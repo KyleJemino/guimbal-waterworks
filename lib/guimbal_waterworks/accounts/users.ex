@@ -3,10 +3,14 @@ defmodule GuimbalWaterworks.Accounts.Users do
   import Ecto.Changeset
 
   schema "users" do
-    field :email, :string
+    field :username, :string
+    field :first_name, :string
+    field :middle_name, :string
+    field :last_name, :string
+    field :role, Ecto.Enum, values: [:manager, :admin, :cashier]
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
-    field :confirmed_at, :naive_datetime
+    field :approved_at, :utc_datetime
 
     timestamps()
   end
@@ -30,18 +34,26 @@ defmodule GuimbalWaterworks.Accounts.Users do
   """
   def registration_changeset(users, attrs, opts \\ []) do
     users
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [
+      :username, 
+      :password,
+      :first_name,
+      :middle_name,
+      :last_name,
+      :role
+    ])
     |> validate_email()
+    |> validate_requred([:first_name, :last_name])
     |> validate_password(opts)
   end
 
-  defp validate_email(changeset) do
+  defp validate_username(changeset) do
     changeset
-    |> validate_required([:email])
-    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
-    |> validate_length(:email, max: 160)
-    |> unsafe_validate_unique(:email, GuimbalWaterworks.Repo)
-    |> unique_constraint(:email)
+    |> validate_required([:username])
+    |> validate_format(:username, ~r/^[A-Za-z][A-Za-z0-9_]{7,29}$"/, message: "alphanumeric characters and underscores only")
+    |> validate_length(:username, max: 160)
+    |> unsafe_validate_unique(:username, GuimbalWaterworks.Repo)
+    |> unique_constraint(:username)
   end
 
   defp validate_password(changeset, opts) do
@@ -70,21 +82,6 @@ defmodule GuimbalWaterworks.Accounts.Users do
   end
 
   @doc """
-  A users changeset for changing the email.
-
-  It requires the email to change otherwise an error is added.
-  """
-  def email_changeset(users, attrs) do
-    users
-    |> cast(attrs, [:email])
-    |> validate_email()
-    |> case do
-      %{changes: %{email: _}} = changeset -> changeset
-      %{} = changeset -> add_error(changeset, :email, "did not change")
-    end
-  end
-
-  @doc """
   A users changeset for changing the password.
 
   ## Options
@@ -106,9 +103,9 @@ defmodule GuimbalWaterworks.Accounts.Users do
   @doc """
   Confirms the account by setting `confirmed_at`.
   """
-  def confirm_changeset(users) do
-    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-    change(users, confirmed_at: now)
+  def approve_changeset(users) do
+    now = DateTime.utc_now() 
+    change(users, approved_at: now)
   end
 
   @doc """
