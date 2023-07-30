@@ -2,7 +2,7 @@ defmodule GuimbalWaterworks.Repo.Migrations.ModifyUsersTable do
   use Ecto.Migration
 
   def change do
-    remove unique_index(:users, [:email])
+    drop_if_exists unique_index(:users, [:email])
 
     alter table(:users) do
       remove :email, :citext, null: false
