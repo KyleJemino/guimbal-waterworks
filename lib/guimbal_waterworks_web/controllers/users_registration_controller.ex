@@ -13,12 +13,6 @@ defmodule GuimbalWaterworksWeb.UsersRegistrationController do
   def create(conn, %{"users" => users_params}) do
     case Accounts.register_users(users_params) do
       {:ok, users} ->
-        {:ok, _} =
-          Accounts.deliver_users_confirmation_instructions(
-            users,
-            &Routes.users_confirmation_url(conn, :edit, &1)
-          )
-
         conn
         |> put_flash(:info, "Users created successfully.")
         |> UsersAuth.log_in_users(users)
