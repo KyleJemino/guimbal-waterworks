@@ -9,13 +9,13 @@ defmodule GuimbalWaterworksWeb.UsersSessionController do
   end
 
   def create(conn, %{"users" => users_params}) do
-    %{"email" => email, "password" => password} = users_params
+    %{"username" => username, "password" => password} = users_params
 
-    if users = Accounts.get_users_by_email_and_password(email, password) do
+    if users = Accounts.get_users_by_username_and_password(username, password) do
       UsersAuth.log_in_users(conn, users, users_params)
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
-      render(conn, "new.html", error_message: "Invalid email or password")
+      render(conn, "new.html", error_message: "Invalid username or password")
     end
   end
 
