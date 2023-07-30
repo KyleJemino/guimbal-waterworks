@@ -66,27 +66,9 @@ defmodule GuimbalWaterworksWeb.Router do
     post "/users/register", UsersRegistrationController, :create
     get "/users/log_in", UsersSessionController, :new
     post "/users/log_in", UsersSessionController, :create
-    get "/users/reset_password", UsersResetPasswordController, :new
-    post "/users/reset_password", UsersResetPasswordController, :create
-    get "/users/reset_password/:token", UsersResetPasswordController, :edit
-    put "/users/reset_password/:token", UsersResetPasswordController, :update
   end
 
   scope "/", GuimbalWaterworksWeb do
     pipe_through [:browser, :require_authenticated_users]
-
-    get "/users/settings", UsersSettingsController, :edit
-    put "/users/settings", UsersSettingsController, :update
-    get "/users/settings/confirm_email/:token", UsersSettingsController, :confirm_email
-  end
-
-  scope "/", GuimbalWaterworksWeb do
-    pipe_through [:browser]
-
-    delete "/users/log_out", UsersSessionController, :delete
-    get "/users/confirm", UsersConfirmationController, :new
-    post "/users/confirm", UsersConfirmationController, :create
-    get "/users/confirm/:token", UsersConfirmationController, :edit
-    post "/users/confirm/:token", UsersConfirmationController, :update
   end
 end
