@@ -10,7 +10,7 @@ defmodule GuimbalWaterworks.Accounts do
 
   ## Database getters
 
-  def get_users_by_username(username) when is_binary(email) do
+  def get_users_by_username(username) when is_binary(username) do
     Repo.get_by(Users, username: username)
   end
 
