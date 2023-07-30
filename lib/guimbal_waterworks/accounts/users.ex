@@ -48,6 +48,23 @@ defmodule GuimbalWaterworks.Accounts.Users do
     |> validate_password(opts)
   end
 
+  def super_changeset(user, attrs, opts \\ []) do
+    users
+    |> cast(attrs, [
+      :username,
+      :first_name,
+      :middle_name,
+      :last_name,
+      :role,
+      :password,
+      :approved_at
+    ])
+    |> validate_username()
+    |> validate_required([:first_name, :last_name, :role])
+    |> validate_inclusion(:role, [:manager, :admin, :cashier])
+    |> validate_password(opts)
+  end
+
   defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
