@@ -42,8 +42,9 @@ defmodule GuimbalWaterworks.Accounts.Users do
       :last_name,
       :role
     ])
-    |> validate_email()
-    |> validate_requred([:first_name, :last_name])
+    |> validate_username()
+    |> validate_requred([:first_name, :last_name, :role])
+    |> validate_inclusion(:role, [:manager, :admin, :cashier])
     |> validate_password(opts)
   end
 
