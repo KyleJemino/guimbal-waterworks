@@ -43,7 +43,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
       :role
     ])
     |> validate_username()
-    |> validate_requred([:first_name, :last_name, :role])
+    |> validate_required([:first_name, :last_name, :role])
     |> validate_inclusion(:role, [:manager, :admin, :cashier])
     |> validate_password(opts)
   end
@@ -52,7 +52,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
     changeset
     |> validate_required([:username])
     |> validate_format(:username, ~r/^[A-Za-z][A-Za-z0-9_]{7,40}$"/, message: "alphanumeric characters and underscores only")
-    |> validate_length(:username, min: y, max: 40)
+    |> validate_length(:username, min: 7, max: 40)
     |> unsafe_validate_unique(:username, GuimbalWaterworks.Repo)
     |> unique_constraint(:username)
   end
