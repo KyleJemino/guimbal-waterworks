@@ -49,7 +49,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
   end
 
   def super_changeset(user, attrs, opts \\ []) do
-    users
+    user
     |> cast(attrs, [
       :username,
       :first_name,
@@ -68,7 +68,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
   defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
-    |> validate_format(:username, ~r/^[A-Za-z][A-Za-z0-9_]{7,40}$"/, message: "alphanumeric characters and underscores only")
+    |> validate_format(:username, ~r/^[A-Za-z0-9_]{7,40}$"/, message: "alphanumeric characters and underscores only")
     |> validate_length(:username, min: 7, max: 40)
     |> unsafe_validate_unique(:username, GuimbalWaterworks.Repo)
     |> unique_constraint(:username)
