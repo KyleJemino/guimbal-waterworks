@@ -1,9 +1,9 @@
-<ul>
+<div class="users-nav-menu">
   <%= if @current_users do %>
-    <li><%= @current_users.username %></li>
-    <li><%= link "Log out", to: Routes.users_session_path(@conn, :delete), method: :delete %></li>
+    <div class="nav-item"><%= @current_users.username %></div>
+    <div class="nav-item"><%= link "Log out", to: Routes.users_session_path(@conn, :delete), method: :delete %></div>
   <% else %>
-    <li><%= link "Register", to: Routes.users_registration_path(@conn, :new) %></li>
-    <li><%= link "Log in", to: Routes.users_session_path(@conn, :new) %></li>
+    <div class="nav-item"><%= link "Register", to: Routes.users_registration_path(@conn, :new) %></div>
+    <div class="nav-item"><%= link "Log in", to: Routes.users_session_path(@conn, :new) %></div>
   <% end %>
-</ul>
+</div>
