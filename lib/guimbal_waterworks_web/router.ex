@@ -66,6 +66,7 @@ defmodule GuimbalWaterworksWeb.Router do
     post "/users/register", UsersRegistrationController, :create
     get "/users/log_in", UsersSessionController, :new
     post "/users/log_in", UsersSessionController, :create
+    delete "/users/log_out", UsersSessionController, :delete
   end
 
   scope "/", GuimbalWaterworksWeb do
