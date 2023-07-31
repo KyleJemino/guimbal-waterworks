@@ -81,7 +81,7 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: "/users/log_in")
+    |> redirect(to: "/")
   end
 
   @doc """
