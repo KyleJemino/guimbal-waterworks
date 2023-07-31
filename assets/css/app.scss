@@ -1,6 +1,5 @@
 /* This file is for your main application CSS */
-@use 'phoenix';
-@use 'users-nav-menu';
+@use 'main-nav';
 
 @tailwind base;
 @tailwind components;
