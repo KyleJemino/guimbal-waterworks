@@ -1,6 +1,8 @@
 defmodule GuimbalWaterworksWeb.Router do
   use GuimbalWaterworksWeb, :router
 
+  import GuimbalWaterworksWeb.UsersAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule GuimbalWaterworksWeb.Router do
     plug :put_root_layout, {GuimbalWaterworksWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_users
   end
 
   pipeline :api do
@@ -52,5 +55,20 @@ defmodule GuimbalWaterworksWeb.Router do
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  ## Authentication routes
+
+  scope "/", GuimbalWaterworksWeb do
+    pipe_through [:browser, :redirect_if_users_is_authenticated]
+
+    get "/users/register", UsersRegistrationController, :new
+    post "/users/register", UsersRegistrationController, :create
+    get "/users/log_in", UsersSessionController, :new
+    post "/users/log_in", UsersSessionController, :create
+  end
+
+  scope "/", GuimbalWaterworksWeb do
+    pipe_through [:browser, :require_authenticated_users]
   end
 end
