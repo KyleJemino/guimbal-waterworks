@@ -50,7 +50,8 @@ defmodule GuimbalWaterworks.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:dart_sass, "~> 0.5", runtime: Mix.env() == :dev}
+      {:dart_sass, "~> 0.5", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev}
     ]
   end
 
@@ -62,14 +63,23 @@ defmodule GuimbalWaterworks.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup"],
+      setup: ["deps.get", "ecto.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.deploy": [
         "esbuild default --minify", 
         "sass default --no-source-map --style=compressed",
+        "tailwind default --minify",
         "phx.digest"
+      ],
+      "assets.setup": [
+        "tailwind.install --if-missing"
+      ],
+      "assets.build": [
+        "esbuild default",
+        "sass default",
+        "tailwind default"
       ]
     ]
   end
