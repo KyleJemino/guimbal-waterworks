@@ -1,11 +1,20 @@
 /* This file is for your main application CSS */
 @use 'main-nav';
+@use 'containers';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Alerts and form errors used by phx.new */
+* {
+  box-sizing: border-box; 
+}
+
+body {
+  @apply h-screen w-screen bg-slate-300;
+}
+
 .alert {
   padding: 15px;
   margin-bottom: 20px;
