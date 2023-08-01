@@ -1,6 +1,9 @@
 /* This file is for your main application CSS */
 @use 'main-nav';
 @use 'containers';
+@use 'log-in-page';
+@use 'forms';
+@use 'buttons';
 
 @tailwind base;
 @tailwind components;
@@ -13,6 +16,22 @@
 
 body {
   @apply h-screen w-screen bg-slate-300;
+}
+
+h1 {
+  @apply text-3xl font-bold;
+}
+
+h2 {
+  @apply text-2xl font-bold;
+}
+
+h3 {
+  @apply text-xl font-bold;
+}
+
+h4 {
+  @apply text-lg font-bold;
 }
 
 .alert {
