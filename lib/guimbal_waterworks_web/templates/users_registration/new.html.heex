@@ -55,6 +55,9 @@
 
   <div class="form-button-group">
     <%= submit "Register", class: "submit" %>
-    <%= link "Log in", to: Routes.users_session_path(@conn, :new), class: "neutral" %>
+  </div>
+
+  <div class="form-links">
+    <%= link "Go to log in page", to: Routes.users_session_path(@conn, :new) %>
   </div>
 </.form>

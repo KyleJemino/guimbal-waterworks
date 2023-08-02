@@ -25,3 +25,11 @@
     @apply text-center border border-slate-600 text-lg py-2 px-6 font-medium min-w-[120px] rounded;
   }
 }
+
+.form-links {
+  @apply flex flex-col gap-2 justify-center items-center;
+  
+  > a {
+    @apply underline
+  }
+}

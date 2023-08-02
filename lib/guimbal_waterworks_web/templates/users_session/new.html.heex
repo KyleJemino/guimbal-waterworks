@@ -28,8 +28,11 @@
     <%= label f, :remember_me, "Keep me logged in for 60 days" %>
   </div>
 
-  <div class="form-button-group">
+  <div class="form-button-group mt-3">
     <%= submit "Log in", class: "submit"%>
-    <%= link "Register", to: Routes.users_registration_path(@conn, :new), class: "neutral" %>
+  </div>
+
+  <div class="form-links">
+    <%= link "Go to registration page", to: Routes.users_registration_path(@conn, :new) %>
   </div>
 </.form>
