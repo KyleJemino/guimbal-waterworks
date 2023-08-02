@@ -88,8 +88,10 @@ defmodule GuimbalWaterworksWeb.Router do
   end
 
 
-  scope "/", GuimbalWaterworksWeb do
-    pipe_through [:browser, :require_authenticated_users, :require_manager]
-    live "/employees", EmployeeLive.Index, :index
+  live_session :authenticated do
+    scope "/", GuimbalWaterworksWeb.EmployeeLive do
+      pipe_through [:browser, :require_authenticated_users, :require_manager]
+      live "/employees", Index, :index
+    end
   end
 end

@@ -3,6 +3,7 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
   import Phoenix.Controller
 
   alias GuimbalWaterworks.Accounts
+  alias GuimbalWaterworks.Accounts.Users
   alias GuimbalWaterworksWeb.Router.Helpers, as: Routes
 
   # Make the remember me cookie valid for 60 days.
@@ -24,7 +25,11 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
   disconnected on log out. The line can be safely removed
   if you are not using LiveView.
   """
-  def log_in_users(conn, users, params \\ %{}) do
+  def log_in_users(
+    conn, 
+    %Users{approved_at: approved_at} = users, 
+    params \\ %{}
+  ) when not is_nil(approved_at) do
     token = Accounts.generate_users_session_token(users)
     users_return_to = get_session(conn, :users_return_to)
 
@@ -34,6 +39,14 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
     |> put_session(:live_socket_id, "users_sessions:#{Base.url_encode64(token)}")
     |> maybe_write_remember_me_cookie(token, params)
     |> redirect(to: users_return_to || signed_in_path(conn))
+  end
+
+  def log_in_users(conn, _users, _params) do
+    conn
+    |> put_flash(:error, "Wait for approval from manager.")
+    |> maybe_store_return_to()
+    |> redirect(to: Routes.users_session_path(conn, :new))
+    |> halt()
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do
@@ -91,7 +104,15 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
   def fetch_current_users(conn, _opts) do
     {users_token, conn} = ensure_users_token(conn)
     users = users_token && Accounts.get_users_by_session_token(users_token)
-    assign(conn, :current_users, users)
+
+    final_assign_user =
+      case users do
+        %Users{approved_at: approved_at} = user when not is_nil(approved_at)  ->
+          user
+        _ -> nil
+      end
+
+    assign(conn, :current_users, final_assign_user)
   end
 
   defp ensure_users_token(conn) do
