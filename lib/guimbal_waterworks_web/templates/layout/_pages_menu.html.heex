@@ -1,0 +1,5 @@
+<div class="sub-nav">
+  <%= if @current_users.role === :manager do %>
+    <div class="nav-item"><%= link "Employee Dashboard", to: Routes.employee_index_path(@conn, :index) %></div>
+  <% end %>
+</div>
