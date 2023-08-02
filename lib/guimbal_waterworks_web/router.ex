@@ -72,5 +72,6 @@ defmodule GuimbalWaterworksWeb.Router do
     pipe_through [:browser, :require_authenticated_users]
 
     delete "/users/log_out", UsersSessionController, :delete
+    live "/employees", EmployeeLive.Index, :index
   end
 end
