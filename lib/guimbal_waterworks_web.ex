@@ -98,6 +98,7 @@ defmodule GuimbalWaterworksWeb do
       import GuimbalWaterworksWeb.ErrorHelpers
       import GuimbalWaterworksWeb.Gettext
       alias GuimbalWaterworksWeb.Router.Helpers, as: Routes
+      alias GuimbalWaterworksWeb.DisplayHelpers, as: Display
     end
   end
 

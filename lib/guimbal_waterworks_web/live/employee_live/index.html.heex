@@ -9,7 +9,7 @@
   </tr>
   <%= for employee <- @employees do %>
     <tr class="data-row">
-      <td class="data"><%= employee.last_name %></td>
+      <td class="data"><%= Display.full_name(employee) %></td>
       <td class="data"><%= employee.username %></td>
       <td class="data uppercase"><%= not is_nil(employee.approved_at)%></td>
       <td class="actions">
