@@ -14,9 +14,9 @@
       <td class="data uppercase"><%= not is_nil(employee.approved_at)%></td>
       <td class="actions">
         <div class="flex gap-2 flex-row justify-between">
-          <span class="button -table">Password</span>
-          <span class="button -table">Info</span>
-          <span class="button -table">Approve</span>
+          <%= live_patch "Password", to: Routes.employee_index_path(@socket, :edit_pass), class: "button -table" %> 
+          <%= live_patch "Info", to: Routes.employee_index_path(@socket, :edit_info), class: "button -table" %> 
+          <%= live_patch "Approve", to: Routes.employee_index_path(@socket, :edit_approval), class: "button -table" %> 
         </div>
       </td>
     </tr>

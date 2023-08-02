@@ -10,6 +10,7 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
   def handle_params(_params, _url, socket) do
     {:noreply,
      socket
+     |> assign(:page_title, Atom.to_string(socket.assigns.live_action))
      |> assign_employees()}
   end
 
