@@ -87,7 +87,6 @@ defmodule GuimbalWaterworksWeb.Router do
     delete "/users/log_out", UsersSessionController, :delete
   end
 
-
   live_session :authenticated, on_mount: GuimbalWaterworksWeb.AssignUsers do
     scope "/", GuimbalWaterworksWeb.EmployeeLive do
       pipe_through [:browser, :require_authenticated_users, :require_manager]

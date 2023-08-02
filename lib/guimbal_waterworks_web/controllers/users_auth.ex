@@ -26,10 +26,11 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
   if you are not using LiveView.
   """
   def log_in_users(
-    conn, 
-    %Users{approved_at: approved_at} = users, 
-    params \\ %{}
-  ) when not is_nil(approved_at) do
+        conn,
+        %Users{approved_at: approved_at} = users,
+        params \\ %{}
+      )
+      when not is_nil(approved_at) do
     token = Accounts.generate_users_session_token(users)
     users_return_to = get_session(conn, :users_return_to)
 
@@ -107,9 +108,11 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
 
     final_assign_user =
       case users do
-        %Users{approved_at: approved_at} = user when not is_nil(approved_at)  ->
+        %Users{approved_at: approved_at} = user when not is_nil(approved_at) ->
           user
-        _ -> nil
+
+        _ ->
+          nil
       end
 
     assign(conn, :current_users, final_assign_user)

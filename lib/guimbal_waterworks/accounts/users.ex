@@ -35,7 +35,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
   def registration_changeset(users, attrs, opts \\ []) do
     users
     |> cast(attrs, [
-      :username, 
+      :username,
       :password,
       :first_name,
       :middle_name,
@@ -68,7 +68,9 @@ defmodule GuimbalWaterworks.Accounts.Users do
   defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
-    |> validate_format(:username, ~r/^[A-Za-z0-9_]{7,40}$/, message: "alphanumeric characters and underscores only")
+    |> validate_format(:username, ~r/^[A-Za-z0-9_]{7,40}$/,
+      message: "alphanumeric characters and underscores only"
+    )
     |> validate_length(:username, min: 7, max: 40)
     |> unsafe_validate_unique(:username, GuimbalWaterworks.Repo)
     |> unique_constraint(:username)
@@ -122,7 +124,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
   Confirms the account by setting `confirmed_at`.
   """
   def approve_changeset(users) do
-    now = DateTime.utc_now() 
+    now = DateTime.utc_now()
     change(users, approved_at: now)
   end
 
@@ -132,7 +134,10 @@ defmodule GuimbalWaterworks.Accounts.Users do
   If there is no users or the users doesn't have a password, we call
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
-  def valid_password?(%GuimbalWaterworks.Accounts.Users{hashed_password: hashed_password}, password)
+  def valid_password?(
+        %GuimbalWaterworks.Accounts.Users{hashed_password: hashed_password},
+        password
+      )
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Bcrypt.verify_pass(password, hashed_password)
   end

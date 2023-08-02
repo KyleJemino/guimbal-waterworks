@@ -7,7 +7,7 @@ defmodule GuimbalWaterworks.Accounts.Queries.UserQuery do
   end
 
   use GuimbalWaterworks, :basic_queries
-  #insert custom queries here
+  # insert custom queries here
 
   use GuimbalWaterworks, :catch_query
 end

@@ -1,5 +1,5 @@
 defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
-  use GuimbalWaterworksWeb, :live_view 
+  use GuimbalWaterworksWeb, :live_view
 
   alias GuimbalWaterworks.Accounts
 
@@ -8,10 +8,9 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
   end
 
   def handle_params(_params, _url, socket) do
-    {:noreply, 
-      socket
-      |> assign_employees()
-    }
+    {:noreply,
+     socket
+     |> assign_employees()}
   end
 
   defp assign_employees(socket) do

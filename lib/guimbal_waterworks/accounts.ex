@@ -96,11 +96,11 @@ defmodule GuimbalWaterworks.Accounts do
   def approve_user(user) do
     user
     |> Users.approve_changeset()
-    |> Repo.update() 
+    |> Repo.update()
   end
 
   def list_users(params \\ %{}) do
-    params 
+    params
     |> UserQuery.query_user()
     |> Repo.all()
   end
