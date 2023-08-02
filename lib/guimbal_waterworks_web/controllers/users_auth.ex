@@ -149,7 +149,9 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
   they use the application at all, here would be a good place.
   """
   def require_authenticated_users(conn, _opts) do
-    if conn.assigns[:current_users] do
+    current_user = conn.assigns[:current_users]
+
+    if current_user && current_user.approved_at do
       conn
     else
       conn
