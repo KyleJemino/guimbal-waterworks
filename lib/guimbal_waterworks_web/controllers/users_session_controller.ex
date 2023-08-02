@@ -4,6 +4,8 @@ defmodule GuimbalWaterworksWeb.UsersSessionController do
   alias GuimbalWaterworks.Accounts
   alias GuimbalWaterworksWeb.UsersAuth
 
+  plug :put_layout, "landing_page.html"
+
   def new(conn, _params) do
     render(conn, "new.html", error_message: nil)
   end

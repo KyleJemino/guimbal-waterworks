@@ -1,0 +1,25 @@
+<main class="main-container">
+  <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+  <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <div class="sidebar-container">
+      <div class="log-in-column">
+        <div class="log-in-container">
+          <%= @inner_content %>
+        </div>
+      </div>
+      <div class="container flex flex-col gap-8">
+        <div class="header-content-container">
+          <h1>Mission</h1>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse dictum lobortis tellus sed elementum. Sed nec sapien vel leo pharetra pharetra sed tempor tellus. Integer mattis fermentum mauris, a porttitor mi volutpat nec. Maecenas cursus, mi non auctor vulputate, orci nisl varius justo, eget rutrum est dui vel odio. Vestibulum ornare arcu venenatis ligula convallis, ac hendrerit erat varius. Etiam nec erat facilisis, pulvinar leo sit amet, tincidunt erat. Integer non libero vitae nisl egestas mollis vitae nec ex. Sed quam justo, eleifend ut metus eu, venenatis accumsan dui. Sed semper turpis massa, at tincidunt lacus pretium a. Donec eu tincidunt metus, quis cursus lorem. Sed euismod dui sit amet vehicula pharetra. Curabitur congue quam quis viverra blandit. Praesent tellus erat, vestibulum a tempor quis, auctor ac massa.
+          </p>
+        </div>
+        <div class="header-content-container">
+          <h1>Vission</h1>
+          <p>
+            Phasellus quis justo eget orci placerat venenatis eu eget turpis. Fusce dapibus, urna sit amet ornare commodo, lectus nisl consectetur arcu, sed faucibus libero augue vel mi. Suspendisse accumsan mi dictum tortor vulputate, vitae accumsan est ornare. Pellentesque dapibus, lectus vitae elementum tincidunt, lacus lorem euismod nibh, id faucibus dolor nunc hendrerit eros. Nam imperdiet vulputate lacus, nec malesuada magna pharetra ut. Fusce gravida augue bibendum mollis laoreet. Morbi non mauris pretium justo sagittis fermentum. Suspendisse non quam interdum, vestibulum mauris nec, lobortis metus.
+          </p>
+        </div>
+      </div>
+    </div>
+</main>

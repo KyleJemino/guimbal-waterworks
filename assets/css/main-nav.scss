@@ -1,0 +1,13 @@
+.main-nav {
+  @apply flex flex-row items-center w-full bg-slate-400 lg:px-16 px-12;
+
+  min-height: 60px;
+}
+
+.sub-nav {
+  @apply flex flex-row gap-4;
+}
+
+.nav-item {
+  @apply flex justify-center items-center bg-slate-200 p-2 min-w-[120px] rounded;
+}

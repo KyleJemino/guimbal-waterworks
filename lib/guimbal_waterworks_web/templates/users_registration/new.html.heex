@@ -1,49 +1,63 @@
 <h1>Register</h1>
 
-<.form let={f} for={@changeset} action={Routes.users_registration_path(@conn, :create)}>
+<.form 
+  let={f} 
+  for={@changeset} 
+  action={Routes.users_registration_path(@conn, :create)}
+  class="form-component"
+>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
 
-  <%= label f, :username %>
-  <%= text_input f, :username, required: true %>
-  <%= error_tag f, :username %>
+  <div class="field-group">
+    <%= label f, :username %>
+    <%= text_input f, :username, required: true %>
+    <%= error_tag f, :username %>
+  </div>
 
-  <%= label f, :first_name %>
-  <%= text_input f, :first_name, required: true %>
-  <%= error_tag f, :first_name %>
+  <div class="field-group">
+    <%= label f, :first_name %>
+    <%= text_input f, :first_name, required: true %>
+    <%= error_tag f, :first_name %>
+  </div>
 
-  <%= label f, :middle_name %>
-  <%= text_input f, :middle_name %>
-  <%= error_tag f, :middle_name %>
+  <div class="field-group">
+    <%= label f, :middle_name %>
+    <%= text_input f, :middle_name %>
+    <%= error_tag f, :middle_name %>
+  </div>
 
-  <%= label f, :last_name %>
-  <%= text_input f, :last_name, required: true %>
-  <%= error_tag f, :last_name %>
+  <div class="field-group">
+    <%= label f, :last_name %>
+    <%= text_input f, :last_name, required: true %>
+    <%= error_tag f, :last_name %>
+  </div>
 
-  <%= label f, :role %>
-  <%= select(
-    f, 
-    :role, 
-    [
-      "Admin": :admin,
-      "Cashier": :cashier
-    ],
-    required: true  
-  )%>
-  <%= error_tag f, :role %>
+  <div class="field-group">
+    <%= label f, :role %>
+    <%= select( 
+      f, 
+      :role, 
+      ["Admin": :admin, "Cashier": :cashier], 
+      required: true  
+    )%>
+    <%= error_tag f, :role %>
+  </div>
 
-  <%= label f, :password %>
-  <%= password_input f, :password, required: true %>
-  <%= error_tag f, :password %>
+  <div class="field-group">
+    <%= label f, :password %>
+    <%= password_input f, :password, required: true %>
+    <%= error_tag f, :password %>
+  </div>
 
-  <div>
-    <%= submit "Register" %>
+  <div class="form-button-group">
+    <%= submit "Register", class: "submit" %>
+  </div>
+
+  <div class="form-links">
+    <%= link "Go to log in page", to: Routes.users_session_path(@conn, :new) %>
   </div>
 </.form>
-
-<p>
-  <%= link "Log in", to: Routes.users_session_path(@conn, :new) %>
-</p>

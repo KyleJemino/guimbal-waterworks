@@ -1,26 +1,38 @@
-<h1>Log in</h1>
+<h1 class="text-center">Log in</h1>
 
-<.form let={f} for={@conn} action={Routes.users_session_path(@conn, :create)} as={:users}>
+<.form 
+  let={f} 
+  for={@conn} 
+  action={Routes.users_session_path(@conn, :create)} 
+  as={:users}
+  class="form-component"
+>
   <%= if @error_message do %>
     <div class="alert alert-danger">
       <p><%= @error_message %></p>
     </div>
   <% end %>
 
-  <%= label f, :username %>
-  <%= text_input f, :username, required: true %>
+  <div class="field-group">
+    <%= label f, :username %>
+    <%= text_input f, :username, required: true %>
+  </div>
 
-  <%= label f, :password %>
-  <%= password_input f, :password, required: true %>
+  <div class="field-group">
+    <%= label f, :password %>
+    <%= password_input f, :password, required: true %>
+  </div>
 
-  <%= label f, :remember_me, "Keep me logged in for 60 days" %>
-  <%= checkbox f, :remember_me %>
+  <div class="checkbox-with-label">
+    <%= checkbox f, :remember_me %>
+    <%= label f, :remember_me, "Keep me logged in for 60 days" %>
+  </div>
 
-  <div>
-    <%= submit "Log in" %>
+  <div class="form-button-group mt-3">
+    <%= submit "Log in", class: "submit"%>
+  </div>
+
+  <div class="form-links">
+    <%= link "Go to registration page", to: Routes.users_registration_path(@conn, :new) %>
   </div>
 </.form>
-
-<p>
-  <%= link "Register", to: Routes.users_registration_path(@conn, :new) %> |
-</p>
