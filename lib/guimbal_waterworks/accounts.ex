@@ -97,4 +97,8 @@ defmodule GuimbalWaterworks.Accounts do
     |> Users.approve_changeset()
     |> Repo.update() 
   end
+
+  def list_users() do
+    Repo.all(Users)
+  end
 end

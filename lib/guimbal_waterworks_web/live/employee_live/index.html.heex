@@ -1,1 +1,12 @@
 <h1>Employee List</h1>
+
+<table>
+  <tbody>
+    <%= for employee <- @employees do %>
+      <tr>
+        <td><%= employee.last_name %></td>
+        <td><%= employee.username %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
