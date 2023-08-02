@@ -1,56 +1,35 @@
-<div class="sidebar-container">
-  <div class="log-in-column">
-    <div class="log-in-container">
-      <h1 class="text-center">Log in</h1>
+<h1 class="text-center">Log in</h1>
 
-      <.form 
-        let={f} 
-        for={@conn} 
-        action={Routes.users_session_path(@conn, :create)} 
-        as={:users}
-        class="form-component"
-      >
-        <%= if @error_message do %>
-          <div class="alert alert-danger">
-            <p><%= @error_message %></p>
-          </div>
-        <% end %>
-
-        <div class="field-group">
-          <%= label f, :username %>
-          <%= text_input f, :username, required: true %>
-        </div>
-
-        <div class="field-group">
-          <%= label f, :password %>
-          <%= password_input f, :password, required: true %>
-        </div>
-
-        <div class="checkbox-with-label">
-          <%= checkbox f, :remember_me %>
-          <%= label f, :remember_me, "Keep me logged in for 60 days" %>
-        </div>
-
-        <div class="form-button-group">
-          <%= submit "Log in", class: "submit"%>
-          <%= link "Register", to: Routes.users_registration_path(@conn, :new), class: "neutral" %>
-        </div>
-      </.form>
-
+<.form 
+  let={f} 
+  for={@conn} 
+  action={Routes.users_session_path(@conn, :create)} 
+  as={:users}
+  class="form-component"
+>
+  <%= if @error_message do %>
+    <div class="alert alert-danger">
+      <p><%= @error_message %></p>
     </div>
+  <% end %>
+
+  <div class="field-group">
+    <%= label f, :username %>
+    <%= text_input f, :username, required: true %>
   </div>
-  <div class="container flex flex-col gap-8">
-    <div class="header-content-container">
-      <h1>Mission</h1>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse dictum lobortis tellus sed elementum. Sed nec sapien vel leo pharetra pharetra sed tempor tellus. Integer mattis fermentum mauris, a porttitor mi volutpat nec. Maecenas cursus, mi non auctor vulputate, orci nisl varius justo, eget rutrum est dui vel odio. Vestibulum ornare arcu venenatis ligula convallis, ac hendrerit erat varius. Etiam nec erat facilisis, pulvinar leo sit amet, tincidunt erat. Integer non libero vitae nisl egestas mollis vitae nec ex. Sed quam justo, eleifend ut metus eu, venenatis accumsan dui. Sed semper turpis massa, at tincidunt lacus pretium a. Donec eu tincidunt metus, quis cursus lorem. Sed euismod dui sit amet vehicula pharetra. Curabitur congue quam quis viverra blandit. Praesent tellus erat, vestibulum a tempor quis, auctor ac massa.
-      </p>
-    </div>
-    <div class="header-content-container">
-      <h1>Vission</h1>
-      <p>
-        Phasellus quis justo eget orci placerat venenatis eu eget turpis. Fusce dapibus, urna sit amet ornare commodo, lectus nisl consectetur arcu, sed faucibus libero augue vel mi. Suspendisse accumsan mi dictum tortor vulputate, vitae accumsan est ornare. Pellentesque dapibus, lectus vitae elementum tincidunt, lacus lorem euismod nibh, id faucibus dolor nunc hendrerit eros. Nam imperdiet vulputate lacus, nec malesuada magna pharetra ut. Fusce gravida augue bibendum mollis laoreet. Morbi non mauris pretium justo sagittis fermentum. Suspendisse non quam interdum, vestibulum mauris nec, lobortis metus.
-      </p>
-    </div>
+
+  <div class="field-group">
+    <%= label f, :password %>
+    <%= password_input f, :password, required: true %>
   </div>
-</div>
+
+  <div class="checkbox-with-label">
+    <%= checkbox f, :remember_me %>
+    <%= label f, :remember_me, "Keep me logged in for 60 days" %>
+  </div>
+
+  <div class="form-button-group">
+    <%= submit "Log in", class: "submit"%>
+    <%= link "Register", to: Routes.users_registration_path(@conn, :new), class: "neutral" %>
+  </div>
+</.form>
