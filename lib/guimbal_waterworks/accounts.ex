@@ -7,6 +7,7 @@ defmodule GuimbalWaterworks.Accounts do
   alias GuimbalWaterworks.Repo
 
   alias GuimbalWaterworks.Accounts.{Users, UsersToken, UsersNotifier}
+  alias GuimbalWaterworks.Accounts.Queries.UserQuery
 
   ## Database getters
 
@@ -98,7 +99,9 @@ defmodule GuimbalWaterworks.Accounts do
     |> Repo.update() 
   end
 
-  def list_users() do
-    Repo.all(Users)
+  def list_users(params) do
+    params 
+    |> query_user()
+    |> Repo.all()
   end
 end
