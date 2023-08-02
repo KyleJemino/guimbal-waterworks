@@ -1,12 +1,24 @@
 <h1>Employee List</h1>
 
-<table>
-  <tbody>
-    <%= for employee <- @employees do %>
-      <tr>
-        <td><%= employee.last_name %></td>
-        <td><%= employee.username %></td>
-      </tr>
-    <% end %>
-  </tbody>
+<table class="data-table mt-4">
+  <tr class="header-row">
+    <th class="header">Username</th>
+    <th class="header">Full name</th>
+    <th class="header">Approved</th>
+    <th class="header">Edit</th>
+  </tr>
+  <%= for employee <- @employees do %>
+    <tr class="data-row">
+      <td class="data"><%= employee.last_name %></td>
+      <td class="data"><%= employee.username %></td>
+      <td class="data uppercase"><%= not is_nil(employee.approved_at)%></td>
+      <td class="actions">
+        <div class="flex gap-2 flex-row justify-between">
+          <span class="button -table">Password</span>
+          <span class="button -table">Info</span>
+          <span class="button -table">Approve</span>
+        </div>
+      </td>
+    </tr>
+  <% end %>
 </table>

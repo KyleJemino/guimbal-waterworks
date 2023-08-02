@@ -99,9 +99,9 @@ defmodule GuimbalWaterworks.Accounts do
     |> Repo.update() 
   end
 
-  def list_users(params) do
+  def list_users(params \\ %{}) do
     params 
-    |> query_user()
+    |> UserQuery.query_user()
     |> Repo.all()
   end
 end
