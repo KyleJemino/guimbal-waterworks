@@ -2,6 +2,7 @@ defmodule GuimbalWaterworksWeb.Router do
   use GuimbalWaterworksWeb, :router
 
   import GuimbalWaterworksWeb.UsersAuth
+  alias GuimbalWaterworksWeb.Plugs.AuthorizeUser
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -15,6 +16,18 @@ defmodule GuimbalWaterworksWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :require_manager do
+    plug AuthorizeUser, [:manager]
+  end
+
+  pipeline :require_admin do
+    plug AuthorizeUser, [:admin]
+  end
+
+  pipeline :require_cashier do
+    plug AuthorizeUser, [:cashier]
   end
 
   scope "/", GuimbalWaterworksWeb do
@@ -72,6 +85,11 @@ defmodule GuimbalWaterworksWeb.Router do
     pipe_through [:browser, :require_authenticated_users]
 
     delete "/users/log_out", UsersSessionController, :delete
+  end
+
+
+  scope "/", GuimbalWaterworksWeb do
+    pipe_through [:browser, :require_authenticated_users, :require_manager]
     live "/employees", EmployeeLive.Index, :index
   end
 end
