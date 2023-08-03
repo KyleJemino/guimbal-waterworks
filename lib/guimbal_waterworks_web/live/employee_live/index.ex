@@ -24,15 +24,13 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
 
     case Accounts.approve_user(employee) do
       {:ok, _employee} ->
-        {:noreply, 
-          socket
-          |> put_flash(:info, "Employee approved!")
-          |> assign_employees()
-        }
-      _ ->
         {:noreply,
-          put_flash(socket, :error, "Something went wrong")
-        }
+         socket
+         |> put_flash(:info, "Employee approved!")
+         |> assign_employees()}
+
+      _ ->
+        {:noreply, put_flash(socket, :error, "Something went wrong")}
     end
   end
 
@@ -41,20 +39,18 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
 
     case Accounts.archive_user(employee) do
       {:ok, _employee} ->
-        {:noreply, 
-          socket
-          |> put_flash(:info, "Employee removed!")
-          |> assign_employees()
-        }
-      _ ->
         {:noreply,
-          put_flash(socket, :error, "Something went wrong")
-        }
+         socket
+         |> put_flash(:info, "Employee removed!")
+         |> assign_employees()}
+
+      _ ->
+        {:noreply, put_flash(socket, :error, "Something went wrong")}
     end
   end
 
   defp assign_employees(socket) do
-    employees = 
+    employees =
       Accounts.list_users(%{
         "order_by" => [asc_nulls_first: :approved_at]
       })

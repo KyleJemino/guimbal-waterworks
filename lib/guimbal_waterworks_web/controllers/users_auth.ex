@@ -27,10 +27,10 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
   """
   def log_in_users(
         conn,
-        %Users{approved_at: approved_at} = users,
+        %Users{approved_at: approved_at, archived_at: archived_at} = users,
         params \\ %{}
       )
-      when not is_nil(approved_at) do
+      when not is_nil(approved_at) and is_nil(archived_at) do
     token = Accounts.generate_users_session_token(users)
     users_return_to = get_session(conn, :users_return_to)
 
@@ -108,7 +108,11 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
 
     final_assign_user =
       case users do
-        %Users{approved_at: approved_at} = user when not is_nil(approved_at) ->
+        %Users{
+          approved_at: approved_at,
+          archived_at: archived_at
+        } = user
+        when not is_nil(approved_at) and is_nil(archived_at) ->
           user
 
         _ ->

@@ -128,16 +128,18 @@ defmodule GuimbalWaterworks.Accounts.Users do
   Confirms the account by setting `confirmed_at`.
   """
   def approve_changeset(users) do
-    now = 
+    now =
       DateTime.utc_now()
       |> DateTime.truncate(:second)
+
     change(users, approved_at: now)
   end
 
   def archive_changeset(users) do
-    now = 
+    now =
       DateTime.utc_now()
       |> DateTime.truncate(:second)
+
     change(users, archived_at: now)
   end
 
