@@ -15,6 +15,10 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
   end
 
   defp assign_employees(socket) do
-    assign(socket, :employees, Accounts.list_users())
+    employees = 
+      Accounts.list_users(%{
+        "order_by" => [asc_nulls_first: :approved_at]
+      })
+    assign(socket, :employees, employees)
   end
 end
