@@ -11,6 +11,7 @@
   </head>
   <body>
     <nav class='main-nav'>
+      <%= render "_pages_menu.html", assigns %>
       <%= render "_users_menu.html", assigns %>
     </nav>
     <%= @inner_content %>

@@ -29,6 +29,11 @@ config :guimbal_waterworks, GuimbalWaterworks.Mailer, adapter: Swoosh.Adapters.L
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
 
+config :guimbal_waterworks, :generators,
+  migration: true,
+  binary_id: false,
+  sample_binary_id: "11111111-1111-1111-1111-111111111111"
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.14.29",

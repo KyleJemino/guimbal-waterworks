@@ -53,6 +53,12 @@
     <%= error_tag f, :password %>
   </div>
 
+  <div class="field-group">
+    <%= label f, :password_confirmation %>
+    <%= password_input f, :password_confirmation, required: true %>
+    <%= error_tag f, :password_confirmation %>
+  </div>
+
   <div class="form-button-group">
     <%= submit "Register", class: "submit" %>
   </div>

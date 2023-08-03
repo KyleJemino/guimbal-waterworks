@@ -1,0 +1,27 @@
+table, tr, th, td {
+  border: 1px solid black;
+}
+
+.data-table {
+  @apply w-full bg-slate-200;
+}
+
+.header-row {
+  @apply bg-slate-600 text-white;
+}
+
+.header-row > .header {
+  @apply p-2 text-xl;
+}
+
+.data-row:nth-child(even) {
+  @apply bg-slate-400;
+}
+
+.data-row > .data {
+  @apply p-2 text-lg;
+}
+
+.data-row > .actions {
+  @apply p-2 text-center;
+}

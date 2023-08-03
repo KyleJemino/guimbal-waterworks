@@ -22,7 +22,8 @@ defmodule GuimbalWaterworksWeb.UsersSessionController do
   end
 
   def delete(conn, _params) do
-    IO.inspect conn
+    IO.inspect(conn)
+
     conn
     |> put_flash(:info, "Logged out successfully.")
     |> UsersAuth.log_out_users()

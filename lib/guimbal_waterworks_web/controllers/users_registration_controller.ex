@@ -16,8 +16,9 @@ defmodule GuimbalWaterworksWeb.UsersRegistrationController do
     case Accounts.register_users(users_params) do
       {:ok, users} ->
         conn
-        |> put_flash(:info, "Users created successfully.")
-        |> UsersAuth.log_in_users(users)
+        |> put_flash(:info, "Users created successfully. Pls wait for manager's approval.")
+        |> redirect(to: Routes.users_session_path(conn, :new))
+        |> halt()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)

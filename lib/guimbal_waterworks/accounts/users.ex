@@ -2,6 +2,8 @@ defmodule GuimbalWaterworks.Accounts.Users do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
   schema "users" do
     field :username, :string
     field :first_name, :string
@@ -9,8 +11,10 @@ defmodule GuimbalWaterworks.Accounts.Users do
     field :last_name, :string
     field :role, Ecto.Enum, values: [:manager, :admin, :cashier]
     field :password, :string, virtual: true, redact: true
+    field :password_confirmation, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :approved_at, :utc_datetime
+    field :archived_at, :utc_datetime
 
     timestamps()
   end
@@ -35,12 +39,13 @@ defmodule GuimbalWaterworks.Accounts.Users do
   def registration_changeset(users, attrs, opts \\ []) do
     users
     |> cast(attrs, [
-      :username, 
+      :username,
       :password,
       :first_name,
       :middle_name,
       :last_name,
-      :role
+      :role,
+      :password_confirmation
     ])
     |> validate_username()
     |> validate_required([:first_name, :last_name, :role])
@@ -57,7 +62,9 @@ defmodule GuimbalWaterworks.Accounts.Users do
       :last_name,
       :role,
       :password,
-      :approved_at
+      :password_confirmation,
+      :approved_at,
+      :archived_at
     ])
     |> validate_username()
     |> validate_required([:first_name, :last_name, :role])
@@ -68,7 +75,9 @@ defmodule GuimbalWaterworks.Accounts.Users do
   defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
-    |> validate_format(:username, ~r/^[A-Za-z0-9_]{7,40}$/, message: "alphanumeric characters and underscores only")
+    |> validate_format(:username, ~r/^[A-Za-z0-9_]{7,40}$/,
+      message: "alphanumeric characters and underscores only"
+    )
     |> validate_length(:username, min: 7, max: 40)
     |> unsafe_validate_unique(:username, GuimbalWaterworks.Repo)
     |> unique_constraint(:username)
@@ -76,11 +85,12 @@ defmodule GuimbalWaterworks.Accounts.Users do
 
   defp validate_password(changeset, opts) do
     changeset
-    |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 72)
+    |> validate_required([:password, :password_confirmation])
+    |> validate_length(:password, min: 8, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
+    |> validate_confirmation(:password, message: "does not match password")
     |> maybe_hash_password(opts)
   end
 
@@ -122,8 +132,19 @@ defmodule GuimbalWaterworks.Accounts.Users do
   Confirms the account by setting `confirmed_at`.
   """
   def approve_changeset(users) do
-    now = DateTime.utc_now() 
+    now =
+      DateTime.utc_now()
+      |> DateTime.truncate(:second)
+
     change(users, approved_at: now)
+  end
+
+  def archive_changeset(users) do
+    now =
+      DateTime.utc_now()
+      |> DateTime.truncate(:second)
+
+    change(users, archived_at: now)
   end
 
   @doc """
@@ -132,7 +153,10 @@ defmodule GuimbalWaterworks.Accounts.Users do
   If there is no users or the users doesn't have a password, we call
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
-  def valid_password?(%GuimbalWaterworks.Accounts.Users{hashed_password: hashed_password}, password)
+  def valid_password?(
+        %GuimbalWaterworks.Accounts.Users{hashed_password: hashed_password},
+        password
+      )
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Bcrypt.verify_pass(password, hashed_password)
   end

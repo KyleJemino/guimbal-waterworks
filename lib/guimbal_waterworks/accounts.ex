@@ -6,7 +6,8 @@ defmodule GuimbalWaterworks.Accounts do
   import Ecto.Query, warn: false
   alias GuimbalWaterworks.Repo
 
-  alias GuimbalWaterworks.Accounts.{Users, UsersToken, UsersNotifier}
+  alias GuimbalWaterworks.Accounts.{Users, UsersToken}
+  alias GuimbalWaterworks.Accounts.Queries.UserQuery
 
   ## Database getters
 
@@ -95,6 +96,19 @@ defmodule GuimbalWaterworks.Accounts do
   def approve_user(user) do
     user
     |> Users.approve_changeset()
-    |> Repo.update() 
+    |> Repo.update()
+  end
+
+  def list_users(params \\ %{}) do
+    params
+    |> Map.put_new("with_archived?", false)
+    |> UserQuery.query_user()
+    |> Repo.all()
+  end
+
+  def archive_user(user) do
+    user
+    |> Users.archive_changeset()
+    |> Repo.update()
   end
 end

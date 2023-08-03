@@ -488,7 +488,9 @@ defmodule GuimbalWaterworks.AccountsTest do
     end
 
     test "updates the password", %{users: users} do
-      {:ok, updated_users} = Accounts.reset_users_password(users, %{password: "new valid password"})
+      {:ok, updated_users} =
+        Accounts.reset_users_password(users, %{password: "new valid password"})
+
       assert is_nil(updated_users.password)
       assert Accounts.get_users_by_email_and_password(users.email, "new valid password")
     end

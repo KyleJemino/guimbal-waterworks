@@ -1,0 +1,11 @@
+.button {
+  @apply flex justify-center items-center bg-slate-200 p-2 min-w-[120px] rounded;
+
+  &.-table {
+    @apply w-[120px] bg-blue-200;
+  }
+
+  &.-caution {
+    @apply bg-orange-300;
+  }
+}
