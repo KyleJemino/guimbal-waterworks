@@ -44,7 +44,7 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
 
   def log_in_users(conn, _users, _params) do
     conn
-    |> put_flash(:error, "Wait for approval from manager.")
+    |> put_flash(:error, "Invalid log in credentials")
     |> maybe_store_return_to()
     |> redirect(to: Routes.users_session_path(conn, :new))
     |> halt()
