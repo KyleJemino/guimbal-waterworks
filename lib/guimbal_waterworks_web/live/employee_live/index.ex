@@ -8,7 +8,6 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
   end
 
   def handle_params(params, _url, socket) do
-    IO.inspect params
     {:noreply,
      socket
      |> apply_action(socket.assigns.live_action, params)
