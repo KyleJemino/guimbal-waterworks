@@ -32,6 +32,12 @@ defmodule GuimbalWaterworks do
         |> order_by(^order_by)
         |> query_by(Map.delete(params, "order_by"))
       end
+
+      defp query_by(query, %{"with_archived?" => false} = params) do
+        query
+        |> where([q], is_nil(q.archived_at))
+        |> query_by(Map.delete(params, "with_archived?"))
+      end
     end
   end
 

@@ -101,6 +101,7 @@ defmodule GuimbalWaterworks.Accounts do
 
   def list_users(params \\ %{}) do
     params
+    |> Map.put_new("with_archived?", false)
     |> UserQuery.query_user()
     |> Repo.all()
   end
