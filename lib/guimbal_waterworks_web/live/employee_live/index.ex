@@ -7,11 +7,30 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
     {:ok, socket}
   end
 
-  def handle_params(_params, _url, socket) do
+  def handle_params(params, _url, socket) do
+    IO.inspect params
     {:noreply,
      socket
-     |> assign(:page_title, Atom.to_string(socket.assigns.live_action))
+     |> apply_action(socket.assigns.live_action, params)
      |> assign_employees()}
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Employee List")
+  end
+
+  def handle_event("approve_employee", %{"employee_id" => employee_id}, socket) do
+    employee = Accounts.get_users!(employee_id)
+    case Accounts.approve_user(employee) do
+      {:ok, _employee} ->
+        {:noreply, assign_employees(socket)}
+      _ ->
+        {:noreply,
+          put_flash(socket, :error, "Something went wrong")
+        }
+    end
+    {:noreply, socket}
   end
 
   defp assign_employees(socket) do

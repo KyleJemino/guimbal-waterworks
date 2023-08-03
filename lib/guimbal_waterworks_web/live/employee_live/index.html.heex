@@ -13,10 +13,16 @@
       <td class="data"><%= employee.username %></td>
       <td class="data uppercase"><%= not is_nil(employee.approved_at)%></td>
       <td class="actions">
-        <div class="flex gap-2 flex-row justify-between">
-          <%= live_patch "Password", to: Routes.employee_index_path(@socket, :edit_pass), class: "button -table" %> 
-          <%= live_patch "Info", to: Routes.employee_index_path(@socket, :edit_info), class: "button -table" %> 
-          <%= live_patch "Approve", to: Routes.employee_index_path(@socket, :edit_approval), class: "button -table" %> 
+        <div class="inline-flex gap-2 flex-row">
+          <%= if is_nil(employee.approved_at) do %>
+            <button
+              class="button -table"
+              phx-click="approve_employee"
+              phx-value-employee_id={employee.id}
+            >
+              Approve
+            </button>
+          <% end %>
         </div>
       </td>
     </tr>
