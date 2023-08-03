@@ -21,19 +21,19 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
 
   def handle_event("approve_employee", %{"employee_id" => employee_id}, socket) do
     employee = Accounts.get_users!(employee_id)
+
     case Accounts.approve_user(employee) do
       {:ok, _employee} ->
         {:noreply, 
           socket
           |> put_flash(:info, "Employee approved!")
-          |> push_redirect(to: Routes.employee_index_path(socket))
+          |> assign_employees()
         }
       _ ->
         {:noreply,
           put_flash(socket, :error, "Something went wrong")
         }
     end
-    {:noreply, socket}
   end
 
   defp assign_employees(socket) do
