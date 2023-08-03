@@ -4,4 +4,8 @@
   &.-table {
     @apply w-[120px] bg-blue-200;
   }
+
+  &.-caution {
+    @apply bg-orange-300;
+  }
 }

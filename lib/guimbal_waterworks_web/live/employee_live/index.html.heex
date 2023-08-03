@@ -23,6 +23,15 @@
               Approve
             </button>
           <% end %>
+          <%= if employee.role !== :manager do %>
+            <button
+              class="button -table -caution"
+              phx-click="remove_employee"
+              phx-value-employee_id={employee.id}
+            >
+              Remove
+            </button>
+          <% end %>
         </div>
       </td>
     </tr>

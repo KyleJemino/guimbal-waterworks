@@ -23,7 +23,11 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
     employee = Accounts.get_users!(employee_id)
     case Accounts.approve_user(employee) do
       {:ok, _employee} ->
-        {:noreply, assign_employees(socket)}
+        {:noreply, 
+          socket
+          |> put_flash(:info, "Employee approved!")
+          |> push_redirect(to: Routes.employee_index_path(socket))
+        }
       _ ->
         {:noreply,
           put_flash(socket, :error, "Something went wrong")
@@ -37,6 +41,7 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
       Accounts.list_users(%{
         "order_by" => [asc_nulls_first: :approved_at]
       })
+
     assign(socket, :employees, employees)
   end
 end
