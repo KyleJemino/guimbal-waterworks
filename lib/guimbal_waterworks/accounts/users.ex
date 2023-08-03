@@ -13,6 +13,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :approved_at, :utc_datetime
+    field :archived_at, :utc_datetime
 
     timestamps()
   end
@@ -59,7 +60,8 @@ defmodule GuimbalWaterworks.Accounts.Users do
       :last_name,
       :role,
       :password,
-      :approved_at
+      :approved_at,
+      :archived_at
     ])
     |> validate_username()
     |> validate_required([:first_name, :last_name, :role])
@@ -130,6 +132,13 @@ defmodule GuimbalWaterworks.Accounts.Users do
       DateTime.utc_now()
       |> DateTime.truncate(:second)
     change(users, approved_at: now)
+  end
+
+  def archive_changeset(users) do
+    now = 
+      DateTime.utc_now()
+      |> DateTime.truncate(:second)
+    change(users, archived_at: now)
   end
 
   @doc """
