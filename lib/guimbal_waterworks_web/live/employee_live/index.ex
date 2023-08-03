@@ -36,6 +36,23 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
     end
   end
 
+  def handle_event("remove_employee", %{"employee_id" => employee_id}, socket) do
+    employee = Accounts.get_users!(employee_id)
+
+    case Accounts.archive_user(employee) do
+      {:ok, _employee} ->
+        {:noreply, 
+          socket
+          |> put_flash(:info, "Employee removed!")
+          |> assign_employees()
+        }
+      _ ->
+        {:noreply,
+          put_flash(socket, :error, "Something went wrong")
+        }
+    end
+  end
+
   defp assign_employees(socket) do
     employees = 
       Accounts.list_users(%{
