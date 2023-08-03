@@ -11,6 +11,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
     field :last_name, :string
     field :role, Ecto.Enum, values: [:manager, :admin, :cashier]
     field :password, :string, virtual: true, redact: true
+    field :password_confirmation, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :approved_at, :utc_datetime
     field :archived_at, :utc_datetime
@@ -43,7 +44,8 @@ defmodule GuimbalWaterworks.Accounts.Users do
       :first_name,
       :middle_name,
       :last_name,
-      :role
+      :role,
+      :password_confirmation
     ])
     |> validate_username()
     |> validate_required([:first_name, :last_name, :role])
@@ -60,6 +62,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
       :last_name,
       :role,
       :password,
+      :password_confirmation,
       :approved_at,
       :archived_at
     ])
@@ -82,11 +85,12 @@ defmodule GuimbalWaterworks.Accounts.Users do
 
   defp validate_password(changeset, opts) do
     changeset
-    |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 72)
+    |> validate_required([:password, :password_confirmation])
+    |> validate_length(:password, min: 8, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
+    |> validate_confirmation(:password, message: "does not match password")
     |> maybe_hash_password(opts)
   end
 
