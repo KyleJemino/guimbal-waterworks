@@ -41,17 +41,14 @@ defmodule GuimbalWaterworksWeb.MemberLive.FormComponent do
   end
 
   defp save_member(socket, :new, member_params) do
-    IO.inspect member_params
     case Members.create_member(member_params) do
       {:ok, _member} ->
-        IO.puts "ok"
         {:noreply,
          socket
          |> put_flash(:info, "Member created successfully")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect changeset
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
