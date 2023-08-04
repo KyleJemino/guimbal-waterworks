@@ -19,10 +19,7 @@
 
 <table class="data-table mt-4">
   <tr class="header-row">
-    <th class="header">First name</th>
-    <th class="header">Middle name</th>
-    <th class="header">Last name</th>
-    <th class="header">Unique identifier</th>
+    <th class="header">Name</th>
     <th class="header">Street</th>
     <th class="header">Type</th>
     <th class="header">Meter no</th>
@@ -31,13 +28,10 @@
   </tr>
   <%= for member <- @members do %>
     <tr id={"member-#{member.id}"} class="data-row">
-      <td class="data"><%= member.first_name %></td>
-      <td class="data"><%= member.middle_name %></td>
-      <td class="data"><%= member.last_name %></td>
-      <td class="data"><%= member.unique_identifier %></td>
+      <td class="data"><%= Display.full_name(member) %></td>
       <td class="data"><%= member.street %></td>
       <td class="data"><%= member.type %></td>
-      <td class="data"><%= member.meter_no %></td>
+      <td class="data text-right"><%= member.meter_no %></td>
       <td class="actions">
         <div class="inline-flex gap-2 flex-row">
           <%= live_redirect "Show", to: Routes.member_show_path(@socket, :show, member), class: "button -table" %>
