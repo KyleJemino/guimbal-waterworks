@@ -13,7 +13,9 @@
 
 <h1>Listing Members</h1>
 
-<span><%= live_patch "New Member", to: Routes.member_index_path(@socket, :new) %></span>
+<div class="page-button-container mt-3">
+  <%= live_patch "New Member", to: Routes.member_index_path(@socket, :new), class: "button -dark" %>
+</div>
 
 <table class="data-table mt-4">
   <tr class="header-row">

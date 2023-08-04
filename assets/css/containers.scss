@@ -15,3 +15,8 @@
 .header-content-container {
   @apply flex flex-col gap-3;
 }
+
+.page-button-container {
+  @extend .container;
+  @apply flex flex-row gap-2 p-2;
+}
