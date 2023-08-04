@@ -96,10 +96,10 @@ h4 {
 }
 
 .phx-modal-content {
-  background-color: #fefefe;
+  @apply bg-slate-200;
+
   margin: 15vh auto;
   padding: 20px;
-  border: 1px solid #888;
   width: 80%;
 }
 
