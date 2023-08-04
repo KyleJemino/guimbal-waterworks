@@ -1,5 +1,5 @@
-<div>
-  <h2><%= @title %></h2>
+<div class="form-modal-container">
+  <h1 class="text-center"><%= @title %></h1>
 
   <.form
     let={f}
@@ -7,38 +7,54 @@
     id="member-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="save">
+    phx-submit="save"
+    class="form-component"
+    >
   
+  <div class="field-group">
     <%= label f, :first_name %>
     <%= text_input f, :first_name %>
     <%= error_tag f, :first_name %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :middle_name %>
     <%= text_input f, :middle_name %>
     <%= error_tag f, :middle_name %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :last_name %>
     <%= text_input f, :last_name %>
     <%= error_tag f, :last_name %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :unique_identifier %>
     <%= text_input f, :unique_identifier %>
     <%= error_tag f, :unique_identifier %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :street %>
     <%= text_input f, :street %>
     <%= error_tag f, :street %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :type %>
     <%= text_input f, :type %>
     <%= error_tag f, :type %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :meter_no %>
     <%= number_input f, :meter_no %>
     <%= error_tag f, :meter_no %>
+  </div>
   
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+    <div class="form-button-group">
+      <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
     </div>
   </.form>
 </div>

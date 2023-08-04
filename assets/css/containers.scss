@@ -20,3 +20,8 @@
   @extend .container;
   @apply flex flex-row gap-2 p-2;
 }
+
+.form-modal-container {
+  @extend .container;
+  @apply w-[640px] max-h-[90vh] overflow-auto;
+}
