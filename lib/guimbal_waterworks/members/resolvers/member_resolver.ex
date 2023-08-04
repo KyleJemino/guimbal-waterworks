@@ -4,7 +4,7 @@ defmodule GuimbalWaterworks.Members.Resolvers.MemberResolver do
 
   def archive_member(member) do
     member
-    |> Member.archive_changeset
+    |> Member.archive_changeset()
     |> Repo.update()
   end
 end
