@@ -64,6 +64,13 @@
       <%= label f, :connected?, class: "font-medium" %>
     </div>
   </div>
+
+  <div class="field-group">
+    <div class="flex flex-row gap-2 items-center">
+      <%= checkbox f, :mda?, value: "true" %>
+      <%= label f, :mda?, "Mutual Death Aid", class: "font-medium" %>
+    </div>
+  </div>
   
     <div class="form-button-group">
       <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
