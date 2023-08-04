@@ -43,7 +43,12 @@
   
   <div class="field-group">
     <%= label f, :type %>
-    <%= text_input f, :type %>
+    <%= select( 
+      f, 
+      :type, 
+      ["Personal": :personal, "Business": :business], 
+      required: true  
+    )%>
     <%= error_tag f, :type %>
   </div>
   
@@ -51,6 +56,13 @@
     <%= label f, :meter_no %>
     <%= number_input f, :meter_no %>
     <%= error_tag f, :meter_no %>
+  </div>
+
+  <div class="field-group">
+    <div class="flex flex-row gap-2 items-center">
+      <%= checkbox f, :connected? %>
+      <%= label f, :connected?, class: "font-medium" %>
+    </div>
   </div>
   
     <div class="form-button-group">
