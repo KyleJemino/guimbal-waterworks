@@ -84,6 +84,8 @@ h4 {
 }
 
 .phx-modal {
+  @apply flex flex-col items-center justify-center;
+
   opacity: 1!important;
   position: fixed;
   z-index: 1;
@@ -96,11 +98,9 @@ h4 {
 }
 
 .phx-modal-content {
-  background-color: #fefefe;
-  margin: 15vh auto;
+  @apply bg-slate-200;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+  width: auto;
 }
 
 .phx-modal-close {

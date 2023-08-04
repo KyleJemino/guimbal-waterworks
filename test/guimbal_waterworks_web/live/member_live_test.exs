@@ -4,9 +4,33 @@ defmodule GuimbalWaterworksWeb.MemberLiveTest do
   import Phoenix.LiveViewTest
   import GuimbalWaterworks.MembersFixtures
 
-  @create_attrs %{first_name: "some first_name", last_name: "some last_name", meter_no: 42, middle_name: "some middle_name", street: "some street", type: "some type", unique_identifier: "some unique_identifier"}
-  @update_attrs %{first_name: "some updated first_name", last_name: "some updated last_name", meter_no: 43, middle_name: "some updated middle_name", street: "some updated street", type: "some updated type", unique_identifier: "some updated unique_identifier"}
-  @invalid_attrs %{first_name: nil, last_name: nil, meter_no: nil, middle_name: nil, street: nil, type: nil, unique_identifier: nil}
+  @create_attrs %{
+    first_name: "some first_name",
+    last_name: "some last_name",
+    meter_no: 42,
+    middle_name: "some middle_name",
+    street: "some street",
+    type: "some type",
+    unique_identifier: "some unique_identifier"
+  }
+  @update_attrs %{
+    first_name: "some updated first_name",
+    last_name: "some updated last_name",
+    meter_no: 43,
+    middle_name: "some updated middle_name",
+    street: "some updated street",
+    type: "some updated type",
+    unique_identifier: "some updated unique_identifier"
+  }
+  @invalid_attrs %{
+    first_name: nil,
+    last_name: nil,
+    meter_no: nil,
+    middle_name: nil,
+    street: nil,
+    type: nil,
+    unique_identifier: nil
+  }
 
   defp create_member(_) do
     member = member_fixture()

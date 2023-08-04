@@ -8,7 +8,15 @@ defmodule GuimbalWaterworks.MembersTest do
 
     import GuimbalWaterworks.MembersFixtures
 
-    @invalid_attrs %{first_name: nil, last_name: nil, meter_no: nil, middle_name: nil, street: nil, type: nil, unique_identifier: nil}
+    @invalid_attrs %{
+      first_name: nil,
+      last_name: nil,
+      meter_no: nil,
+      middle_name: nil,
+      street: nil,
+      type: nil,
+      unique_identifier: nil
+    }
 
     test "list_members/0 returns all members" do
       member = member_fixture()
@@ -21,7 +29,15 @@ defmodule GuimbalWaterworks.MembersTest do
     end
 
     test "create_member/1 with valid data creates a member" do
-      valid_attrs = %{first_name: "some first_name", last_name: "some last_name", meter_no: 42, middle_name: "some middle_name", street: "some street", type: "some type", unique_identifier: "some unique_identifier"}
+      valid_attrs = %{
+        first_name: "some first_name",
+        last_name: "some last_name",
+        meter_no: 42,
+        middle_name: "some middle_name",
+        street: "some street",
+        type: "some type",
+        unique_identifier: "some unique_identifier"
+      }
 
       assert {:ok, %Member{} = member} = Members.create_member(valid_attrs)
       assert member.first_name == "some first_name"
@@ -39,7 +55,16 @@ defmodule GuimbalWaterworks.MembersTest do
 
     test "update_member/2 with valid data updates the member" do
       member = member_fixture()
-      update_attrs = %{first_name: "some updated first_name", last_name: "some updated last_name", meter_no: 43, middle_name: "some updated middle_name", street: "some updated street", type: "some updated type", unique_identifier: "some updated unique_identifier"}
+
+      update_attrs = %{
+        first_name: "some updated first_name",
+        last_name: "some updated last_name",
+        meter_no: 43,
+        middle_name: "some updated middle_name",
+        street: "some updated street",
+        type: "some updated type",
+        unique_identifier: "some updated unique_identifier"
+      }
 
       assert {:ok, %Member{} = member} = Members.update_member(member, update_attrs)
       assert member.first_name == "some updated first_name"

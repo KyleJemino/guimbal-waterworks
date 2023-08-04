@@ -93,7 +93,7 @@ defmodule GuimbalWaterworksWeb.Router do
       live "/employees", Index, :index
     end
 
-    scope "/", GuimbalWaterworksWeb.EmployeeLive do
+    scope "/", GuimbalWaterworksWeb do
       pipe_through [:browser, :require_authenticated_users]
 
       live "/members", MemberLive.Index, :index
