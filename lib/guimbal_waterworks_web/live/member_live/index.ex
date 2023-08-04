@@ -6,7 +6,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :members, list_members())}
+    {:ok, assign_members(socket)}
   end
 
   @impl true
@@ -33,14 +33,22 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("archive", %{"id" => id}, socket) do
     member = Members.get_member!(id)
-    {:ok, _} = Members.delete_member(member)
-
-    {:noreply, assign(socket, :members, list_members())}
+    case Members.archive_member(member) do
+      {:ok, _member} -> 
+        {:noreply,
+          socket
+          |> put_flash(:info, "User deleted")
+          |> assign_members()
+        }
+      _ ->
+        {:noreply, put_flash(socket, :error, "Something went wrong")}
+    end
   end
 
-  defp list_members do
-    Members.list_members()
+  defp assign_members(socket) do
+    members = Members.list_members()
+    assign(socket, :members, members) 
   end
 end

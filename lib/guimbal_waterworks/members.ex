@@ -8,6 +8,8 @@ defmodule GuimbalWaterworks.Members do
 
   alias GuimbalWaterworks.Members.Member
 
+  alias GuimbalWaterworks.Resolvers.MemberResolver, as: MR
+
   @doc """
   Returns the list of members.
 
@@ -101,4 +103,6 @@ defmodule GuimbalWaterworks.Members do
   def change_member(%Member{} = member, attrs \\ %{}) do
     Member.changeset(member, attrs)
   end
+
+  defdelegate archive_member(member), to: MR
 end

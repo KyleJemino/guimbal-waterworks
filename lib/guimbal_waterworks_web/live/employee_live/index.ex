@@ -41,7 +41,7 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
       {:ok, _employee} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Employee removed!")
+         |> put_flash(:info, "Employee deleted!")
          |> assign_employees()}
 
       _ ->
