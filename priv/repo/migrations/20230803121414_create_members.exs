@@ -18,15 +18,15 @@ defmodule GuimbalWaterworks.Repo.Migrations.CreateMembers do
     end
 
     create unique_index(
-      :members,
-      [
-        :first_name, 
-        "COALESCE(middle_name, 'NULL_VALUE_MIDDLE_NAME')", 
-        :last_name,
-        "COALESCE(unique_identifier, 'NULL_VALUE_IDENTIFIER')"
-      ],
-      name: :name_combination_unique_idx
-    )
+             :members,
+             [
+               :first_name,
+               "COALESCE(middle_name, 'NULL_VALUE_MIDDLE_NAME')",
+               :last_name,
+               "COALESCE(unique_identifier, 'NULL_VALUE_IDENTIFIER')"
+             ],
+             name: :name_combination_unique_idx
+           )
 
     create unique_index(:members, [:meter_no])
   end
