@@ -8,7 +8,8 @@ defmodule GuimbalWaterworks.Members do
 
   alias GuimbalWaterworks.Members.Member
 
-  alias GuimbalWaterworks.Resolvers.MemberResolver, as: MR
+  alias GuimbalWaterworks.Members.Queries.MemberQuery, as: MQ
+  alias GuimbalWaterworks.Members.Resolvers.MemberResolver, as: MR
 
   @doc """
   Returns the list of members.
@@ -19,8 +20,11 @@ defmodule GuimbalWaterworks.Members do
       [%Member{}, ...]
 
   """
-  def list_members do
-    Repo.all(Member)
+  def list_members(params \\ %{}) do
+    params
+    |> Map.put_new("with_archived?", false)
+    |> MQ.query_member()
+    |> Repo.all()
   end
 
   @doc """
