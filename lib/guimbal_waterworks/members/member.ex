@@ -41,6 +41,11 @@ defmodule GuimbalWaterworks.Members.Member do
       message:
         "First name, middle name, last name, and unique identifier fields should be unique."
     )
+    |> unique_constraint(
+      :meter_no,
+      name: :uniq_active_meter_no_idx,
+      message: "Meter number already exists."
+    )
   end
 
   def archive_changeset(member) do
