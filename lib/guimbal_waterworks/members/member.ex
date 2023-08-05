@@ -14,6 +14,7 @@ defmodule GuimbalWaterworks.Members.Member do
     field :unique_identifier, :string
     field :connected?, :boolean
     field :mda?, :boolean
+    field :archived_at, :utc_datetime
 
     timestamps()
   end
@@ -40,5 +41,13 @@ defmodule GuimbalWaterworks.Members.Member do
       message:
         "First name, middle name, last name, and unique identifier fields should be unique."
     )
+  end
+
+  def archive_changeset(member) do
+    now =
+      DateTime.utc_now()
+      |> DateTime.truncate(:second)
+
+    change(member, archived_at: now)
   end
 end

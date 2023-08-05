@@ -100,6 +100,7 @@ defmodule GuimbalWaterworksWeb do
       import GuimbalWaterworksWeb.Gettext
       alias GuimbalWaterworksWeb.Router.Helpers, as: Routes
       alias GuimbalWaterworksWeb.DisplayHelpers, as: Display
+      alias GuimbalWaterworksWeb.Components.SharedComponents, as: SC
     end
   end
 
