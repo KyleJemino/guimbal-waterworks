@@ -3,7 +3,7 @@ table, tr, th, td {
 }
 
 .data-table {
-  @apply w-full bg-slate-200;
+  @apply w-full bg-slate-100;
 }
 
 .header-row {
@@ -14,8 +14,8 @@ table, tr, th, td {
   @apply p-2 text-xl;
 }
 
-.data-row:nth-child(even) {
-  @apply bg-slate-400;
+.data-row:nth-child(odd) {
+  @apply bg-slate-300;
 }
 
 .data-row > .data {

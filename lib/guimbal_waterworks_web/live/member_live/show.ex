@@ -5,7 +5,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, assign_new(socket, :show_info?, fn -> true end)}
   end
 
   @impl true
@@ -14,6 +14,14 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:member, Members.get_member!(id))}
+  end
+
+  def handle_event("show_info", _value, socket) do
+    {:noreply, assign(socket, :show_info?, true)}
+  end
+
+  def handle_event("hide_info", _value, socket) do
+    {:noreply, assign(socket, :show_info?, false)}
   end
 
   defp page_title(:show), do: "Show Member"
