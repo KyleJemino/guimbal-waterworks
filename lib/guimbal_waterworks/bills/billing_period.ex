@@ -47,7 +47,7 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
       name: :billing_periods_month_year_unique_idx,
       message: "Billing period already exists for this month and year."
     )
-    |> cast_embed(:death_aid_recipient, with: &death_aid_recipient_changeset/2)
+    |> cast_embed(:death_aid_recipients, with: &death_aid_recipient_changeset/2)
   end
 
   def death_aid_recipient_changeset(death_aid_recipient, params) do
