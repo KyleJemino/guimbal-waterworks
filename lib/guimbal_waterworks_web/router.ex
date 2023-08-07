@@ -91,6 +91,12 @@ defmodule GuimbalWaterworksWeb.Router do
     scope "/", GuimbalWaterworksWeb.EmployeeLive do
       pipe_through [:browser, :require_authenticated_users, :require_manager]
       live "/employees", Index, :index
+
+      live "/billing_periods", BillingPeriodLive.Index, :index
+      live "/billing_periods/new", BillingPeriodLive.Index, :new
+      live "/billing_periods/:id/edit", BillingPeriodLive.Index, :edit
+      live "/billing_periods/:id", BillingPeriodLive.Show, :show
+      live "/billing_periods/:id/show/edit", BillingPeriodLive.Show, :edit
     end
 
     scope "/", GuimbalWaterworksWeb do
