@@ -9,8 +9,8 @@ defmodule GuimbalWaterworks.Repo.Migrations.CreateBillingPeriods do
       add :month, :string, null: false
       add :year, :string, null: false
       add :due_date, :date, null: false
-      add :personal_rate, :decimal, precision: 5, scale: 4
-      add :business_rate, :decimal, precision: 5, scale: 4
+      add :personal_rate, :decimal, precision: 5, scale: 4, null: false
+      add :business_rate, :decimal, precision: 5, scale: 4, null: false
       add :death_aid_recipient, {:array, :map}
 
       timestamps()
@@ -18,7 +18,8 @@ defmodule GuimbalWaterworks.Repo.Migrations.CreateBillingPeriods do
 
     create unique_index(
       :billing_periods,
-      [:month, :year]
+      [:month, :year],
+      name: :billing_periods_month_year_unique_idx
     )
   end
 end
