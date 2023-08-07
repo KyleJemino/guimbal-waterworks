@@ -1,5 +1,5 @@
-<div>
-  <h2><%= @title %></h2>
+<div class="form-modal-container">
+  <h2 class="text-center"><%= @title %></h2>
 
   <.form
     let={f}
@@ -7,30 +7,46 @@
     id="billing_period-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="save">
+    phx-submit="save"
+    class="form-component"
+  >
   
+  <div class="field-group">
     <%= label f, :from %>
-    <%= date_select f, :from %>
+    <%= date_input f, :from %>
     <%= error_tag f, :from %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :to %>
-    <%= date_select f, :to %>
+    <div class="date-input">
+      <%= date_input f, :to %>
+    </div>
     <%= error_tag f, :to %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :month %>
     <%= text_input f, :month %>
     <%= error_tag f, :month %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :year %>
     <%= text_input f, :year %>
     <%= error_tag f, :year %>
+  </div>
   
+  <div class="field-group">
     <%= label f, :due_date %>
-    <%= date_select f, :due_date %>
+    <div class="date-input">
+      <%= date_input f, :due_date %>
+    </div>
     <%= error_tag f, :due_date %>
+  </div>
   
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+    <div class="form-button-group">
+      <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
     </div>
   </.form>
 </div>
