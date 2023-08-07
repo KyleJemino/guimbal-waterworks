@@ -1,0 +1,47 @@
+<h1>Listing Billing periods</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.billing_period_index_path(@socket, :index)}>
+    <.live_component
+      module={GuimbalWaterworksWeb.BillingPeriodLive.FormComponent}
+      id={@billing_period.id || :new}
+      title={@page_title}
+      action={@live_action}
+      billing_period={@billing_period}
+      return_to={Routes.billing_period_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>From</th>
+      <th>To</th>
+      <th>Month</th>
+      <th>Year</th>
+      <th>Due date</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="billing_periods">
+    <%= for billing_period <- @billing_periods do %>
+      <tr id={"billing_period-#{billing_period.id}"}>
+        <td><%= billing_period.from %></td>
+        <td><%= billing_period.to %></td>
+        <td><%= billing_period.month %></td>
+        <td><%= billing_period.year %></td>
+        <td><%= billing_period.due_date %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.billing_period_show_path(@socket, :show, billing_period) %></span>
+          <span><%= live_patch "Edit", to: Routes.billing_period_index_path(@socket, :edit, billing_period) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: billing_period.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Billing period", to: Routes.billing_period_index_path(@socket, :new) %></span>
