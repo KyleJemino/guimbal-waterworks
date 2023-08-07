@@ -4,5 +4,6 @@
   <% end %>
   <%= if not is_nil(@current_users) do %>
     <div class="nav-item"><%= link "Members", to: Routes.member_index_path(@conn, :index) %></div>
+    <div class="nav-item"><%= link "Billing Periods", to: Routes.billing_period_index_path(@conn, :index) %></div>
   <% end %>
 </div>

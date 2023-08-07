@@ -11,7 +11,7 @@ defmodule GuimbalWaterworks.Repo.Migrations.CreateBillingPeriods do
       add :due_date, :date, null: false
       add :personal_rate, :decimal, precision: 5, scale: 4, null: false
       add :business_rate, :decimal, precision: 5, scale: 4, null: false
-      add :death_aid_recipient, {:array, :map}
+      add :death_aid_recipients, {:array, :map}
 
       timestamps()
     end

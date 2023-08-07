@@ -88,9 +88,9 @@ defmodule GuimbalWaterworksWeb.Router do
   end
 
   live_session :authenticated, on_mount: GuimbalWaterworksWeb.AssignUsers do
-    scope "/", GuimbalWaterworksWeb.EmployeeLive do
+    scope "/", GuimbalWaterworksWeb do
       pipe_through [:browser, :require_authenticated_users, :require_manager]
-      live "/employees", Index, :index
+      live "/employees", EmployeeLive.Index, :index
 
       live "/billing_periods/new", BillingPeriodLive.Index, :new
       live "/billing_periods/:id/edit", BillingPeriodLive.Index, :edit
