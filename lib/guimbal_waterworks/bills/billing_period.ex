@@ -43,6 +43,18 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     ])
     |> validate_inclusion(:month, GuimbalWaterworks.Constants.months())
     |> validate_format(:year, ~r/^\d{4}$/)
+    |> validate_number(
+      :personal_rate, 
+      greater_than_or_equal_to: 0,
+      less_than_or_equal_to: 1,
+      message: "Must be between 0 and 1"
+    )
+    |> validate_number(
+      :business_rate, 
+      greater_than_or_equal_to: 0,
+      less_than_or_equal_to: 1,
+      message: "Must be between 0 and 1"
+    )
     |> unique_constraint(
       :month,
       name: :billing_periods_month_year_unique_idx,
