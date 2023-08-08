@@ -21,9 +21,22 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
+    year_string = 
+      Date.utc_today().year
+      |> Integer.to_string()
+
+    billing_period_with_defaults =
+      %BillingPeriod{
+        personal_rate: 0.02,
+        business_rate: 0.02,
+        year: year_string
+      }
     socket
     |> assign(:page_title, "New Billing period")
-    |> assign(:billing_period, %BillingPeriod{})
+    |> assign(
+      :billing_period, 
+      billing_period_with_defaults
+    )
   end
 
   defp apply_action(socket, :index, _params) do
