@@ -32,13 +32,13 @@
   <div class="flex flex-row gap-4">
     <div class="field-group w-1/2">
       <%= label f, :month %>
-      <%= text_input f, :month %>
+      <%= select f, :month, GuimbalWaterworks.Constants.months(), [prompt: "Choose a month"] %>
       <%= error_tag f, :month %>
     </div>
     
     <div class="field-group w-1/2">
       <%= label f, :year %>
-      <%= text_input f, :year %>
+      <%= text_input f, :year, value: Date.utc_today().year |> Integer.to_string() %>
       <%= error_tag f, :year %>
     </div>
   </div>
