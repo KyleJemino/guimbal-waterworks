@@ -33,3 +33,7 @@
     @apply underline
   }
 }
+
+.date-input {
+  @apply flex gap-2 items-center;
+}

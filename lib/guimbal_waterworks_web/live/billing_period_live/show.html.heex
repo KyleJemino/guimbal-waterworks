@@ -1,0 +1,46 @@
+<h1>Show Billing period</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.billing_period_show_path(@socket, :show, @billing_period)}>
+    <.live_component
+      module={GuimbalWaterworksWeb.BillingPeriodLive.FormComponent}
+      id={@billing_period.id}
+      title={@page_title}
+      action={@live_action}
+      billing_period={@billing_period}
+      return_to={Routes.billing_period_show_path(@socket, :show, @billing_period)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>From:</strong>
+    <%= @billing_period.from %>
+  </li>
+
+  <li>
+    <strong>To:</strong>
+    <%= @billing_period.to %>
+  </li>
+
+  <li>
+    <strong>Month:</strong>
+    <%= @billing_period.month %>
+  </li>
+
+  <li>
+    <strong>Year:</strong>
+    <%= @billing_period.year %>
+  </li>
+
+  <li>
+    <strong>Due date:</strong>
+    <%= @billing_period.due_date %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.billing_period_show_path(@socket, :edit, @billing_period), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.billing_period_index_path(@socket, :index) %></span>
