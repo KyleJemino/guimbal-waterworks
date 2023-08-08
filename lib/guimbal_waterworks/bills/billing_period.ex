@@ -55,6 +55,7 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
       less_than_or_equal_to: 1,
       message: "Must be between 0 and 1"
     )
+    |> validate_from_and_to()
     |> unique_constraint(
       :month,
       name: :billing_periods_month_year_unique_idx,
@@ -67,5 +68,17 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     death_aid_recipient
     |> cast(params, [:name])
     |> validate_required([:name])
+  end
+
+  defp validate_from_and_to(changeset) do
+    from = get_change(changeset, :from)
+    to = get_change(changeset, :to)
+
+    cond do
+      is_nil(from) || is_nil(to) -> changeset
+      Timex.before?(to, from) ->
+        add_error(changeset, :from, "To must be a date after From")
+      true -> changeset
+    end
   end
 end
