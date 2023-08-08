@@ -11,37 +11,41 @@
     class="form-component"
   >
   
-  <div class="field-group">
-    <%= label f, :from %>
-    <%= date_input f, :from %>
-    <%= error_tag f, :from %>
-  </div>
-  
-  <div class="field-group">
-    <%= label f, :to %>
-    <div class="date-input">
-      <%= date_input f, :to %>
+  <div class="flex flex-row gap-4">
+    <div class="field-group w-1/2">
+      <%= label f, :from %>
+      <div class="date-input">
+      <%= date_input f, :from, class: "w-full" %>
+      </div>
+      <%= error_tag f, :from %>
     </div>
-    <%= error_tag f, :to %>
+    
+    <div class="field-group w-1/2">
+      <%= label f, :to %>
+      <div class="date-input">
+        <%= date_input f, :to , class: "w-full"%>
+      </div>
+      <%= error_tag f, :to %>
+    </div>
   </div>
   
-  <div class="field-group">
-    <%= label f, :month %>
-    <%= text_input f, :month %>
-    <%= error_tag f, :month %>
+  <div class="flex flex-row gap-4">
+    <div class="field-group w-1/2">
+      <%= label f, :month %>
+      <%= text_input f, :month %>
+      <%= error_tag f, :month %>
+    </div>
+    
+    <div class="field-group w-1/2">
+      <%= label f, :year %>
+      <%= text_input f, :year %>
+      <%= error_tag f, :year %>
+    </div>
   </div>
   
-  <div class="field-group">
-    <%= label f, :year %>
-    <%= text_input f, :year %>
-    <%= error_tag f, :year %>
-  </div>
-  
-  <div class="field-group">
+  <div class="field-group w-1/2 pr-2">
     <%= label f, :due_date %>
-    <div class="date-input">
-      <%= date_input f, :due_date %>
-    </div>
+    <%= date_input f, :due_date, class: "w-full" %>
     <%= error_tag f, :due_date %>
   </div>
   
