@@ -10,6 +10,20 @@
     phx-submit="save"
     class="form-component"
   >
+
+  <div class="flex flex-row gap-4">
+    <div class="field-group w-1/2">
+      <%= label f, :month %>
+      <%= select f, :month, GuimbalWaterworks.Constants.months(), [prompt: "Choose a month"] %>
+      <%= error_tag f, :month %>
+    </div>
+    
+    <div class="field-group w-1/2">
+      <%= label f, :year %>
+      <%= text_input f, :year %>
+      <%= error_tag f, :year %>
+    </div>
+  </div>
   
   <div class="flex flex-row gap-4">
     <div class="field-group w-1/2">
@@ -28,18 +42,22 @@
       <%= error_tag f, :to %>
     </div>
   </div>
-  
+
   <div class="flex flex-row gap-4">
     <div class="field-group w-1/2">
-      <%= label f, :month %>
-      <%= select f, :month, GuimbalWaterworks.Constants.months(), [prompt: "Choose a month"] %>
-      <%= error_tag f, :month %>
+      <%= label f, :personal_rate %>
+      <div class="date-input">
+      <%= number_input f, :personal_rate, class: "w-full", min: 0, max: 1, step: 0.01 %>
+      </div>
+      <%= error_tag f, :personal_rate %>
     </div>
     
     <div class="field-group w-1/2">
-      <%= label f, :year %>
-      <%= text_input f, :year, value: Date.utc_today().year |> Integer.to_string() %>
-      <%= error_tag f, :year %>
+      <%= label f, :business_rate %>
+      <div class="date-input">
+      <%= number_input f, :business_rate, class: "w-full", min: 0, max: 1, step: 0.01 %>
+      </div>
+      <%= error_tag f, :business_rate %>
     </div>
   </div>
   

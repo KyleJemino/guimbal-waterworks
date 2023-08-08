@@ -41,7 +41,8 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
       :personal_rate,
       :business_rate
     ])
-
+    |> validate_inclusion(:month, GuimbalWaterworks.Constants.months())
+    |> validate_format(:year, ~r/^\d{4}$/)
     |> unique_constraint(
       :month,
       name: :billing_periods_month_year_unique_idx,
