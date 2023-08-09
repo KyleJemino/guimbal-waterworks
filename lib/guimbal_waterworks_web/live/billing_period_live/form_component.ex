@@ -1,7 +1,9 @@
 defmodule GuimbalWaterworksWeb.BillingPeriodLive.FormComponent do
   use GuimbalWaterworksWeb, :live_component
+  alias Ecto.Changeset
 
   alias GuimbalWaterworks.Bills
+  alias Bills.BillingPeriod
 
   @impl true
   def update(%{billing_period: billing_period} = assigns, socket) do
@@ -25,6 +27,27 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.FormComponent do
 
   def handle_event("save", %{"billing_period" => billing_period_params}, socket) do
     save_billing_period(socket, socket.assigns.action, billing_period_params)
+  end
+
+  def handle_event("add-recipient", _, socket) do
+    current_changeset = socket.assigns.changeset
+    current_recipients = Changeset.get_change(current_changeset, :death_aid_recipients)
+    IO.inspect current_recipients
+
+    updated_changeset = 
+      Changeset.put_embed(
+        current_changeset,
+        :death_aid_recipients,
+        (current_recipients || []) ++ [
+          %BillingPeriod.DeathAidRecipient{
+            name: ""
+          }
+        ]
+      )
+
+    IO.inspect updated_changeset
+
+    {:noreply, assign(socket, :changeset, updated_changeset)}
   end
 
   defp save_billing_period(socket, :edit, billing_period_params) do
