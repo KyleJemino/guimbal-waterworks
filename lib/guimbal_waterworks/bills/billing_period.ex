@@ -13,7 +13,7 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     field :personal_rate, :decimal
     field :business_rate, :decimal
 
-    embeds_many :death_aid_recipients, DeathAidRecipient do
+    embeds_many :death_aid_recipients, DeathAidRecipient, on_replace: :delete do
       field :name, :string
     end
 

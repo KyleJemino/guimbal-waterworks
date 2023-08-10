@@ -72,8 +72,16 @@
 
     <%= for recipient_form <- inputs_for(f, :death_aid_recipients) do %>
       <div class="flex flex-row items-center gap-2">
+        <%= hidden_input recipient_form, :id %>
         <%= label recipient_form, :name %>
         <%= text_input recipient_form, :name %>
+        <button
+          phx-target={@myself}
+          phx-click="delete-recipient"
+          phx-value-recipient-id={input_value(recipient_form, :id)}
+          type="button"
+          class="button -icon bg-blue-200 px-4"
+          > x </button>
       </div>
     <% end %>
     
