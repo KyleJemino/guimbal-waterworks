@@ -21,4 +21,6 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
 
     "#{formatted_name}#{if not is_nil(identifier), do: " (#{identifier})"}"
   end
+
+  def format_date(date), do: Timex.format!(date, "%b %d %Y", :strftime)
 end

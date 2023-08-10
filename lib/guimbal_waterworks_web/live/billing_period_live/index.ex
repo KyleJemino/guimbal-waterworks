@@ -35,14 +35,6 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Index do
     |> assign(:billing_period, nil)
   end
 
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    billing_period = Bills.get_billing_period!(id)
-    {:ok, _} = Bills.delete_billing_period(billing_period)
-
-    {:noreply, assign(socket, :billing_periods, list_billing_periods())}
-  end
-
   defp list_billing_periods do
     Bills.list_billing_periods()
   end
