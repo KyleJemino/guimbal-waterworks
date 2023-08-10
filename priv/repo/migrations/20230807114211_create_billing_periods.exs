@@ -17,9 +17,9 @@ defmodule GuimbalWaterworks.Repo.Migrations.CreateBillingPeriods do
     end
 
     create unique_index(
-      :billing_periods,
-      [:month, :year],
-      name: :billing_periods_month_year_unique_idx
-    )
+             :billing_periods,
+             [:month, :year],
+             name: :billing_periods_month_year_unique_idx
+           )
   end
 end

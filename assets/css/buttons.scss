@@ -12,4 +12,8 @@
   &.-caution {
     @apply bg-orange-300;
   }
+
+  &.-icon {
+    @apply min-w-[unset] text-lg font-bold;
+  }
 }

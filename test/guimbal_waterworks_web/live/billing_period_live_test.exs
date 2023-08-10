@@ -4,9 +4,27 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLiveTest do
   import Phoenix.LiveViewTest
   import GuimbalWaterworks.BillsFixtures
 
-  @create_attrs %{due_date: %{day: 6, month: 8, year: 2023}, from: %{day: 6, month: 8, year: 2023}, month: "some month", to: %{day: 6, month: 8, year: 2023}, year: "some year"}
-  @update_attrs %{due_date: %{day: 7, month: 8, year: 2023}, from: %{day: 7, month: 8, year: 2023}, month: "some updated month", to: %{day: 7, month: 8, year: 2023}, year: "some updated year"}
-  @invalid_attrs %{due_date: %{day: 30, month: 2, year: 2023}, from: %{day: 30, month: 2, year: 2023}, month: nil, to: %{day: 30, month: 2, year: 2023}, year: nil}
+  @create_attrs %{
+    due_date: %{day: 6, month: 8, year: 2023},
+    from: %{day: 6, month: 8, year: 2023},
+    month: "some month",
+    to: %{day: 6, month: 8, year: 2023},
+    year: "some year"
+  }
+  @update_attrs %{
+    due_date: %{day: 7, month: 8, year: 2023},
+    from: %{day: 7, month: 8, year: 2023},
+    month: "some updated month",
+    to: %{day: 7, month: 8, year: 2023},
+    year: "some updated year"
+  }
+  @invalid_attrs %{
+    due_date: %{day: 30, month: 2, year: 2023},
+    from: %{day: 30, month: 2, year: 2023},
+    month: nil,
+    to: %{day: 30, month: 2, year: 2023},
+    year: nil
+  }
 
   defp create_billing_period(_) do
     billing_period = billing_period_fixture()
@@ -48,7 +66,9 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLiveTest do
     test "updates billing_period in listing", %{conn: conn, billing_period: billing_period} do
       {:ok, index_live, _html} = live(conn, Routes.billing_period_index_path(conn, :index))
 
-      assert index_live |> element("#billing_period-#{billing_period.id} a", "Edit") |> render_click() =~
+      assert index_live
+             |> element("#billing_period-#{billing_period.id} a", "Edit")
+             |> render_click() =~
                "Edit Billing period"
 
       assert_patch(index_live, Routes.billing_period_index_path(conn, :edit, billing_period))
@@ -70,7 +90,10 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLiveTest do
     test "deletes billing_period in listing", %{conn: conn, billing_period: billing_period} do
       {:ok, index_live, _html} = live(conn, Routes.billing_period_index_path(conn, :index))
 
-      assert index_live |> element("#billing_period-#{billing_period.id} a", "Delete") |> render_click()
+      assert index_live
+             |> element("#billing_period-#{billing_period.id} a", "Delete")
+             |> render_click()
+
       refute has_element?(index_live, "#billing_period-#{billing_period.id}")
     end
   end
@@ -79,14 +102,16 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLiveTest do
     setup [:create_billing_period]
 
     test "displays billing_period", %{conn: conn, billing_period: billing_period} do
-      {:ok, _show_live, html} = live(conn, Routes.billing_period_show_path(conn, :show, billing_period))
+      {:ok, _show_live, html} =
+        live(conn, Routes.billing_period_show_path(conn, :show, billing_period))
 
       assert html =~ "Show Billing period"
       assert html =~ billing_period.month
     end
 
     test "updates billing_period within modal", %{conn: conn, billing_period: billing_period} do
-      {:ok, show_live, _html} = live(conn, Routes.billing_period_show_path(conn, :show, billing_period))
+      {:ok, show_live, _html} =
+        live(conn, Routes.billing_period_show_path(conn, :show, billing_period))
 
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Billing period"

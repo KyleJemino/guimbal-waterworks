@@ -2,7 +2,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver do
   alias GuimbalWaterworks.Bills.BillingPeriod
 
   def new_billing_period() do
-    year_string = 
+    year_string =
       Date.utc_today().year
       |> Integer.to_string()
 

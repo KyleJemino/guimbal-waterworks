@@ -13,7 +13,7 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     field :personal_rate, :decimal
     field :business_rate, :decimal
 
-    embeds_many :death_aid_recipients, DeathAidRecipient do
+    embeds_many :death_aid_recipients, DeathAidRecipient, on_replace: :delete do
       field :name, :string
     end
 
@@ -24,19 +24,19 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
   def changeset(billing_period, attrs) do
     billing_period
     |> cast(attrs, [
-      :from, 
-      :to, 
-      :month, 
-      :year, 
+      :from,
+      :to,
+      :month,
+      :year,
       :due_date,
       :personal_rate,
       :business_rate
     ])
     |> validate_required([
-      :from, 
-      :to, 
-      :month, 
-      :year, 
+      :from,
+      :to,
+      :month,
+      :year,
       :due_date,
       :personal_rate,
       :business_rate
@@ -44,13 +44,13 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     |> validate_inclusion(:month, GuimbalWaterworks.Constants.months())
     |> validate_format(:year, ~r/^\d{4}$/)
     |> validate_number(
-      :personal_rate, 
+      :personal_rate,
       greater_than_or_equal_to: 0,
       less_than_or_equal_to: 1,
       message: "Must be between 0 and 1"
     )
     |> validate_number(
-      :business_rate, 
+      :business_rate,
       greater_than_or_equal_to: 0,
       less_than_or_equal_to: 1,
       message: "Must be between 0 and 1"
@@ -75,10 +75,14 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     to = get_change(changeset, :to)
 
     cond do
-      is_nil(from) || is_nil(to) -> changeset
+      is_nil(from) || is_nil(to) ->
+        changeset
+
       Timex.before?(to, from) ->
         add_error(changeset, :from, "To must be a date after From")
-      true -> changeset
+
+      true ->
+        changeset
     end
   end
 end

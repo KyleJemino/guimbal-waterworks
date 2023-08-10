@@ -66,9 +66,35 @@
     <%= date_input f, :due_date, class: "w-full" %>
     <%= error_tag f, :due_date %>
   </div>
+
+  <div class="field-group flex flex-col items-center">
+    <%= label f, :death_aid_recipients, class: "!text-2xl font-bold text-center mb-3" %>
+
+    <%= for recipient_form <- inputs_for(f, :death_aid_recipients) do %>
+      <div class="flex flex-row items-center gap-2">
+        <%= hidden_input recipient_form, :id %>
+        <%= label recipient_form, :name %>
+        <%= text_input recipient_form, :name %>
+        <button
+          phx-target={@myself}
+          phx-click="delete-recipient"
+          phx-value-recipient-id={input_value(recipient_form, :id)}
+          type="button"
+          class="button -icon bg-blue-200 px-4"
+          > x </button>
+      </div>
+    <% end %>
+    
+    <button 
+      phx-target={@myself}
+      phx-click="add-recipient"
+      type="button"
+      class="button max-w-[160px] bg-blue-200 text-md font-medium p-3"
+    >Add recipient</button>
+  </div>
   
-    <div class="form-button-group">
-      <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
-    </div>
+  <div class="form-button-group mt-3">
+    <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
+  </div>
   </.form>
 </div>
