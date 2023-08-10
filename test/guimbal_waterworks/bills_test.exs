@@ -21,7 +21,13 @@ defmodule GuimbalWaterworks.BillsTest do
     end
 
     test "create_billing_period/1 with valid data creates a billing_period" do
-      valid_attrs = %{due_date: ~D[2023-08-06], from: ~D[2023-08-06], month: "some month", to: ~D[2023-08-06], year: "some year"}
+      valid_attrs = %{
+        due_date: ~D[2023-08-06],
+        from: ~D[2023-08-06],
+        month: "some month",
+        to: ~D[2023-08-06],
+        year: "some year"
+      }
 
       assert {:ok, %BillingPeriod{} = billing_period} = Bills.create_billing_period(valid_attrs)
       assert billing_period.due_date == ~D[2023-08-06]
@@ -37,9 +43,18 @@ defmodule GuimbalWaterworks.BillsTest do
 
     test "update_billing_period/2 with valid data updates the billing_period" do
       billing_period = billing_period_fixture()
-      update_attrs = %{due_date: ~D[2023-08-07], from: ~D[2023-08-07], month: "some updated month", to: ~D[2023-08-07], year: "some updated year"}
 
-      assert {:ok, %BillingPeriod{} = billing_period} = Bills.update_billing_period(billing_period, update_attrs)
+      update_attrs = %{
+        due_date: ~D[2023-08-07],
+        from: ~D[2023-08-07],
+        month: "some updated month",
+        to: ~D[2023-08-07],
+        year: "some updated year"
+      }
+
+      assert {:ok, %BillingPeriod{} = billing_period} =
+               Bills.update_billing_period(billing_period, update_attrs)
+
       assert billing_period.due_date == ~D[2023-08-07]
       assert billing_period.from == ~D[2023-08-07]
       assert billing_period.month == "some updated month"
@@ -49,7 +64,10 @@ defmodule GuimbalWaterworks.BillsTest do
 
     test "update_billing_period/2 with invalid data returns error changeset" do
       billing_period = billing_period_fixture()
-      assert {:error, %Ecto.Changeset{}} = Bills.update_billing_period(billing_period, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Bills.update_billing_period(billing_period, @invalid_attrs)
+
       assert billing_period == Bills.get_billing_period!(billing_period.id)
     end
 

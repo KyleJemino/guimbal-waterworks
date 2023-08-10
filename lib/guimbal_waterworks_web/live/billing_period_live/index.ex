@@ -24,7 +24,7 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Index do
     socket
     |> assign(:page_title, "New Billing period")
     |> assign(
-      :billing_period, 
+      :billing_period,
       Bills.new_billing_period()
     )
   end
