@@ -30,4 +30,19 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   def change_bill(%Bill{} = bill, params \\ %{}) do
     Bill.changeset(bill, params)
   end
+
+  def new_bill(params) do
+    params_with_defaults =
+      params
+      |> Map.merge(
+        %{
+          membership_fee?: false,
+          adv_fee?: false,
+          reconnection_fee?: false,
+        },
+        fn _k, v1, _v2 -> end
+      )
+
+    struct(Bill, params_with_defaults)
+  end
 end
