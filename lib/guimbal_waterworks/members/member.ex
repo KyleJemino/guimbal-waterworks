@@ -18,6 +18,8 @@ defmodule GuimbalWaterworks.Members.Member do
     field :mda?, :boolean
     field :archived_at, :utc_datetime
 
+    has_many :bills, Bill
+
     timestamps()
   end
 
@@ -48,8 +50,6 @@ defmodule GuimbalWaterworks.Members.Member do
       name: :uniq_active_meter_no_idx,
       message: "Meter number already exists."
     )
-
-    has_many :bills, Bill
   end
 
   def archive_changeset(member) do

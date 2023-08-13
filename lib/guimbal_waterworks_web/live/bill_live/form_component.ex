@@ -5,12 +5,16 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   alias GuimbalWaterworks.Bills
 
   def update(%{bill: bill} = assigns, socket) do
-    changeset = Bills.change_bill(bill)
     billing_period_options = 
-      Bills.list_billing_periods()
+      %{
+        "with_no_bill_for_member_id" => bill.member_id
+      }
+      |> Bills.list_billing_periods()
       |> Enum.map(fn period ->
         {"#{period.month} #{period.year}", period.id}
       end)
+
+    changeset = Bills.change_bill(bill)
 
     {:ok,
       socket
