@@ -2,6 +2,8 @@ defmodule GuimbalWaterworks.Members.Member do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias GuimbalWaterworks.Bills.Bill
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "members" do
@@ -46,6 +48,8 @@ defmodule GuimbalWaterworks.Members.Member do
       name: :uniq_active_meter_no_idx,
       message: "Meter number already exists."
     )
+
+    has_many :bills, Bill
   end
 
   def archive_changeset(member) do

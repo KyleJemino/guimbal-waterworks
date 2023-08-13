@@ -2,6 +2,8 @@ defmodule GuimbalWaterworks.Accounts.Users do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias GuimbalWaterworks.Bills.Bill
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
@@ -15,6 +17,8 @@ defmodule GuimbalWaterworks.Accounts.Users do
     field :hashed_password, :string, redact: true
     field :approved_at, :utc_datetime
     field :archived_at, :utc_datetime
+
+    has_many :bills, Bill
 
     timestamps()
   end
