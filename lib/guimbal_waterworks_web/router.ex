@@ -106,6 +106,7 @@ defmodule GuimbalWaterworksWeb.Router do
 
       live "/members/:id", MemberLive.Show, :show
       live "/members/:id/show/edit", MemberLive.Show, :edit
+      live "/members/:id/show/new_bill", MemberLive.Show, :new_bill
 
       live "/billing_periods", BillingPeriodLive.Index, :index
       live "/billing_periods/:id", BillingPeriodLive.Show, :show

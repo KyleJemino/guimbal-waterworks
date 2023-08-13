@@ -2,6 +2,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
   use GuimbalWaterworksWeb, :live_view
 
   alias GuimbalWaterworks.Members
+  alias GuimbalWaterworks.Bills
 
   @impl true
   def mount(_params, _session, socket) do
@@ -10,10 +11,18 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    member = Members.get_member!(id)
+    bill = Bills.new_bill(%{
+      member_id: member.id,  
+      user_id: socket.assigns.current_users.id
+    })
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:member, Members.get_member!(id))}
+     |> assign(:member, member)
+     |> assign(:bill, bill)
+    }
   end
 
   def handle_event("show_info", _value, socket) do
@@ -26,4 +35,5 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
 
   defp page_title(:show), do: "Show Member"
   defp page_title(:edit), do: "Edit Member"
+  defp page_title(:new_bill), do: "Create Bill"
 end

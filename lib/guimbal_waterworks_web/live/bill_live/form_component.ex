@@ -3,7 +3,6 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   alias Ecto.Changeset
 
   alias GuimbalWaterworks.Bills
-  alias Bills.Bills
 
   def update(%{bill: bill} = assigns, socket) do
     changeset = Bills.change_bill(bill)
