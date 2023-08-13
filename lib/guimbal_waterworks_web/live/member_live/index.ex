@@ -3,6 +3,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
 
   alias GuimbalWaterworks.Members
   alias GuimbalWaterworks.Members.Member
+  alias GuimbalWaterworks.Bills
 
   @impl true
   def mount(_params, _session, socket) do
@@ -18,18 +19,36 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
     socket
     |> assign(:page_title, "Edit Member")
     |> assign(:member, Members.get_member!(id))
+    |> assign(:bill, nil)
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Member")
     |> assign(:member, %Member{})
+    |> assign(:bill, nil)
   end
 
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Members")
     |> assign(:member, nil)
+    |> assign(:bill, nil)
+  end
+
+  defp apply_action(socket, :new_bill, %{"id" => id}) do
+    member = Members.get_member!(id)
+
+    bill =
+      Bills.new_bill(%{
+        member_id: member.id,
+        user_id: socket.assigns.current_users.id
+      })
+
+    socket
+    |> assign(:member, member)
+    |> assign(:page_title, "New Bill for #{Display.full_name(member)}")
+    |> assign(:bill, bill)
   end
 
   @impl true

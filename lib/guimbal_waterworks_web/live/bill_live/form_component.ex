@@ -5,7 +5,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   alias GuimbalWaterworks.Bills
 
   def update(%{bill: bill} = assigns, socket) do
-    billing_period_options = 
+    billing_period_options =
       %{
         "with_no_bill_for_member_id" => bill.member_id
       }
@@ -17,11 +17,10 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
     changeset = Bills.change_bill(bill)
 
     {:ok,
-      socket
-      |> assign(assigns)
-      |> assign(:changeset, changeset)
-      |> assign(:billing_period_options, billing_period_options)
-    }
+     socket
+     |> assign(assigns)
+     |> assign(:changeset, changeset)
+     |> assign(:billing_period_options, billing_period_options)}
   end
 
   def handle_event("validate", %{"bill" => bill_params}, socket) do
@@ -41,10 +40,9 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
     case Bills.create_bill(bill_params) do
       {:ok, _bill} ->
         {:noreply,
-          socket
-          |> put_flash(:info, "Bill created successfully")
-          |> push_redirect(to: socket.assigns.return_to)
-        }
+         socket
+         |> put_flash(:info, "Bill created successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

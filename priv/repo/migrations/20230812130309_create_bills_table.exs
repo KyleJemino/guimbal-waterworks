@@ -16,28 +16,27 @@ defmodule GuimbalWaterworks.Repo.Migrations.CreateBillsTable do
     end
 
     create index(
-      :bills,
-      [:member_id],
-      name: :bills_members_idx
-    )
+             :bills,
+             [:member_id],
+             name: :bills_members_idx
+           )
 
     create index(
-      :bills,
-      [:billing_period_id],
-      name: :bills_periods_idx
-    )
-
+             :bills,
+             [:billing_period_id],
+             name: :bills_periods_idx
+           )
 
     create index(
-      :bills,
-      [:user_id],
-      name: :bills_users_idx
-    )
+             :bills,
+             [:user_id],
+             name: :bills_users_idx
+           )
 
     create unique_index(
-      :bills,
-      [:member_id, :billing_period_id],
-      name: :bills_members_periods_uniq_idx
-    )
+             :bills,
+             [:member_id, :billing_period_id],
+             name: :bills_members_periods_uniq_idx
+           )
   end
 end

@@ -12,17 +12,18 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
     member = Members.get_member!(id)
-    bill = Bills.new_bill(%{
-      member_id: member.id,  
-      user_id: socket.assigns.current_users.id
-    })
+
+    bill =
+      Bills.new_bill(%{
+        member_id: member.id,
+        user_id: socket.assigns.current_users.id
+      })
 
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:member, member)
-     |> assign(:bill, bill)
-    }
+     |> assign(:bill, bill)}
   end
 
   def handle_event("show_info", _value, socket) do

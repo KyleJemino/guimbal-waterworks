@@ -6,7 +6,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver do
 
   def list_billing_periods(params \\ %{}) do
     params
-    |> BPQ.query_billing_period
+    |> BPQ.query_billing_period()
     |> Repo.all()
   end
 

@@ -94,7 +94,7 @@ defmodule GuimbalWaterworks.Bills do
   end
 
   defdelegate new_billing_period(), to: BPR
-  
+
   defdelegate list_bills(params \\ %{}), to: BR
   defdelegate get_bill_by_id(id), to: BR
   defdelegate create_bill(params \\ %{}), to: BR

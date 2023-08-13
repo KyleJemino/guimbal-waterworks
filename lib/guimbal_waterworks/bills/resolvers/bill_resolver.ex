@@ -18,7 +18,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   def get_bill(params \\ %{}) do
     params
     |> BQ.query_bill()
-    |> Repo.one
+    |> Repo.one()
   end
 
   def create_bill(params \\ %{}) do
@@ -38,9 +38,9 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
         %{
           membership_fee?: false,
           adv_fee?: false,
-          reconnection_fee?: false,
+          reconnection_fee?: false
         },
-        fn _k, v1, _v2 -> end
+        fn _k, v1, _v2 -> v1 end
       )
 
     struct(Bill, params_with_defaults)
