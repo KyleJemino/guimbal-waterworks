@@ -21,7 +21,6 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.FormComponent do
       socket.assigns.billing_period
       |> Bills.change_billing_period(billing_period_params)
       |> Map.put(:action, :validate)
-      |> IO.inspect()
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
@@ -55,7 +54,6 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.FormComponent do
     updated_recipients =
       current_changeset
       |> Changeset.get_embed(:death_aid_recipients)
-      |> IO.inspect()
       |> Enum.reject(fn recipient_changeset ->
         recipient_changeset.data.id === remove_id
       end)
@@ -92,7 +90,6 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.FormComponent do
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset)
         {:noreply, assign(socket, changeset: changeset)}
     end
   end

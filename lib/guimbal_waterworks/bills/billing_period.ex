@@ -2,6 +2,8 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias GuimbalWaterworks.Bills.Bill
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "billing_periods" do
@@ -16,6 +18,8 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     embeds_many :death_aid_recipients, DeathAidRecipient, on_replace: :delete do
       field :name, :string
     end
+
+    has_many :bills, Bill
 
     timestamps()
   end

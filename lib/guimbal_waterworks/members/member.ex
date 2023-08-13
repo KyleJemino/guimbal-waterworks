@@ -2,6 +2,8 @@ defmodule GuimbalWaterworks.Members.Member do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias GuimbalWaterworks.Bills.Bill
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "members" do
@@ -15,6 +17,8 @@ defmodule GuimbalWaterworks.Members.Member do
     field :connected?, :boolean
     field :mda?, :boolean
     field :archived_at, :utc_datetime
+
+    has_many :bills, Bill
 
     timestamps()
   end
