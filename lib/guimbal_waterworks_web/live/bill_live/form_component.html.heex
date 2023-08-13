@@ -29,6 +29,11 @@
       required: true  
     )%>
     <%= error_tag f, :billing_period_id %>
+    <%= if Enum.count(@billing_period_options) == 0 do %>
+      <span class="invalid-feedback">
+        Member has no missing bills. Must create a new billing period before making a bill for this member.
+      </span>
+    <% end %>
   </div>
 
   <div class="field-group">
