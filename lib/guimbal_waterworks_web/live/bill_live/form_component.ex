@@ -44,7 +44,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
          |> put_flash(:info, "Bill created successfully")
          |> push_redirect(to: socket.assigns.return_to)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, %Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
   end

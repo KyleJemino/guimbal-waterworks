@@ -26,10 +26,12 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
      |> assign(:bill, bill)}
   end
 
+  @impl true
   def handle_event("show_info", _value, socket) do
     {:noreply, assign(socket, :show_info?, true)}
   end
 
+  @impl true
   def handle_event("hide_info", _value, socket) do
     {:noreply, assign(socket, :show_info?, false)}
   end
