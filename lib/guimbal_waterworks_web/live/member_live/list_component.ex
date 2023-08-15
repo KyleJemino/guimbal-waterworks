@@ -7,9 +7,9 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     "first_name" => "",
     "middle_name" => "",
     "last_name" => "",
-    "unique_identifier" => nil,
+    "unique_identifier" => "",
     "street" => "",
-    "type" => :all
+    "type" => "all"
   }
 
   @impl true
@@ -30,6 +30,16 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     }
   end
 
+  @impl true
+
+  def handle_event("filter_change", %{ "search_params" => search_params }, socket) do
+    {:noreply,
+      socket
+      |> assign_search_params(search_params)
+      |> assign_members()
+    }
+  end
+
   defp assign_search_params(socket, search_params) do
     assign(socket, :search_params, search_params)
   end
@@ -44,7 +54,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
       search_params
       |> Enum.filter(
         fn {_key, value} ->
-          not is_nil(value) or value !== ""
+          not is_nil(value) and value !== ""
         end
       )
       |> Map.new()
