@@ -21,7 +21,7 @@
     </div>
     <div class="search-input-group">
       <%= label f, :street %>
-      <%= text_input f, :street, value: @search_params["last_name"] %>
+      <%= text_input f, :street, value: @search_params["street"] %>
     </div>
     <div class="search-input-group">
       <%= label f, :type %>
@@ -45,19 +45,17 @@
 
   <table class="data-table">
     <tr class="header-row">
+      <th class="header">M#</th>
       <th class="header">Name</th>
       <th class="header">Street</th>
-      <th class="header">Type</th>
-      <th class="header">Meter no</th>
 
       <th class="header">Actions</th>
     </tr>
     <%= for member <- @members do %>
       <tr id={"member-#{member.id}"} class="data-row">
+        <td class="data text-right"><%= member.meter_no %></td>
         <td class="data"><%= Display.full_name(member) %></td>
         <td class="data"><%= member.street %></td>
-        <td class="data"><%= member.type %></td>
-        <td class="data text-right"><%= member.meter_no %></td>
         <td class="actions">
           <div class="inline-flex gap-2 flex-row">
             <%= live_redirect "Show", to: Routes.member_show_path(@socket, :show, member), class: "button -table" %>
