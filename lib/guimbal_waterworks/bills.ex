@@ -10,6 +10,8 @@ defmodule GuimbalWaterworks.Bills do
   alias GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver, as: BPR
   alias GuimbalWaterworks.Bills.Resolvers.BillResolver, as: BR
 
+  alias GuimbalWaterworks.Bills.Queries.BillQuery, as: BQ
+
   defdelegate list_billing_periods(params \\ %{}), to: BPR
 
   @doc """
@@ -100,4 +102,5 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate create_bill(params \\ %{}), to: BR
   defdelegate change_bill(bill, params \\ %{}), to: BR
   defdelegate new_bill(params \\ %{}), to: BR
+  defdelegate query_bill(params \\ %{}), to: BQ
 end

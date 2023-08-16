@@ -2,6 +2,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   use GuimbalWaterworksWeb, :live_component
 
   alias GuimbalWaterworks.Members
+  alias GuimbalWaterworks.Bills
 
   @default_search_params %{
     "first_name" => "",
@@ -21,10 +22,14 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
         @default_search_params
       end
 
+    base_params = %{
+      "preload" => [bills: bill_preload_query()]
+    }
+
     {:ok, 
       socket
       |> assign(assigns)
-      |> assign(:base_params, %{})
+      |> assign(:base_params, base_params)
       |> assign_search_params(search_params)
       |> assign_members()
     }
@@ -61,6 +66,17 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
 
     list_params = Map.merge(base_params, search_params_with_values)
 
-    assign(socket, :members, Members.list_members(list_params)) 
+    members = Members.list_members(list_params) 
+    IO.inspect(members)
+    # assign(socket, :members, Members.list_members(list_params)) 
+    assign(socket, :members, members) 
+  end
+
+  defp bill_preload_query do
+    Bills.query_bill(%{
+      "limit" => 2,
+      "order_by" => [desc: :inserted_at],
+      "preload" => [:billing_period]
+    })
   end
 end
