@@ -97,10 +97,11 @@ defmodule GuimbalWaterworks.Bills do
 
   defdelegate new_billing_period(), to: BPR
 
+  defdelegate query_bill(params \\ %{}), to: BQ
   defdelegate list_bills(params \\ %{}), to: BR
   defdelegate get_bill_by_id(id), to: BR
   defdelegate create_bill(params \\ %{}), to: BR
   defdelegate change_bill(bill, params \\ %{}), to: BR
   defdelegate new_bill(params \\ %{}), to: BR
-  defdelegate query_bill(params \\ %{}), to: BQ
+  defdelegate calculate_bill(bill), to: BR
 end
