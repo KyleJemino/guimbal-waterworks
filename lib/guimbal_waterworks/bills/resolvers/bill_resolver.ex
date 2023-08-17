@@ -50,9 +50,13 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     struct(Bill, params_with_defaults)
   end
 
-  def calculate_bill(%Bill{
-    billing_period: %BillingPeriod{} = billing_period,
-  } = bill, member_type) when member_type in [:personal, :business] do
+  def calculate_bill(
+        %Bill{
+          billing_period: %BillingPeriod{} = billing_period
+        } = bill,
+        member_type
+      )
+      when member_type in [:personal, :business] do
     %{
       reading: reading,
       adv_fee?: adv_fee?,
@@ -67,7 +71,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       due_date: due_date
     } = billing_period
 
-    base_rate = 
+    base_rate =
       case member_type do
         :personal -> personal_rate
         :business_rate -> business_rate
@@ -75,14 +79,11 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
     base_amount = D.mult(base_rate, reading)
     franchise_tax_amount = D.mult(base_amount, tax_rate)
-    adv_amount = 
-      D.new(if adv_fee?, do: 150, else: 0)
+    adv_amount = D.new(if adv_fee?, do: 150, else: 0)
 
-    membership_amount = 
-      D.new(if membership_fee?, do: 100, else: 0)
+    membership_amount = D.new(if membership_fee?, do: 100, else: 0)
 
-    reconnection_amount = 
-      D.new(if reconnection_fee?, do: 100, else: 0)
+    reconnection_amount = D.new(if reconnection_fee?, do: 100, else: 0)
 
     is_overdue = Date.diff(Date.utc_today(), due_date) > 0
     surcharge_amount = D.new(if is_overdue, do: 20, else: 0)
@@ -95,15 +96,16 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       |> D.add(reconnection_amount)
       |> D.add(surcharge_amount)
 
-    {:ok, %{
-      base_amount: base_amount,
-      franchise_tax_amount: franchise_tax_amount,
-      adv_amount: adv_amount,
-      membership_amount: membership_amount,
-      reconnection_amount: reconnection_amount,
-      surcharge: surcharge_amount,
-      total: total
-    }}
+    {:ok,
+     %{
+       base_amount: base_amount,
+       franchise_tax_amount: franchise_tax_amount,
+       adv_amount: adv_amount,
+       membership_amount: membership_amount,
+       reconnection_amount: reconnection_amount,
+       surcharge: surcharge_amount,
+       total: total
+     }}
   end
 
   def calculate_bill(_, _), do: {:error, nil}

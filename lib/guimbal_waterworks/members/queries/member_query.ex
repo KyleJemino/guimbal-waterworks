@@ -48,13 +48,16 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
   defp query_by(query, %{"status" => status} = params) do
     status_query =
       case status do
-        "connected" -> 
+        "connected" ->
           query
           |> where([q], q.connected?)
+
         "disconnected" ->
           query
           |> where([q], not q.connected?)
-        _ -> query
+
+        _ ->
+          query
       end
 
     query_by(status_query, Map.delete(params, "status"))
