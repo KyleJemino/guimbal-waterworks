@@ -67,8 +67,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     list_params = Map.merge(base_params, search_params_with_values)
 
     members = Members.list_members(list_params) 
-    IO.inspect(members)
-    # assign(socket, :members, Members.list_members(list_params)) 
+
     assign(socket, :members, members) 
   end
 

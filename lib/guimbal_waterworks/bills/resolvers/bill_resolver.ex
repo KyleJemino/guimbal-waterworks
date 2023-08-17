@@ -1,5 +1,7 @@
 defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   alias GuimbalWaterworks.Repo
+  alias Decimal, as: D
+
   alias GuimbalWaterworks.Bills.Bill
   alias GuimbalWaterworks.Bills.Queries.BillQuery, as: BQ
   alias GuimbalWaterworks.Bills.BillingPeriod
@@ -50,8 +52,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def calculate_bill(%Bill{
     billing_period: %BillingPeriod{} = billing_period,
-    member: %Member{type: member_type}
-  } = bill) do
+  } = bill, member_type) when member_type in [:personal, :business] do
     %{
       reading: reading,
       adv_fee?: adv_fee?,
@@ -72,15 +73,27 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
         :business_rate -> business_rate
       end
 
-    base_amount = base_rate * reading
-    franchise_tax_amount = base_amount * tax_rate
-    adv_amount = if adv_fee?, do: 150, else: 0
-    membership_amount = if membership_fee?, do: 100, else: 0
-    reconnection_amount = if reconnection_fee?, do: 100, else: 0
-    is_overdue = Date.diff(Date.utc_today(), due_date) > 0
+    base_amount = D.mult(base_rate, reading)
+    franchise_tax_amount = D.mult(base_amount, tax_rate)
+    adv_amount = 
+      D.new(if adv_fee?, do: 150, else: 0)
 
-    surcharge = if is_overdue, do: 20, else: 0
-    total = base_amount + franchise_tax_amount + adv_amount + membership_amount + reconnection_amount + surcharge
+    membership_amount = 
+      D.new(if membership_fee?, do: 100, else: 0)
+
+    reconnection_amount = 
+      D.new(if reconnection_fee?, do: 100, else: 0)
+
+    is_overdue = Date.diff(Date.utc_today(), due_date) > 0
+    surcharge_amount = D.new(if is_overdue, do: 20, else: 0)
+
+    total =
+      base_amount
+      |> D.add(franchise_tax_amount)
+      |> D.add(adv_amount)
+      |> D.add(membership_amount)
+      |> D.add(reconnection_amount)
+      |> D.add(surcharge_amount)
 
     {:ok, %{
       base_amount: base_amount,
@@ -88,10 +101,10 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       adv_amount: adv_amount,
       membership_amount: membership_amount,
       reconnection_amount: reconnection_amount,
-      surcharge: surcharge,
+      surcharge: surcharge_amount,
       total: total
     }}
   end
 
-  def calculate_bill(), do: {:error, nil}
+  def calculate_bill(_, _), do: {:error, nil}
 end

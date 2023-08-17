@@ -94,4 +94,5 @@ defmodule GuimbalWaterworks.Members do
 
   defdelegate list_members(params \\ %{}), to: MR
   defdelegate archive_member(member), to: MR
+  defdelegate calculate_member_bills(member), to: MR
 end
