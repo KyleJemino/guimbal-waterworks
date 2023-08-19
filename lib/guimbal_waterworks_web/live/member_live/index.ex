@@ -7,7 +7,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign_members(socket)}
+    {:ok, socket}
   end
 
   @impl true
@@ -59,16 +59,9 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
       {:ok, _member} ->
         {:noreply,
          socket
-         |> put_flash(:info, "User deleted")
-         |> assign_members()}
-
+         |> put_flash(:info, "User deleted")}
       _ ->
         {:noreply, put_flash(socket, :error, "Something went wrong")}
     end
-  end
-
-  defp assign_members(socket) do
-    members = Members.list_members()
-    assign(socket, :members, members)
   end
 end
