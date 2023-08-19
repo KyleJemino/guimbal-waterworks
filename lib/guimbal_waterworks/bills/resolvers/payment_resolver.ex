@@ -17,7 +17,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
       |> update(set: [payment_id: ^payment.id])
     end, [])
     |> Repo.transaction()
-    |> IO.inspect()
   end
 
   def change_payment(%Payment{} = payment, params), do: Payment.changeset(payment, params)
