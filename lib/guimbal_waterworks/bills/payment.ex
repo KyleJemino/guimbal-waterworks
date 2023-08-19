@@ -2,8 +2,10 @@ defmodule GuimbalWaterworks.Bills.Payment do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias GuimbalWaterworks.Members.Member
   alias GuimbalWaterworks.Bills.Bill
   alias GuimbalWaterworks.Helpers
+  alias GuimbalWaterworks.Accounts.Users
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -11,6 +13,9 @@ defmodule GuimbalWaterworks.Bills.Payment do
   schema "payments" do
     field :or, :integer
     field :paid_at, :utc_datetime
+    field :bill_ids, {:array, :binary_id}, virtual: true
+    belongs_to :member, Member
+    belongs_to :user, Users
 
     has_many :bills, Bill
 

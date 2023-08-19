@@ -6,10 +6,14 @@ defmodule GuimbalWaterworks.Repo.Migrations.CreatePaymentsTable do
       add :id, :binary_id, primary_key: true
       add :or, :integer, null: false
       add :paid_at, :utc_datetime, null: false
+      add :member_id, references(:members, type: :binary_id)
+      add :user_id, references(:users, type: :binary_id)
 
       timestamps()
     end
 
+    create index(:payments, [:member_id], name: :payments_member_idx)
+    create index(:payments, [:user_id], name: :payments_users_idx)
     create unique_index(:payments, [:or], name: :payments_ors_uniq_idx)
 
     alter table(:bills) do
