@@ -103,5 +103,5 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate create_bill(params \\ %{}), to: BR
   defdelegate change_bill(bill, params \\ %{}), to: BR
   defdelegate new_bill(params \\ %{}), to: BR
-  defdelegate calculate_bill(bill, member_type), to: BR
+  defdelegate calculate_bill(bill, billing_period, member), to: BR
 end

@@ -51,10 +51,11 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   end
 
   def calculate_bill(
-        %Bill{
-          billing_period: %BillingPeriod{} = billing_period
-        } = bill,
-        member_type
+        %Bill{} = bill,
+        %BillingPeriod{} = billing_period,
+        %Member{
+          type: member_type
+        }
       )
       when member_type in [:personal, :business] do
     %{
@@ -108,5 +109,5 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
      }}
   end
 
-  def calculate_bill(_, _), do: {:error, nil}
+  def calculate_bill(_, _, _), do: {:error, nil}
 end
