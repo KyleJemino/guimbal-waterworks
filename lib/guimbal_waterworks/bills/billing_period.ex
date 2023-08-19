@@ -14,6 +14,7 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     field :due_date, :date
     field :personal_rate, :decimal
     field :business_rate, :decimal
+    field :franchise_tax_rate, :decimal
 
     embeds_many :death_aid_recipients, DeathAidRecipient, on_replace: :delete do
       field :name, :string
@@ -34,7 +35,8 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
       :year,
       :due_date,
       :personal_rate,
-      :business_rate
+      :business_rate,
+      :franchise_tax_rate
     ])
     |> validate_required([
       :from,
@@ -43,18 +45,13 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
       :year,
       :due_date,
       :personal_rate,
-      :business_rate
+      :business_rate,
+      :franchise_tax_rate
     ])
     |> validate_inclusion(:month, GuimbalWaterworks.Constants.months())
     |> validate_format(:year, ~r/^\d{4}$/)
     |> validate_number(
-      :personal_rate,
-      greater_than_or_equal_to: 0,
-      less_than_or_equal_to: 1,
-      message: "Must be between 0 and 1"
-    )
-    |> validate_number(
-      :business_rate,
+      :franchise_tax_rate,
       greater_than_or_equal_to: 0,
       less_than_or_equal_to: 1,
       message: "Must be between 0 and 1"

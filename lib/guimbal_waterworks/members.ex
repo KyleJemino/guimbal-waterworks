@@ -12,22 +12,6 @@ defmodule GuimbalWaterworks.Members do
   alias GuimbalWaterworks.Members.Resolvers.MemberResolver, as: MR
 
   @doc """
-  Returns the list of members.
-
-  ## Examples
-
-      iex> list_members()
-      [%Member{}, ...]
-
-  """
-  def list_members(params \\ %{}) do
-    params
-    |> Map.put_new("with_archived?", false)
-    |> MQ.query_member()
-    |> Repo.all()
-  end
-
-  @doc """
   Gets a single member.
 
   Raises `Ecto.NoResultsError` if the Member does not exist.
@@ -108,5 +92,7 @@ defmodule GuimbalWaterworks.Members do
     Member.changeset(member, attrs)
   end
 
+  defdelegate list_members(params \\ %{}), to: MR
   defdelegate archive_member(member), to: MR
+  defdelegate calculate_member_bills(member), to: MR
 end

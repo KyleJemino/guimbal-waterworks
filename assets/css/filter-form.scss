@@ -1,0 +1,14 @@
+.filter-form {
+  @apply grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-between gap-4;
+}
+
+.search-input-group {
+  @apply flex flex-row gap-2 items-center;
+}
+
+.search-input-group > label {
+  @apply font-bold;
+}
+.search-input-group > input, select {
+  @apply flex-1;
+}
