@@ -3,7 +3,10 @@ defmodule GuimbalWaterworks.Bills.Bill do
   import Ecto.Changeset
 
   alias GuimbalWaterworks.Members.Member
-  alias GuimbalWaterworks.Bills.BillingPeriod
+  alias GuimbalWaterworks.Bills.{
+    BillingPeriod,
+    Payment
+  }
   alias GuimbalWaterworks.Accounts.Users
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -18,6 +21,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
     belongs_to :member, Member
     belongs_to :billing_period, BillingPeriod
     belongs_to :user, Users
+    belongs_to :payment, Payment
 
     timestamps()
   end
