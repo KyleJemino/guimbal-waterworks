@@ -2,6 +2,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias GuimbalWaterworks.Helpers
   alias GuimbalWaterworks.Bills.Bill
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -136,19 +137,11 @@ defmodule GuimbalWaterworks.Accounts.Users do
   Confirms the account by setting `confirmed_at`.
   """
   def approve_changeset(users) do
-    now =
-      DateTime.utc_now()
-      |> DateTime.truncate(:second)
-
-    change(users, approved_at: now)
+    change(users, approved_at: Helpers.db_now())
   end
 
   def archive_changeset(users) do
-    now =
-      DateTime.utc_now()
-      |> DateTime.truncate(:second)
-
-    change(users, archived_at: now)
+    change(users, archived_at: Helpers.db_now())
   end
 
   @doc """
