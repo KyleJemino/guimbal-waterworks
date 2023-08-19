@@ -56,4 +56,10 @@ defmodule GuimbalWaterworks.Bills.Bill do
       message: "Member already has an existing bill for this billing period."
     )
   end
+
+  def payment_changeset(bill, %Payment{id: payment_id}) do
+    bill
+    |> change(payment_id: payment_id)
+    |> foreign_key_constraint(:payment_id)
+  end
 end
