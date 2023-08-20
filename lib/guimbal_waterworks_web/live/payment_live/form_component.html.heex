@@ -22,10 +22,11 @@
   
     <div class="field-group">
       <%= label f, :bill_ids, "Bills" %>
-      <%= select( 
+      <%= multiple_select( 
         f, 
         :bill_ids, 
         Enum.map(@bill_options, &({&1.label, &1.value})),
+        selected: [],
         required: true  
       )%>
       <%= error_tag f, :bill_ids %>

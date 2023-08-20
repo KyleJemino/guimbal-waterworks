@@ -56,7 +56,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
         {:noreply,
           socket
           |> put_flash(:info, "Payment successful")
-          |> push_redirect(to: Routes.member_show_path(socket, payment.member_id))
+          |> push_redirect(to: Routes.member_show_path(socket, :show, payment.member_id))
         }
       {:error, _operation, %Changeset{} = changeset, _changes} ->
         {:noreply, assign(socket, changeset: changeset)}
