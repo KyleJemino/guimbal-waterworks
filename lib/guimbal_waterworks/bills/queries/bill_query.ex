@@ -8,5 +8,11 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
 
   use GuimbalWaterworks, :basic_queries
 
+  defp query_by(query, %{"member_id" => member_id} = params) do
+    query
+    |> where([q], q.member_id == ^member_id)
+    |> query_by(Map.delete(params, "member_id"))
+  end
+
   use GuimbalWaterworks, :catch_query
 end
