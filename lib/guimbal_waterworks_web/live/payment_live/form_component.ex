@@ -1,5 +1,6 @@
 defmodule GuimbalWaterworks.PaymentLive.FormComponent do
   use GuimbalWaterworksWeb, :live_component
+  alias Ecto.Changeset
 
   alias GuimbalWaterworks.Bills
   alias GuimbalWaterworks.Bills.Payment
@@ -37,5 +38,29 @@ defmodule GuimbalWaterworks.PaymentLive.FormComponent do
       |> assign(:changeset, changeset)
       |> assign(:bill_options, bill_options)
     }
+  end
+
+  def handle_event("validate", %{"payment" => payment_params}, socket) do
+    changeset =
+      socket.assigns.payment
+      |> Bills.change_payment(payment_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :changeset, changeset)}
+  end
+
+  def handle_event("save", %{"payment" => payment_params}, socket) do
+    case Bills.create_payment(payment_params) do
+      {:ok, %{payment: payment}} ->
+        {:noreply,
+          socket
+          |> put_flash(:info, "Payment successful")
+          |> push_redirect(to: Routes.member_show_path(socket, payment.member_id))
+        }
+      {:error, _operation, %Changeset{} = changeset, _changes} ->
+        {:noreply, assign(socket, changeset: changeset)}
+      _ ->
+        {:noreply, socket}
+    end
   end
 end
