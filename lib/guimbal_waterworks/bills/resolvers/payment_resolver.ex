@@ -47,5 +47,5 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
     |> Repo.transaction()
   end
 
-  def change_payment(%Payment{} = payment, params), do: Payment.changeset(payment, params)
+  def change_payment(%Payment{} = payment, params \\ %{}), do: Payment.changeset(payment, params)
 end

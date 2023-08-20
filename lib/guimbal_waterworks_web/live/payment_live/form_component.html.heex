@@ -1,0 +1,64 @@
+<div class="form-modal-container">
+  <h1 class="text-center"><%= @title %></h1>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="bill-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save"
+    class="form-component"
+    >
+
+    <%= hidden_input f, :member_id, required: true %>
+    <%= hidden_input f, :user_id, required: true %>
+  
+  <div class="field-group">
+    <%= label f, :reading %>
+    <%= number_input f, :reading, required: true %>
+    <%= error_tag f, :reading %>
+  </div>
+  
+  <div class="field-group">
+    <%= label f, :billing_period_id, "Billing Period" %>
+    <%= select( 
+      f, 
+      :billing_period_id, 
+      @billing_period_options,
+      required: true  
+    )%>
+    <%= error_tag f, :billing_period_id %>
+    <%= if Enum.count(@billing_period_options) == 0 do %>
+      <span class="invalid-feedback">
+        Member has no missing bills. Must create a new billing period before making a bill for this member.
+      </span>
+    <% end %>
+  </div>
+
+  <div class="field-group">
+    <div class="flex flex-row gap-2 items-center">
+      <%= checkbox f, :membership_fee? %>
+      <%= label f, :membership_fee?, "Should pay membership fee?", class: "font-medium" %>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="flex flex-row gap-2 items-center">
+      <%= checkbox f, :adv_fee? %>
+      <%= label f, :adv_fee?, "Should pay advance fee?", class: "font-medium" %>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <div class="flex flex-row gap-2 items-center">
+      <%= checkbox f, :reconnection_fee? %>
+      <%= label f, :reconnection_fee?, "Should pay reconnection fee?", class: "font-medium" %>
+    </div>
+  </div>
+  
+    <div class="form-button-group">
+      <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
+    </div>
+  </.form>
+</div>

@@ -14,5 +14,11 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     |> query_by(Map.delete(params, "member_id"))
   end
 
+  defp query_by(query, %{"status" => :unpaid} = params) do
+    query
+    |> where([q], is_nil(q.payment_id))
+    |> query_by(Map.delete(params, "status"))
+  end
+
   use GuimbalWaterworks, :catch_query
 end
