@@ -107,6 +107,7 @@ defmodule GuimbalWaterworksWeb.Router do
       live "/members/:id/show/edit", MemberLive.Show, :edit
       live "/members/:id/show/new_bill", MemberLive.Show, :new_bill
     end
+
     scope "/", GuimbalWaterworksWeb do
       pipe_through [:browser, :require_authenticated_users, :require_cashier]
 

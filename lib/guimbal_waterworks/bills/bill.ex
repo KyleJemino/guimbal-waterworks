@@ -3,10 +3,12 @@ defmodule GuimbalWaterworks.Bills.Bill do
   import Ecto.Changeset
 
   alias GuimbalWaterworks.Members.Member
+
   alias GuimbalWaterworks.Bills.{
     BillingPeriod,
     Payment
   }
+
   alias GuimbalWaterworks.Accounts.Users
 
   @primary_key {:id, :binary_id, autogenerate: true}

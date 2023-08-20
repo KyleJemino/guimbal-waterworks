@@ -24,7 +24,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
 
   def changeset(payment, attrs) do
     payment
-    |> cast(attrs,[:or, :member_id, :user_id, :bill_ids])
+    |> cast(attrs, [:or, :member_id, :user_id, :bill_ids])
     |> validate_required([:or, :member_id, :user_id, :bill_ids])
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:user_id)
@@ -37,7 +37,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
 
     changeset = delete_change(changeset, :bill_ids)
 
-    if (not is_nil(bill_ids)) and Enum.count(bill_ids) < 1 do
+    if not is_nil(bill_ids) and Enum.count(bill_ids) < 1 do
       add_error(changeset, :bill_ids, "no bills to pay")
     else
       changeset

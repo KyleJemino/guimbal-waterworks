@@ -2,10 +2,12 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
   alias GuimbalWaterworks.Repo
   alias Ecto.Multi
   alias Ecto.Changeset
+
   alias GuimbalWaterworks.Bills.{
     Payment,
     Bill
   }
+
   alias GuimbalWaterworks.Bills.Resolvers.BillResolver
 
   def create_payment(%{"bill_ids" => bill_ids} = params) do
@@ -13,10 +15,10 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
     |> Multi.insert(:payment, change_payment(%Payment{}, params))
     |> Multi.run(:check_member_bills, fn _repo, %{payment: payment} ->
       Enum.reduce(
-        bill_ids, 
-        {:ok, []}, 
-        fn 
-          bill_id, {:ok, list} -> 
+        bill_ids,
+        {:ok, []},
+        fn
+          bill_id, {:ok, list} ->
             bill_params = %{
               "id" => bill_id,
               "member_id" => payment.member_id
@@ -25,25 +27,32 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
             case BillResolver.get_bill(bill_params) do
               %Bill{} ->
                 {:ok, [bill_id | list]}
-              _ -> 
+
+              _ ->
                 payment_changeset =
                   %Payment{}
                   |> change_payment(params)
-                  |> Changeset.add_error(:bill_ids, "Invalid bills") 
+                  |> Changeset.add_error(:bill_ids, "Invalid bills")
 
                 {:error, payment_changeset}
             end
 
-          _bill_id, error -> error 
-      end) 
+          _bill_id, error ->
+            error
+        end
+      )
     end)
-    |> Multi.update_all(:pay_bills, fn %{payment: payment, check_member_bills: validated_bill_ids} ->
-      import Ecto.Query
+    |> Multi.update_all(
+      :pay_bills,
+      fn %{payment: payment, check_member_bills: validated_bill_ids} ->
+        import Ecto.Query
 
-      Bill    
-      |> where([b], b.id in ^validated_bill_ids)
-      |> update(set: [payment_id: ^payment.id])
-    end, [])
+        Bill
+        |> where([b], b.id in ^validated_bill_ids)
+        |> update(set: [payment_id: ^payment.id])
+      end,
+      []
+    )
     |> Repo.transaction()
   end
 

@@ -6,14 +6,15 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
   alias GuimbalWaterworks.Bills.Payment
 
   def update(
-    %{
-      payment: %Payment{
-        member_id: member_id,
-      } = payment,
-      member: member
-    } = assigns, 
-    socket
-  ) do
+        %{
+          payment:
+            %Payment{
+              member_id: member_id
+            } = payment,
+          member: member
+        } = assigns,
+        socket
+      ) do
     changeset = Bills.change_payment(payment)
 
     bill_options =
@@ -27,18 +28,17 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
         {:ok, %{total: bill_amount}} = Bills.calculate_bill(bill, period, member)
 
         %{
-          label: "#{period.month} #{period.year} - PHP#{Display.money(bill_amount)}", 
+          label: "#{period.month} #{period.year} - PHP#{Display.money(bill_amount)}",
           value: bill.id,
           amount: bill_amount
         }
       end)
 
-    {:ok, 
-      socket
-      |> assign(assigns)
-      |> assign(:changeset, changeset)
-      |> assign(:bill_options, bill_options)
-    }
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> assign(:changeset, changeset)
+     |> assign(:bill_options, bill_options)}
   end
 
   def handle_event("validate", %{"payment" => payment_params}, socket) do
@@ -54,12 +54,13 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
     case Bills.create_payment(payment_params) do
       {:ok, %{payment: payment}} ->
         {:noreply,
-          socket
-          |> put_flash(:info, "Payment successful")
-          |> push_redirect(to: Routes.member_show_path(socket, :show, payment.member_id))
-        }
+         socket
+         |> put_flash(:info, "Payment successful")
+         |> push_redirect(to: Routes.member_show_path(socket, :show, payment.member_id))}
+
       {:error, _operation, %Changeset{} = changeset, _changes} ->
         {:noreply, assign(socket, changeset: changeset)}
+
       _ ->
         {:noreply, socket}
     end

@@ -13,10 +13,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, 
-      socket
-      |> apply_action(socket.assigns.live_action, params)
-      |> assign_payment(socket.assigns.live_action, params)}
+    {:noreply,
+     socket
+     |> apply_action(socket.assigns.live_action, params)
+     |> assign_payment(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -87,6 +87,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
         {:noreply,
          socket
          |> put_flash(:info, "User deleted")}
+
       _ ->
         {:noreply, put_flash(socket, :error, "Something went wrong")}
     end
