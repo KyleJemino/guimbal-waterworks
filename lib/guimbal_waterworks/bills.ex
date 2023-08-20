@@ -107,5 +107,5 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate calculate_bill(bill, billing_period, member), to: BR
 
   defdelegate create_payment(params), to: PR
-  defdelegate change_payment(payment, params), to: PR
+  defdelegate change_payment(payment, params \\ %{}), to: PR
 end
