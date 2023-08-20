@@ -1,4 +1,4 @@
-defmodule GuimbalWaterworks.PaymentLive.FormComponent do
+defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
   use GuimbalWaterworksWeb, :live_component
   alias Ecto.Changeset
 
@@ -24,7 +24,8 @@ defmodule GuimbalWaterworks.PaymentLive.FormComponent do
       }
       |> Bills.list_bills()
       |> Enum.map(fn %{billing_period: period} = bill ->
-        bill_amount = Bills.calculate_bill(bill, period, member)
+        {:ok, %{total: bill_amount}} = Bills.calculate_bill(bill, period, member)
+
         %{
           label: "#{period.month} #{period.year} - PHP#{Display.money(bill_amount)}", 
           value: bill.id,

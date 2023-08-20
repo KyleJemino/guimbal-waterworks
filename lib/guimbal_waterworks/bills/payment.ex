@@ -37,7 +37,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
 
     changeset = delete_change(changeset, :bill_ids)
 
-    if Enum.count(bill_ids) < 1 do
+    if (not is_nil(bill_ids)) and Enum.count(bill_ids) < 1 do
       add_error(changeset, :bill_ids, "no bills to pay")
     else
       changeset

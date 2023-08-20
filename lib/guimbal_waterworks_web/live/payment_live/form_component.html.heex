@@ -25,7 +25,7 @@
       <%= select( 
         f, 
         :bill_ids, 
-        Enum.map(@bill_options, &({&1.label: &1.value})),
+        Enum.map(@bill_options, &({&1.label, &1.value})),
         required: true  
       )%>
       <%= error_tag f, :bill_ids %>

@@ -102,9 +102,15 @@ defmodule GuimbalWaterworksWeb.Router do
       live "/members/new", MemberLive.Index, :new
       live "/members/:id/edit", MemberLive.Index, :edit
       live "/members/:id/new_bill", MemberLive.Index, :new_bill
+      live "/members/:id/pay_bills", MemberLive.Index, :payment
 
       live "/members/:id/show/edit", MemberLive.Show, :edit
       live "/members/:id/show/new_bill", MemberLive.Show, :new_bill
+    end
+    scope "/", GuimbalWaterworksWeb do
+      pipe_through [:browser, :require_authenticated_users, :require_cashier]
+
+      live "/members/:id/pay_bills", MemberLive.Index, :payment
     end
 
     scope "/", GuimbalWaterworksWeb do
