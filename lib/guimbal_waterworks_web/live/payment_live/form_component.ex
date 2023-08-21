@@ -37,8 +37,8 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)
-     |> assign(:bill_options, bill_options)}
+     |> assign(:bill_options, bill_options)
+     |> assign_changeset(changeset)}
   end
 
   def handle_event("validate", %{"payment" => payment_params}, socket) do
@@ -47,7 +47,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
       |> Bills.change_payment(payment_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply, assign_changeset(socket, changeset)}
   end
 
   def handle_event("save", %{"payment" => payment_params}, socket) do
@@ -59,10 +59,34 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
          |> push_redirect(to: Routes.member_show_path(socket, :show, payment.member_id))}
 
       {:error, _operation, %Changeset{} = changeset, _changes} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign_changeset(socket, changeset)}
 
       _ ->
         {:noreply, socket}
     end
+  end
+
+  defp update_total(socket) do
+    %{changeset: changeset, bill_options: bill_options} = socket.assigns
+    IO.inspect changeset
+
+    selected_bills = Changeset.get_field(changeset, :bill_ids, [])  
+
+    IO.inspect selected_bills
+
+    total_amount = 
+      Enum.reduce(bill_options, 0, fn bill, total ->
+        addition_to_total = if bill.value in selected_bills, do: bill.amount, else: 0
+
+        Decimal.add(total, addition_to_total)  
+      end)
+
+    assign(socket, :total_amount, total_amount)
+  end
+
+  defp assign_changeset(socket, changeset) do
+    socket
+    |> assign(:changeset, changeset)
+    |> update_total()
   end
 end

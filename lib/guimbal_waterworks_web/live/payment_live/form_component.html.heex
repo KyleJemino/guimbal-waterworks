@@ -26,7 +26,7 @@
         f, 
         :bill_ids, 
         Enum.map(@bill_options, &({&1.label, &1.value})),
-        selected: [],
+        selected: Changeset.get_field(@changeset, :bill_ids, []),
         required: true  
       )%>
       <%= error_tag f, :bill_ids %>
@@ -36,6 +36,10 @@
         </span>
       <% end %>
     </div>
+
+    <p class="text-xl font-bold">
+      Total: <%= Display.money @total_amount %>
+    </p>
 
     <div class="form-button-group">
       <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
