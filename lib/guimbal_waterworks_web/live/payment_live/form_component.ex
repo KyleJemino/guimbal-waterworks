@@ -17,16 +17,16 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
       ) do
     changeset = Bills.change_payment(payment)
 
-    bills = 
+    bills =
       Bills.list_bills(%{
         "member_id" => member_id,
         "status" => :unpaid,
         "preload" => :billing_period,
         "order_by" => [asc: :inserted_at]
       })
-        
+
     {bills_display, payment_options} =
-      Enum.reduce(bills, {[], []}, fn 
+      Enum.reduce(bills, {[], []}, fn
         bill, acc ->
           %{billing_period: period} = bill
           {bills_display_acc, payment_options_acc} = acc
@@ -41,13 +41,14 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
             case payment_options_acc do
               [head | _tail] ->
                 total_amount = Decimal.add(head.total_amount, bill_amount)
-                 
+
                 %{
                   billing_periods: "#{head.billing_periods}, #{bill_name}",
                   total_amount: total_amount,
                   bill_ids: "#{head.bill_ids},#{bill.id}"
                 }
-              [] -> 
+
+              [] ->
                 %{
                   billing_periods: bill_name,
                   total_amount: bill_amount,

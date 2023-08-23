@@ -33,7 +33,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
   end
 
   defp validate_bill_ids_length(changeset) do
-    bill_ids = 
+    bill_ids =
       changeset
       |> get_change(:bill_ids, "")
 
