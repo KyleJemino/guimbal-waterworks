@@ -13,7 +13,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
   schema "payments" do
     field :or, :integer
     field :paid_at, :utc_datetime
-    field :bill_ids, {:array, :binary_id}, virtual: true
+    field :bill_ids, :string, virtual: true
     belongs_to :member, Member
     belongs_to :user, Users
 
@@ -33,12 +33,14 @@ defmodule GuimbalWaterworks.Bills.Payment do
   end
 
   defp validate_bill_ids_length(changeset) do
-    bill_ids = get_change(changeset, :bill_ids)
+    bill_ids = 
+      changeset
+      |> get_change(:bill_ids, "")
 
     changeset = delete_change(changeset, :bill_ids)
 
-    if not is_nil(bill_ids) and Enum.count(bill_ids) < 1 do
-      add_error(changeset, :bill_ids, "no bills to pay")
+    if is_nil(bill_ids) or bill_ids == "" do
+      add_error(changeset, :bill_ids, "No bills selected.")
     else
       changeset
     end

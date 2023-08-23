@@ -71,7 +71,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
       %Payment{
         member_id: member_id,
         user_id: socket.assigns.current_users.id,
-        bill_ids: []
+        bill_ids: ""
       }
     )
   end

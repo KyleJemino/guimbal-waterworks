@@ -38,6 +38,7 @@
             <span><%= "#{payment_option.billing_periods} - PHP#{Display.money(payment_option.total_amount)}" %></span>
           </div>
         <% end %>
+        <%= error_tag f, :bill_ids %>
       </div>
     </div>
 

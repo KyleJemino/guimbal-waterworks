@@ -45,13 +45,13 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
                 %{
                   billing_periods: "#{head.billing_periods}, #{bill_name}",
                   total_amount: total_amount,
-                  bill_ids: [bill.id | head.bill_ids]
+                  bill_ids: "#{head.bill_ids},#{bill.id}"
                 }
               [] -> 
                 %{
                   billing_periods: bill_name,
                   total_amount: bill_amount,
-                  bill_ids: [bill.id]
+                  bill_ids: bill.id
                 }
             end
 

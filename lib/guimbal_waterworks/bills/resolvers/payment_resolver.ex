@@ -10,12 +10,13 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
 
   alias GuimbalWaterworks.Bills.Resolvers.BillResolver
 
-  def create_payment(%{"bill_ids" => bill_ids} = params) do
+  def create_payment(%{"bill_ids" => bill_ids_string} = params) do
     Multi.new()
     |> Multi.insert(:payment, change_payment(%Payment{}, params))
     |> Multi.run(:check_member_bills, fn _repo, %{payment: payment} ->
-      Enum.reduce(
-        bill_ids,
+      bill_ids_string
+      |> String.split(",")
+      |> Enum.reduce(
         {:ok, []},
         fn
           bill_id, {:ok, list} ->
