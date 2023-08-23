@@ -17,27 +17,55 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
       ) do
     changeset = Bills.change_payment(payment)
 
-    bill_options =
-      %{
+    bills = 
+      Bills.list_bills(%{
         "member_id" => member_id,
         "status" => :unpaid,
-        "preload" => :billing_period
-      }
-      |> Bills.list_bills()
-      |> Enum.map(fn %{billing_period: period} = bill ->
-        {:ok, %{total: bill_amount}} = Bills.calculate_bill(bill, period, member)
+        "preload" => :billing_period,
+        "order_by" => [asc: :inserted_at]
+      })
+        
+    {bills_display, payment_options} =
+      Enum.reduce(bills, {[], []}, fn 
+        bill, acc ->
+          %{billing_period: period} = bill
+          {bills_display_acc, payment_options_acc} = acc
 
-        %{
-          label: "#{period.month} #{period.year} - PHP#{Display.money(bill_amount)}",
-          value: bill.id,
-          amount: bill_amount
-        }
+          {:ok, %{total: bill_amount}} = Bills.calculate_bill(bill, period, member)
+
+          bill_name = "#{period.month} #{period.year}"
+
+          curr_bills_display = "#{bill_name} - PHP#{Display.money(bill_amount)}"
+
+          curr_payment_option =
+            case payment_options_acc do
+              [head | _tail] ->
+                total_amount = Decimal.add(head.total_amount, bill_amount)
+                 
+                %{
+                  billing_periods: "#{head.billing_periods}, #{bill_name}",
+                  total_amount: total_amount,
+                  bill_ids: [bill.id | head.bill_ids]
+                }
+              [] -> 
+                %{
+                  billing_periods: bill_name,
+                  total_amount: bill_amount,
+                  bill_ids: [bill.id]
+                }
+            end
+
+          {
+            [curr_bills_display | bills_display_acc],
+            [curr_payment_option | payment_options_acc]
+          }
       end)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:bill_options, bill_options)
+     |> assign(:bills_display, Enum.reverse(bills_display))
+     |> assign(:payment_options, Enum.reverse(payment_options))
      |> assign_changeset(changeset)}
   end
 
@@ -66,27 +94,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
     end
   end
 
-  defp update_total(socket) do
-    %{changeset: changeset, bill_options: bill_options} = socket.assigns
-    IO.inspect changeset
-
-    selected_bills = Changeset.get_field(changeset, :bill_ids, [])  
-
-    IO.inspect selected_bills
-
-    total_amount = 
-      Enum.reduce(bill_options, 0, fn bill, total ->
-        addition_to_total = if bill.value in selected_bills, do: bill.amount, else: 0
-
-        Decimal.add(total, addition_to_total)  
-      end)
-
-    assign(socket, :total_amount, total_amount)
-  end
-
   defp assign_changeset(socket, changeset) do
-    socket
-    |> assign(:changeset, changeset)
-    |> update_total()
+    assign(socket, :changeset, changeset)
   end
 end

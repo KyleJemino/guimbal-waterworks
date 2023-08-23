@@ -15,31 +15,31 @@
     <%= hidden_input f, :user_id, required: true %>
   
     <div class="field-group">
-      <%= label f, :or %>
+      <%= label f, :or, class: "uppercase" %>
       <%= number_input f, :or, required: true %>
       <%= error_tag f, :or %>
     </div>
   
-    <div class="field-group">
-      <%= label f, :bill_ids, "Bills" %>
-      <%= multiple_select( 
-        f, 
-        :bill_ids, 
-        Enum.map(@bill_options, &({&1.label, &1.value})),
-        selected: Changeset.get_field(@changeset, :bill_ids, []),
-        required: true  
-      )%>
-      <%= error_tag f, :bill_ids %>
-      <%= if Enum.count(@bill_options) == 0 do %>
-        <span class="invalid-feedback">
-          Member has no unpaid bills.
-        </span>
-      <% end %>
+    <div class="flex flex-col gap-2 mt-3">
+      <h4>Unpaid Bills:</h4>
+      <div class="flex flex-col gap-1">
+        <%= for bill <- @bills_display do %>
+          <p class="font-medium"><%= bill %></p>
+        <% end %>
+      </div>
     </div>
 
-    <p class="text-xl font-bold">
-      Total: <%= Display.money @total_amount %>
-    </p>
+    <div class="flex flex-col gap-2 mt-3">
+      <h4>Select Bills to Pay:</h4>
+      <div class="flex flex-col gap-1">
+        <%= for payment_option <- @payment_options do %>
+          <div class="flex items-center gap-2">
+            <%= radio_button f, :bill_ids, payment_option.bill_ids %>
+            <span><%= "#{payment_option.billing_periods} - PHP#{Display.money(payment_option.total_amount)}" %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
 
     <div class="form-button-group">
       <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
