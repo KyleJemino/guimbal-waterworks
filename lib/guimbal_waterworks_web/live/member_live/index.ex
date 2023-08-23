@@ -4,15 +4,19 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
   alias GuimbalWaterworks.Members
   alias GuimbalWaterworks.Members.Member
   alias GuimbalWaterworks.Bills
+  alias GuimbalWaterworks.Bills.Payment
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign_members(socket)}
+    {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    {:noreply,
+     socket
+     |> apply_action(socket.assigns.live_action, params)
+     |> assign_payment(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -51,6 +55,29 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
     |> assign(:bill, bill)
   end
 
+  defp apply_action(socket, :payment, %{"id" => id}) do
+    member = Members.get_member!(id)
+
+    socket
+    |> assign(:page_title, "Pay Bills for #{Display.full_name(member)}")
+    |> assign(:member, member)
+    |> assign(:bill, nil)
+  end
+
+  defp assign_payment(socket, :payment, %{"id" => member_id}) do
+    assign(
+      socket,
+      :payment,
+      %Payment{
+        member_id: member_id,
+        user_id: socket.assigns.current_users.id,
+        bill_ids: ""
+      }
+    )
+  end
+
+  defp assign_payment(socket, _action, _params), do: assign(socket, :payment, nil)
+
   @impl true
   def handle_event("archive", %{"id" => id}, socket) do
     member = Members.get_member!(id)
@@ -59,16 +86,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
       {:ok, _member} ->
         {:noreply,
          socket
-         |> put_flash(:info, "User deleted")
-         |> assign_members()}
+         |> put_flash(:info, "User deleted")}
 
       _ ->
         {:noreply, put_flash(socket, :error, "Something went wrong")}
     end
-  end
-
-  defp assign_members(socket) do
-    members = Members.list_members()
-    assign(socket, :members, members)
   end
 end

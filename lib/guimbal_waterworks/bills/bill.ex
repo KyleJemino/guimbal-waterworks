@@ -3,7 +3,12 @@ defmodule GuimbalWaterworks.Bills.Bill do
   import Ecto.Changeset
 
   alias GuimbalWaterworks.Members.Member
-  alias GuimbalWaterworks.Bills.BillingPeriod
+
+  alias GuimbalWaterworks.Bills.{
+    BillingPeriod,
+    Payment
+  }
+
   alias GuimbalWaterworks.Accounts.Users
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -18,6 +23,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
     belongs_to :member, Member
     belongs_to :billing_period, BillingPeriod
     belongs_to :user, Users
+    belongs_to :payment, Payment
 
     timestamps()
   end
@@ -51,5 +57,11 @@ defmodule GuimbalWaterworks.Bills.Bill do
       name: :bills_members_periods_uniq_idx,
       message: "Member already has an existing bill for this billing period."
     )
+  end
+
+  def payment_changeset(bill, %Payment{id: payment_id}) do
+    bill
+    |> change(payment_id: payment_id)
+    |> foreign_key_constraint(:payment_id)
   end
 end

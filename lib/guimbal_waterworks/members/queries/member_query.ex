@@ -1,6 +1,7 @@
 defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
   import Ecto.Query
   alias GuimbalWaterworks.Members.Member
+  alias GuimbalWaterworks.Bills.Bill
 
   def query_member(params) do
     query_by(Member, params)
@@ -55,6 +56,12 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
         "disconnected" ->
           query
           |> where([q], not q.connected?)
+
+        "with_unpaid" ->
+          query
+          |> join(:inner, [m], b in Bill, on: b.member_id == m.id)
+          |> where([m, b], is_nil(b.payment_id))
+          |> group_by([m], m.id)
 
         _ ->
           query
