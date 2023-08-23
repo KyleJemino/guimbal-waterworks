@@ -72,6 +72,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   defp bill_preload_query do
     Bills.query_bill(%{
       "order_by" => [desc: :inserted_at],
+      "status" => :unpaid,
       "preload" => [:billing_period]
     })
   end
