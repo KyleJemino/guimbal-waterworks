@@ -31,7 +31,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
      |> assign(assigns)
      |> assign(:base_params, base_params)
      |> assign_search_params(search_params)
-     |> assign_members()}
+     |> update_members_and_bills()}
   end
 
   @impl true
@@ -40,7 +40,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     {:noreply,
      socket
      |> assign_search_params(search_params)
-     |> assign_members()}
+     |> update_members_and_bills()}
   end
 
   defp assign_search_params(socket, search_params) do
@@ -67,6 +67,46 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     members = Members.list_members(list_params)
 
     assign(socket, :members, members)
+  end
+
+  defp assign_member_bill_map(%{ assigns: %{ members: members } } = socket) do
+    member_bill_map =
+    Enum.reduce(members, %{}, fn member, member_map_acc ->
+      initial_bills_with_amount = %{
+        total: 0,
+        period_amount_map: %{}
+      }
+
+      bills_with_amount = 
+        Enum.reduce(member.bills, initial_bills_with_amount, fn bill, bill_acc ->
+          %{
+            total: running_total, 
+            period_amount_map: period_amount_map
+          } = bill_acc
+
+          {:ok, %{total: current_bill_amount}} = 
+            Bills.calculate_bill(bill, bill.billing_period, member)
+
+          %{
+            total: Decimal.add(running_total, current_bill_amount),
+            period_amount_map: Map.put(
+              period_amount_map, 
+              Display.display_period(bill.billing_period),
+              current_bill_amount
+            )
+          }
+        end)
+
+      Map.put(member_map_acc, member.id, bills_with_amount)
+    end)
+
+    assign(socket, :member_bill_map, member_bill_map)
+  end
+
+  defp update_members_and_bills(socket) do
+    socket
+    |> assign_members()
+    |> assign_member_bill_map()
   end
 
   defp bill_preload_query do

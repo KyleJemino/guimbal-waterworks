@@ -58,11 +58,14 @@
         <td class="data"><%= Display.full_name(member) %></td>
         <td class="data"><%= member.street %></td>
         <td class="data text-right">
-          <%= member |> Members.calculate_member_bills() |> Display.money() %>
+          <%= Display.money(@member_bill_map[member.id].total) %>
         </td>
         <td class="data">
-          <%= for bill <- member.bills do %>
-            <p><%= Display.display_period(bill.billing_period) %></p>
+          <%= for {billing_period, amount} <- @member_bill_map[member.id].period_amount_map do %>
+            <div class="flex flex-row justify-between">
+              <p><%= "#{billing_period}:" %></p>
+              <p><%= Display.money(amount) %></p>
+            </div>
           <% end %>
         </td>
         <td class="actions">
