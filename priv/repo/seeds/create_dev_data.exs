@@ -1,7 +1,9 @@
 alias GuimbalWaterworks.Repo
 alias GuimbalWaterworks.Helpers
+alias GuimbalWaterworks.Constants
 alias GuimbalWaterworks.Accounts.Users
 alias GuimbalWaterworks.Members.Member
+alias GuimbalWaterworks.Bills.BillingPeriod
 alias GuimbalWaterworks.Accounts.Queries.UserQuery
 
 superuser =
@@ -61,5 +63,51 @@ members =
 
     %Member{} 
     |> Member.changeset(user_attrs)
+    |> Repo.insert!()
+  end)
+
+feb_index = 1
+
+# Create billing periods from march
+billing_periods =
+  Enum.map(1..6, fn x ->
+    month = Enum.at(Constants.months, 1 + x)
+
+    current_month_number = 1 + x + 1
+
+    due_date =
+      Date.new!(2023, current_month_number, 1)
+      |> Date.end_of_month()
+
+    from =
+      Date.new!(2023, current_month_number - 1, 1)
+
+    to = Date.end_of_month(from)
+
+    recipient_count = Enum.random(0..3)
+
+    recipients = 
+      if recipient_count > 0 do
+        Enum.map(0..recipient_count, fn _x -> 
+          %{name: Faker.Name.name()}
+        end)
+      else
+        []
+      end
+
+    period_attrs = %{
+      month: month,
+      year: "2023",
+      due_date: due_date,
+      from: from,
+      to: to,
+      personal_rate: 0.18,
+      business_rate: 0.15,
+      franchise_tax_rate: 0.02,
+      death_aid_recipients: recipients
+    }
+
+    %BillingPeriod{}
+    |> BillingPeriod.changeset(period_attrs)
     |> Repo.insert!()
   end)
