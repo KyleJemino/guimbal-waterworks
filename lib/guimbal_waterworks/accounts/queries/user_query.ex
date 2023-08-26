@@ -6,8 +6,13 @@ defmodule GuimbalWaterworks.Accounts.Queries.UserQuery do
     query_by(Users, params)
   end
 
+  defp query_by(query, %{"role" => role} = params) do
+    query
+    |> where([q], q.role == ^role)
+    |> query_by(Map.delete(params, "role"))
+  end
+
   use GuimbalWaterworks, :basic_queries
-  # insert custom queries here
 
   use GuimbalWaterworks, :catch_query
 end
