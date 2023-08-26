@@ -8,6 +8,7 @@ super_user_attrs = %{
   last_name: "Cabral",
   role: :manager,
   password: "AgwVKrfLRgJv",
+  password_confirmation: "AgwVKrfLRgJv",
   approved_at: DateTime.utc_now()
 }
 
