@@ -18,8 +18,20 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
         last_name: last_name,
         unique_identifier: identifier
       }) do
+    middle_initial_part =
+      if not is_nil(middle_name) do
+        abbreviation =
+          middle_name
+          |> String.first()
+          |> String.capitalize()
+
+        ", #{abbreviation}."
+      else
+        ""
+      end
+
     formatted_name =
-      "#{last_name}, #{first_name}#{if not is_nil(middle_name), do: ", #{middle_name}"}"
+      "#{last_name}, #{first_name}#{middle_initial_part}"
 
     "#{formatted_name}#{if not is_nil(identifier), do: " (#{identifier})"}"
   end
