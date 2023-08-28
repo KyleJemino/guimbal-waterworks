@@ -48,12 +48,24 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   end
 
   @impl true
-
   def handle_event("filter_change", %{"search_params" => search_params}, socket) do
     {:noreply,
      socket
      |> assign_search_params(search_params)
+     |> assign_pagination_params(@default_pagination_params)
      |> update_members_and_bills()}
+  end
+
+  @impl true
+  def handle_event("turn_page", %{"page" => page} = _params, socket) do
+    updated_pagination_params = 
+      Map.replace!(socket.assigns.pagination_params, "current_page", String.to_integer(page))
+
+    {:noreply,
+      socket
+        |> assign_pagination_params(updated_pagination_params)
+        |> update_members_and_bills()
+    }
   end
 
   defp assign_search_params(socket, search_params) do

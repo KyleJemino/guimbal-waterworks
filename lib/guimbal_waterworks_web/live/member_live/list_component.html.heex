@@ -94,4 +94,22 @@
       </tr>
     <% end %>
   </table>
+  <div class="flex flex-row justify-between">
+    <button
+      class="button"
+      phx-target={@myself}
+      phx-click="turn_page"
+      phx-value-page={@pagination_params["current_page"] - 1}
+    >
+      Prev
+    </button>
+    <button
+      class="button"
+      phx-target={@myself}
+      phx-click="turn_page"
+      phx-value-page={@pagination_params["current_page"] + 1}
+    >
+      Next
+    </button>
+  </div>
 </div>
