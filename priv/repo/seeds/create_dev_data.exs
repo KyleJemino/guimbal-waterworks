@@ -105,8 +105,8 @@ billing_periods =
       due_date: due_date,
       from: from,
       to: to,
-      personal_rate: 0.18,
-      business_rate: 0.15,
+      personal_rate: 18,
+      business_rate: 15,
       franchise_tax_rate: 0.02,
       death_aid_recipients: recipients
     }
