@@ -3,7 +3,11 @@ alias GuimbalWaterworks.Helpers
 alias GuimbalWaterworks.Constants
 alias GuimbalWaterworks.Accounts.Users
 alias GuimbalWaterworks.Members.Member
-alias GuimbalWaterworks.Bills.BillingPeriod
+alias GuimbalWaterworks.Bills
+alias GuimbalWaterworks.Bills.{
+  Bill,
+  BillingPeriod
+}
 alias GuimbalWaterworks.Accounts.Queries.UserQuery
 
 superuser =
@@ -111,3 +115,49 @@ billing_periods =
     |> BillingPeriod.changeset(period_attrs)
     |> Repo.insert!()
   end)
+
+# Create bills and payments
+IO.puts "Creating bils and payments"
+Enum.each(members, fn member ->
+  bills =
+    Enum.map(billing_periods, fn period ->
+      bill_attrs = %{
+        reading: Enum.random(1..30),
+        membership_fee?: false,
+        adv_fee?: false,
+        reconnection_fee?: false,
+        member_id: member.id,
+        billing_period_id: period.id,
+        user_id: admin.id
+      }
+
+      %Bill{}
+      |> Bill.changeset(bill_attrs)
+      |> Repo.insert!()
+    end)
+
+  no_of_bills_to_pay = Enum.random(3..6)
+  chunked_bills_to_pay = 
+    bills
+    |> Enum.take(no_of_bills_to_pay)
+    |> Helpers.chunk_random()
+
+  payments =
+    Enum.map(chunked_bills_to_pay, fn bills ->
+      bill_ids = 
+        bills
+        |> Enum.map(fn bill -> bill.id end)
+        |> Enum.join(",")
+
+      payment_attrs = %{
+        "or" => Enum.random(0..10_000_000),
+        "bill_ids" => bill_ids,
+        "member_id" => member.id,
+        "user_id" => cashier.id
+      }
+
+      {:ok, %{payment: payment}} = Bills.create_payment(payment_attrs)
+
+      payment
+    end)
+end)
