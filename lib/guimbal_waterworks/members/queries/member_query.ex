@@ -7,9 +7,6 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
     query_by(Member, params)
   end
 
-  use GuimbalWaterworks, :basic_queries
-  # insert custom queries here
-
   defp query_by(query, %{"last_name" => last_name} = params) do
     last_name_query = "%#{last_name}%"
 
@@ -70,5 +67,5 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
     query_by(status_query, Map.delete(params, "status"))
   end
 
-  use GuimbalWaterworks, :catch_query
+  use GuimbalWaterworks, :basic_queries
 end

@@ -8,7 +8,6 @@ defmodule GuimbalWaterworks.Bills.Queries.BillingPeriodQuery do
     query_by(BillingPeriod, params)
   end
 
-  use GuimbalWaterworks, :basic_queries
 
   defp query_by(query, %{"with_no_bill_for_member_id" => member_id} = params) do
     query
@@ -17,5 +16,5 @@ defmodule GuimbalWaterworks.Bills.Queries.BillingPeriodQuery do
     |> query_by(Map.delete(params, "with_no_bill_for_member_id"))
   end
 
-  use GuimbalWaterworks, :catch_query
+  use GuimbalWaterworks, :basic_queries
 end

@@ -13,6 +13,4 @@ defmodule GuimbalWaterworks.Accounts.Queries.UserQuery do
   end
 
   use GuimbalWaterworks, :basic_queries
-
-  use GuimbalWaterworks, :catch_query
 end

@@ -13,6 +13,11 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     "type" => "all"
   }
 
+  @default_pagination_params %{
+    "limit" => 20,
+    "offset" => 0
+  }
+
   @impl true
   def update(assigns, socket) do
     search_params =

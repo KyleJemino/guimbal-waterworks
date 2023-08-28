@@ -38,11 +38,7 @@ defmodule GuimbalWaterworks do
         |> where([q], is_nil(q.archived_at))
         |> query_by(Map.delete(params, "with_archived?"))
       end
-    end
-  end
 
-  def catch_query do
-    quote do
       defp query_by(query, _params), do: query
     end
   end
