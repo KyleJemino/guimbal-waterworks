@@ -30,8 +30,7 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
         ""
       end
 
-    formatted_name =
-      "#{last_name}, #{first_name}#{middle_initial_part}"
+    formatted_name = "#{last_name}, #{first_name}#{middle_initial_part}"
 
     "#{formatted_name}#{if not is_nil(identifier), do: " (#{identifier})"}"
   end

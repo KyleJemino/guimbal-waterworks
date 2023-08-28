@@ -27,6 +27,12 @@ defmodule GuimbalWaterworks do
         |> query_by(Map.delete(params, "limit"))
       end
 
+      defp query_by(query, %{"offset" => offset} = params) do
+        query
+        |> offset(^offset)
+        |> query_by(Map.delete(params, "offset"))
+      end
+
       defp query_by(query, %{"order_by" => order_by} = params) do
         query
         |> order_by(^order_by)
