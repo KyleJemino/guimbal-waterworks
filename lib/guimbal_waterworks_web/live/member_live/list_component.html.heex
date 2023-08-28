@@ -29,7 +29,8 @@
         f, 
         :type, 
         ["All": :all, "Personal": :personal, "Business": :business], 
-        required: true  
+        required: true,
+        value: @search_params["type"]
       )%>
     </div>
     <div class="search-input-group">
@@ -38,7 +39,8 @@
         f, 
         :status, 
         ["All": :all, "Connected": :connected, "Disconnected": :disconnected, "With Unpaid Bills": :with_unpaid], 
-        required: true  
+        required: true,
+        value: @search_params["status"]
       )%>
     </div>
   </.form>
