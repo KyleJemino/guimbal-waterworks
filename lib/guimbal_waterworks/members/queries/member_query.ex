@@ -31,6 +31,10 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
     |> query_by(Map.delete(params, "middle_name"))
   end
 
+  defp query_by(query, %{"street" => "All"} = params) do
+    query_by(query, Map.delete(params, "street"))
+  end
+
   defp query_by(query, %{"street" => street} = params) do
     query
     |> where([q], q.street == ^street)

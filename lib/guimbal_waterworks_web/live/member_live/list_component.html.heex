@@ -21,7 +21,12 @@
     </div>
     <div class="search-input-group">
       <%= label f, :street %>
-      <%= text_input f, :street, value: @search_params["street"] %>
+      <%= select( 
+        f, 
+        :street, 
+        ["All" | GuimbalWaterworks.Constants.streets()], 
+        value: @search_params["street"]
+      )%>
     </div>
     <div class="search-input-group">
       <%= label f, :type %>
