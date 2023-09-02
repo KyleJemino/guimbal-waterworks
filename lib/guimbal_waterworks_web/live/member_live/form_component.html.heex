@@ -37,7 +37,12 @@
   
   <div class="field-group">
     <%= label f, :street %>
-    <%= text_input f, :street %>
+    <%= select( 
+      f, 
+      :street, 
+      GuimbalWaterworks.Constants.streets(), 
+      required: true  
+    )%>
     <%= error_tag f, :street %>
   </div>
   
