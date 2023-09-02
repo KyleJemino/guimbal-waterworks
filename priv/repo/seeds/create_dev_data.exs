@@ -50,7 +50,7 @@ cashier =
 
 # Create members
 members =
-  Enum.map(1..100, fn x ->
+  Enum.map(1..3000, fn x ->
     type = if (Enum.random(0..100) > 5), do: :personal, else: :business 
 
     user_attrs = %{
@@ -58,7 +58,7 @@ members =
       middle_name: Faker.Name.last_name(),
       last_name: Faker.Name.last_name(),
       unique_identifier: nil,
-      street: Faker.Address.street_name(),
+      street: Enum.random(GuimbalWaterworks.Constants.streets()),
       meter_no: x,
       type: type,
       connected?: true,
