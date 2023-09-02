@@ -10,7 +10,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     "last_name" => "",
     "unique_identifier" => "",
     "street" => "",
-    "type" => "all"
+    "type" => "all",
+    "actions?" => true
   }
 
   @default_pagination_params %{
@@ -49,10 +50,49 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
 
   @impl true
   def handle_event("filter_change", %{"search_params" => search_params}, socket) do
+    actions? =
+      search_params
+      |> Map.get("actions?")
+      |> IO.inspect
+      |> String.to_existing_atom()
+
+    format_params =
+      search_params
+      |> Map.replace!("actions?", actions?)
+
     {:noreply,
      socket
-     |> assign_search_params(search_params)
-     |> assign_pagination_params(@default_pagination_params)
+     |> assign_search_params(format_params)
+     |> assign_pagination_params(%{
+       "per_page" => socket.assigns.pagination_params["per_page"],
+       "current_page" => 1
+     })
+     |> update_members_and_bills()}
+  end
+
+  @impl true
+  def handle_event(
+    "per_page_change", 
+    %{"pagination_params" => %{
+      "per_page" => per_page,
+    }}, 
+    socket
+  ) do
+    formatted_per_page =
+      if per_page == "All" do
+        per_page
+      else
+        String.to_integer(per_page)
+      end
+
+    formatted_pagination_params = %{
+      "per_page" => formatted_per_page,
+      "current_page" => 1
+    }
+
+    {:noreply,
+     socket
+     |> assign_pagination_params(formatted_pagination_params)
      |> update_members_and_bills()}
   end
 
@@ -69,6 +109,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   end
 
   defp assign_search_params(socket, search_params) do
+    IO.inspect search_params
     search_params_with_values =
       search_params
       |> Enum.filter(fn {_key, value} ->
@@ -95,10 +136,15 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
            }
          } = socket
        ) do
-    pagination_query_params = %{
-      "limit" => limit,
-      "offset" => limit * (current_page - 1)
-    }
+    pagination_query_params =
+      if limit != "All" do
+        %{
+          "limit" => limit,
+          "offset" => limit * (current_page - 1)
+        }
+      else
+        %{}
+      end
 
     list_params =
       base_params
@@ -146,18 +192,59 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   end
 
   defp assign_pagination_information(%{assigns: assigns} = socket) do
-    pagination_params = assigns.pagination_params
+    %{
+      "per_page" => per_page,
+      "current_page" => current_page
+    } = assigns.pagination_params
 
     result_member_count =
       assigns.base_params
       |> Map.merge(assigns.search_params)
       |> Members.count_members()
 
-    pages_count = ceil(result_member_count / pagination_params["per_page"])
+    pages_count = 
+      if per_page != "All" do
+        ceil(result_member_count / per_page)
+      else
+        1
+      end
+
     display_count = Enum.count(assigns.members)
+
+    pagination_chunks =
+      cond do
+        per_page == "All" -> []
+        pages_count < 10 ->
+          [
+            Enum.to_list(1..pages_count)
+          ]
+        (current_page < 7) -> 
+          [
+            Enum.to_list(1..10),
+            [pages_count - 1, pages_count]
+          ] 
+
+        current_page > pages_count - 6 ->
+          [
+            [1, 2],
+            Enum.to_list((pages_count - 9)..pages_count),
+          ]
+        true ->
+          [
+            [1],
+            Enum.to_list(
+              (current_page - 4)..(current_page + 4)
+            ),
+            [pages_count]
+          ]
+      end
     
-    ## add to assign
-    socket
+    assign(socket, :pagination, %{
+      total_count: result_member_count,
+      display_count: display_count,
+      pages_count: pages_count,
+      pagination_chunks: pagination_chunks
+    })
   end
 
   defp update_members_and_bills(socket) do

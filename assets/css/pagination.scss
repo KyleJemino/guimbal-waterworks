@@ -1,0 +1,13 @@
+.pagination-info-container {
+  @apply w-full flex flex-row justify-between items-center;
+}
+
+.pagination-buttons-container {
+  @apply flex justify-center;
+}
+
+.pagination-buttons-container > .pagination {
+  @apply flex justify-between items-center w-full mt-4 mb-8;
+
+  max-width: 720px;
+}

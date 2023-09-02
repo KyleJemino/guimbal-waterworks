@@ -48,16 +48,46 @@
         value: @search_params["status"]
       )%>
     </div>
+    <div class="flex flex-row items-center gap-2">
+      <%= checkbox(f, :actions?, value: @search_params["actions?"], class: "checkbox") %>
+      <span>Show Action</span>
+    </div>
   </.form>
 
+  <.form
+    let={f}
+    for={:pagination_params}
+    id="pagination-info-form"
+    phx-target={@myself}
+    phx-change="per_page_change"
+    class="pagination-info-container"
+  >
+    <div>
+      <span>Show per page</span>
+      <%= select( 
+        f, 
+        :per_page, 
+        ["All" | Enum.to_list(10..100//10)], 
+        required: true,
+        value: @pagination_params["per_page"]
+      )%>
+    </div>
+    <p>
+      Displaying <strong><%= @pagination.display_count %></strong> results of <strong><%= @pagination.total_count %></strong>
+    </p>
+  </.form>
   <table class="data-table">
     <tr class="header-row">
       <th class="header">M#</th>
       <th class="header">Name</th>
       <th class="header">Street</th>
-      <th class="headers">Unpaid Bill</th>
-      <th class="headers">Billing Periods</th>
-      <th class="header">Actions</th>
+      <th class="header">Unpaid Bill</th>
+      <th class="header">Billing Periods</th>
+      <th 
+        class={"header #{!@search_params["actions?"] && "hidden"}"}
+      >
+        Actions
+      </th>
     </tr>
     <%= for member <- @members do %>
       <tr id={"member-#{member.id}"} class="data-row">
@@ -75,7 +105,9 @@
             </div>
           <% end %>
         </td>
-        <td class="actions">
+        <td 
+          class={"actions #{!@search_params["actions?"] && "hidden"}"}
+        >
           <div class="inline-flex gap-2 flex-row">
             <%= live_redirect "Show", to: Routes.member_show_path(@socket, :show, member), class: "button -table" %>
             <SC.render_for_roles roles={[:admin]} user={@current_users}>
@@ -99,22 +131,47 @@
       </tr>
     <% end %>
   </table>
-  <div class="flex flex-row justify-between">
-    <button
-      class="button"
-      phx-target={@myself}
-      phx-click="turn_page"
-      phx-value-page={@pagination_params["current_page"] - 1}
-    >
-      Prev
-    </button>
-    <button
-      class="button"
-      phx-target={@myself}
-      phx-click="turn_page"
-      phx-value-page={@pagination_params["current_page"] + 1}
-    >
-      Next
-    </button>
+  <div class="pagination-buttons-container">
+    <div class="pagination">
+      <%= if @pagination_params["current_page"] != 1 do %>
+        <button
+          class="button"
+          phx-target={@myself}
+          phx-click="turn_page"
+          phx-value-page={@pagination_params["current_page"] - 1}
+        >
+          Prev
+        </button>
+      <% end %>
+      <div class="spacer"></div> 
+      <%= for chunk <- @pagination.pagination_chunks do %>
+        <%= if chunk != List.first(@pagination.pagination_chunks) do %>
+          <span>..</span>
+        <% end %>
+        <%= for page <- chunk do %>
+          <button
+            class={
+              "button -page #{if page == @pagination_params["current_page"], do: "-active"}"
+            }
+            phx-target={@myself}
+            phx-click="turn_page"
+            phx-value-page={page}
+          >
+            <%= page %>
+          </button>
+        <% end %>
+      <% end %>
+      <div class="spacer"></div> 
+      <%= if @pagination_params["current_page"] < @pagination.pages_count do %>
+        <button
+          class="button"
+          phx-target={@myself}
+          phx-click="turn_page"
+          phx-value-page={@pagination_params["current_page"] + 1}
+        >
+          Next
+        </button>
+      <% end %>
+    </div>
   </div>
 </div>

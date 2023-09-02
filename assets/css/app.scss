@@ -6,6 +6,8 @@
 @use 'buttons';
 @use 'tables';
 @use 'filter-form';
+@use 'pagination';
+@use 'inputs';
 
 @tailwind base;
 @tailwind components;
