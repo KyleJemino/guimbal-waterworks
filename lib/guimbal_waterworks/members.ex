@@ -7,8 +7,6 @@ defmodule GuimbalWaterworks.Members do
   alias GuimbalWaterworks.Repo
 
   alias GuimbalWaterworks.Members.Member
-
-  alias GuimbalWaterworks.Members.Queries.MemberQuery, as: MQ
   alias GuimbalWaterworks.Members.Resolvers.MemberResolver, as: MR
 
   @doc """
@@ -95,4 +93,5 @@ defmodule GuimbalWaterworks.Members do
   defdelegate list_members(params \\ %{}), to: MR
   defdelegate archive_member(member), to: MR
   defdelegate calculate_member_bills(member), to: MR
+  defdelegate count_members(params \\ %{}), to: MR
 end
