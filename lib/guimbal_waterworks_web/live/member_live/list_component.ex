@@ -4,6 +4,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   alias GuimbalWaterworks.Members
   alias GuimbalWaterworks.Bills
 
+  @status_options ["All": :all, "Connected": :connected, "Disconnected": :disconnected, "With Unpaid Bills": :with_unpaid, "With No Unpaid": :with_no_unpaid]
+
   @default_search_params %{
     "first_name" => "",
     "middle_name" => "",
@@ -42,6 +44,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(:status_options, @status_options)
      |> assign(:base_params, base_params)
      |> assign_search_params(search_params)
      |> assign_pagination_params(pagination_params)

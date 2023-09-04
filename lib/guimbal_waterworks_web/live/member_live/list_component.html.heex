@@ -43,7 +43,7 @@
       <%= select( 
         f, 
         :status, 
-        ["All": :all, "Connected": :connected, "Disconnected": :disconnected, "With Unpaid Bills": :with_unpaid], 
+        @status_options, 
         required: true,
         value: @search_params["status"]
       )%>
