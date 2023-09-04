@@ -1,7 +1,6 @@
 defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
   import Ecto.Query
   alias GuimbalWaterworks.Members.Member
-  alias GuimbalWaterworks.Bills.Bill
 
   def query_member(params) do
     query_by(Member, params)
@@ -60,15 +59,23 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
 
         "with_unpaid" ->
           query
-          |> where([m], fragment(
-            "EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)", m.id
-          ))
+          |> where(
+            [m],
+            fragment(
+              "EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)",
+              m.id
+            )
+          )
 
         "with_no_unpaid" ->
           query
-          |> where([m], fragment(
-            "NOT EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)", m.id
-          ))
+          |> where(
+            [m],
+            fragment(
+              "NOT EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)",
+              m.id
+            )
+          )
 
         _ ->
           query

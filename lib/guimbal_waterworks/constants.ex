@@ -1,12 +1,12 @@
 defmodule GuimbalWaterworks.Constants do
   @months Enum.map(
-      1..12,
-      fn x ->
-        x
-        |> Timex.month_name()
-        |> String.upcase()
-      end
-    )
+            1..12,
+            fn x ->
+              x
+              |> Timex.month_name()
+              |> String.upcase()
+            end
+          )
 
   @streets [
     "BALANTAD ST. (1)",
