@@ -60,9 +60,15 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
 
         "with_unpaid" ->
           query
-          |> join(:inner, [m], b in Bill, on: b.member_id == m.id)
-          |> where([m, b], is_nil(b.payment_id))
-          |> distinct(true)
+          |> where([m], fragment(
+            "EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)", m.id
+          ))
+
+        "with_no_unpaid" ->
+          query
+          |> where([m], fragment(
+            "NOT EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)", m.id
+          ))
 
         _ ->
           query
