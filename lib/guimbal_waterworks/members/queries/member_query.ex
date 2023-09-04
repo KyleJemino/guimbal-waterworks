@@ -62,7 +62,7 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
           query
           |> join(:inner, [m], b in Bill, on: b.member_id == m.id)
           |> where([m, b], is_nil(b.payment_id))
-          |> group_by([m], m.id)
+          |> distinct(true)
 
         _ ->
           query
