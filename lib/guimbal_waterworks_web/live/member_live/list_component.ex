@@ -9,7 +9,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     Connected: :connected,
     Disconnected: :disconnected,
     "With Unpaid Bills": :with_unpaid,
-    "With No Unpaid": :with_no_unpaid
+    "With No Unpaid": :with_no_unpaid,
+    "Disconnection Warning": :disconnection_warning,
+    "For Disconnection": :for_disconnection,
+    "For Reconnection": :for_reconnection
   ]
 
   @default_search_params %{
@@ -62,7 +65,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     actions? =
       search_params
       |> Map.get("actions?")
-      |> IO.inspect()
       |> String.to_existing_atom()
 
     format_params =
@@ -119,8 +121,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   end
 
   defp assign_search_params(socket, search_params) do
-    IO.inspect(search_params)
-
     search_params_with_values =
       search_params
       |> Enum.filter(fn {_key, value} ->
