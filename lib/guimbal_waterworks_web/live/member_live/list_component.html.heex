@@ -83,6 +83,7 @@
       <th class="header">Street</th>
       <th class="header">Unpaid Bill</th>
       <th class="header">Billing Periods</th>
+      <th class="header">Status</th>
       <th 
         class={"header #{!@search_params["actions?"] && "hidden"}"}
       >
@@ -104,6 +105,11 @@
               <p><%= Display.money(amount) %></p>
             </div>
           <% end %>
+        </td>
+        <td class="data">
+          <div class="flex items-center justify-center">
+            <%= Display.member_status(@member_bill_map[member.id].period_amount_map, member.connected?) %>
+          </div>
         </td>
         <td 
           class={"actions #{!@search_params["actions?"] && "hidden"}"}
