@@ -57,4 +57,14 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
       "Disconnected"
     end
   end
+
+  def status_color(status) do
+    case status do
+      "With No Unpaid" -> "green"
+      "For Reconnection" -> "blue"
+      "With 1 Unpaid" -> "yellow"
+      "Disconnection Warning" -> "orange"
+      _x -> "red" 
+    end
+  end
 end
