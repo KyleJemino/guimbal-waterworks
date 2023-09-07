@@ -18,8 +18,19 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
         last_name: last_name,
         unique_identifier: identifier
       }) do
-    formatted_name =
-      "#{last_name}, #{first_name}#{if not is_nil(middle_name), do: ", #{middle_name}"}"
+    middle_initial_part =
+      if not is_nil(middle_name) do
+        abbreviation =
+          middle_name
+          |> String.first()
+          |> String.capitalize()
+
+        ", #{abbreviation}."
+      else
+        ""
+      end
+
+    formatted_name = "#{last_name}, #{first_name}#{middle_initial_part}"
 
     "#{formatted_name}#{if not is_nil(identifier), do: " (#{identifier})"}"
   end
@@ -29,4 +40,31 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
   def money(decimal), do: "PHP #{D.round(decimal, 2)}"
 
   def display_period(billing_period), do: "#{billing_period.month} #{billing_period.year}"
+
+  def member_status(unpaid_period_amount_map, true = _connected?) do
+    case Enum.count(unpaid_period_amount_map) do
+      0 -> "With No Unpaid"
+      1 -> "With 1 Unpaid"
+      2 -> "Disconnection Warning"
+      3 -> "For Disconnection"
+    end
+  end
+
+  def member_status(unpaid_period_amount_map, false = _connected?) do
+    if Enum.count(unpaid_period_amount_map) < 2 do
+      "For Reconnection"
+    else
+      "Disconnected"
+    end
+  end
+
+  def status_color(status) do
+    case status do
+      "With No Unpaid" -> "green"
+      "For Reconnection" -> "blue"
+      "With 1 Unpaid" -> "yellow"
+      "Disconnection Warning" -> "orange"
+      _x -> "red"
+    end
+  end
 end

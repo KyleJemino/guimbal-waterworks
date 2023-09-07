@@ -3,6 +3,7 @@ defmodule GuimbalWaterworks.Members.Member do
   import Ecto.Changeset
 
   alias GuimbalWaterworks.Bills.Bill
+  alias GuimbalWaterworks.Constants
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -39,6 +40,7 @@ defmodule GuimbalWaterworks.Members.Member do
     ])
     |> validate_required([:first_name, :last_name, :street, :type, :meter_no, :connected?, :mda?])
     |> validate_inclusion(:type, [:personal, :business])
+    |> validate_inclusion(:street, Constants.streets())
     |> unique_constraint(
       :unique_identifier,
       name: :name_combination_unique_idx,

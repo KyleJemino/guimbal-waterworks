@@ -19,6 +19,4 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
   end
 
   use GuimbalWaterworks, :basic_queries
-
-  use GuimbalWaterworks, :catch_query
 end

@@ -27,6 +27,12 @@ defmodule GuimbalWaterworks do
         |> query_by(Map.delete(params, "limit"))
       end
 
+      defp query_by(query, %{"offset" => offset} = params) do
+        query
+        |> offset(^offset)
+        |> query_by(Map.delete(params, "offset"))
+      end
+
       defp query_by(query, %{"order_by" => order_by} = params) do
         query
         |> order_by(^order_by)
@@ -38,11 +44,7 @@ defmodule GuimbalWaterworks do
         |> where([q], is_nil(q.archived_at))
         |> query_by(Map.delete(params, "with_archived?"))
       end
-    end
-  end
 
-  def catch_query do
-    quote do
       defp query_by(query, _params), do: query
     end
   end

@@ -25,4 +25,10 @@ defmodule GuimbalWaterworks.Members.Resolvers.MemberResolver do
       Decimal.add(total, acc)
     end)
   end
+
+  def count_members(params \\ %{}) do
+    params
+    |> MQ.query_member()
+    |> Repo.aggregate(:count)
+  end
 end

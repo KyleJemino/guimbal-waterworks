@@ -4,11 +4,9 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
   alias GuimbalWaterworks.Bills.Bill
 
   def query_member(params) do
-    query_by(Member, params)
+    from(m in Member, as: :member)
+    |> query_by(params)
   end
-
-  use GuimbalWaterworks, :basic_queries
-  # insert custom queries here
 
   defp query_by(query, %{"last_name" => last_name} = params) do
     last_name_query = "%#{last_name}%"
@@ -32,6 +30,10 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
     query
     |> where([q], ilike(q.middle_name, ^middle_name_query))
     |> query_by(Map.delete(params, "middle_name"))
+  end
+
+  defp query_by(query, %{"street" => "All"} = params) do
+    query_by(query, Map.delete(params, "street"))
   end
 
   defp query_by(query, %{"street" => street} = params) do
@@ -59,9 +61,60 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
 
         "with_unpaid" ->
           query
-          |> join(:inner, [m], b in Bill, on: b.member_id == m.id)
-          |> where([m, b], is_nil(b.payment_id))
-          |> group_by([m], m.id)
+          |> where(
+            [m],
+            fragment(
+              "EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)",
+              m.id
+            )
+          )
+
+        "with_no_unpaid" ->
+          query
+          |> where(
+            [m],
+            fragment(
+              "NOT EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)",
+              m.id
+            )
+          )
+
+        "disconnection_warning" ->
+          query
+          |> where(
+            [m],
+            subquery(
+              from(b in Bill,
+                select: count(),
+                where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)
+              )
+            ) == 2
+          )
+          |> where([m], m.connected?)
+
+        "for_disconnection" ->
+          query
+          |> where(
+            [m],
+            subquery(
+              from(b in Bill,
+                select: count(),
+                where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)
+              )
+            ) == 3
+          )
+          |> where([m], m.connected?)
+
+        "for_reconnection" ->
+          query
+          |> where(
+            [m],
+            fragment(
+              "NOT EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)",
+              m.id
+            )
+          )
+          |> where([m], not m.connected?)
 
         _ ->
           query
@@ -70,5 +123,5 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
     query_by(status_query, Map.delete(params, "status"))
   end
 
-  use GuimbalWaterworks, :catch_query
+  use GuimbalWaterworks, :basic_queries
 end

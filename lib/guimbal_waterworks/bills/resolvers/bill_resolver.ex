@@ -75,7 +75,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     base_rate =
       case member_type do
         :personal -> personal_rate
-        :business_rate -> business_rate
+        :business -> business_rate
       end
 
     base_amount = D.mult(base_rate, reading)

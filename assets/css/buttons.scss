@@ -16,4 +16,12 @@
   &.-icon {
     @apply min-w-[unset] text-lg font-bold;
   }
+
+  &.-page {
+    @apply min-w-[unset] bg-transparent;
+  }
+
+  &.-page.-active {
+    @apply bg-slate-600 text-white;
+  }
 }
