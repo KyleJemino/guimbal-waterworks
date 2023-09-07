@@ -64,7 +64,7 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
       "For Reconnection" -> "blue"
       "With 1 Unpaid" -> "yellow"
       "Disconnection Warning" -> "orange"
-      _x -> "red" 
+      _x -> "red"
     end
   end
 end

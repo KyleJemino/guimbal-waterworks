@@ -81,18 +81,26 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
 
         "disconnection_warning" ->
           query
-          |> where([m], 
+          |> where(
+            [m],
             subquery(
-              from(b in Bill, select: count(), where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)) 
+              from(b in Bill,
+                select: count(),
+                where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)
+              )
             ) == 2
           )
           |> where([m], m.connected?)
 
         "for_disconnection" ->
           query
-          |> where([m], 
+          |> where(
+            [m],
             subquery(
-              from(b in Bill, select: count(), where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)) 
+              from(b in Bill,
+                select: count(),
+                where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)
+              )
             ) == 3
           )
           |> where([m], m.connected?)
