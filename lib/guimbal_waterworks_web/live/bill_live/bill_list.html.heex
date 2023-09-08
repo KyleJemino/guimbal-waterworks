@@ -1,0 +1,32 @@
+<table>
+  <tr class="header-row">
+    <th class="header">Billing Period</th>
+    <th class="header">Reading (Cu.M.)</th>
+    <th class="header">Base Amount (PHP)</th>
+    <th class="header">Franchise Tax (PHP)</th>
+    <th class="header">Membership Fee (PHP)</th>
+    <th class="header">Advance Fee (PHP)</th>
+    <th class="header">Reconnection Fee (PHP)</th>
+    <th class="header">Surcharge Fee (PHP)</th>
+    <th class="header">Total</th>
+    <th class="header">Payment Status</th>
+  </tr>
+  <%= for bill <- @bills do %>
+    <tr class="data-row">
+      <td class="data"><%= Display.display_period(bill.billing_period) %></td>
+      <td class="data text-right"><%= Decimal.round(bill.reading, 2) %></td>
+      <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
+      <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
+      <td class="data text-right"><%= Display.money(bill.calculation.membership_amount) %></td>
+      <td class="data text-right"><%= Display.money(bill.calculation.adv_amount) %></td>
+      <td class="data text-right"><%= Display.money(bill.calculation.reconnection_amount) %></td>
+      <td class="data text-right"><%= Display.money(bill.calculation.surcharge) %></td>
+      <td class="data text-right"><%= Display.money(bill.calculation.total) %></td>
+      <td class="data">
+        <%= if not is_nil(bill.payment), do: "PAID", else: "UNPAID" %>
+      </td>
+    </tr>
+<% end %>
+  <tr>
+  </tr>
+</table>

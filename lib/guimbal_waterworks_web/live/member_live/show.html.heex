@@ -57,3 +57,10 @@
 <% end %>
 
 <h2 class="mt-3">Bills</h2>
+<.live_component
+  module={GuimbalWaterworksWeb.BillLive.BillList}
+  id={:bill_list}
+  base_params={%{
+    "member_id" => @member.id
+  }}
+/>
