@@ -37,7 +37,7 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
 
   def format_date(date), do: Timex.format!(date, "%b %d %Y", :strftime)
 
-  def money(decimal), do: "PHP #{D.round(decimal, 2)}"
+  def money(decimal), do: "₱#{D.round(decimal, 2)}"
 
   def display_period(billing_period), do: "#{billing_period.month} #{billing_period.year}"
 
