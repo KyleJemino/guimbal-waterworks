@@ -26,6 +26,14 @@ table, tr, th, td {
   @apply p-2 text-center;
 }
 
+.total-row {
+  @apply text-lg font-bold;
+}
+
+.total-row > .data {
+  @apply p-2;
+}
+
 .status-cell {
   &.-green {
     @apply bg-green-400
