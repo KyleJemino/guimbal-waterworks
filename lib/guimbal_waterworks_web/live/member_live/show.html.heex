@@ -63,7 +63,13 @@
   </div>
   <div class="table-container">
     <%= if @live_action in [:payments] do %>
-      <h1>Payments Table</h1>
+      <.live_component
+        module={GuimbalWaterworksWeb.PaymentLive.PaymentList}
+        id={:payment_list}
+        base_params={%{
+         "member_id" => @member.id
+        }}
+      />
     <% end %>
     <%= if @live_action in [:new_bill, :show, :edit] do %>
       <.live_component
