@@ -36,7 +36,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
     {:noreply, assign(socket, :show_info?, false)}
   end
 
-  defp page_title(:show), do: "Show Member"
   defp page_title(:edit), do: "Edit Member"
   defp page_title(:new_bill), do: "Create Bill"
+  defp page_title(_action), do: "Show Member"
 end
