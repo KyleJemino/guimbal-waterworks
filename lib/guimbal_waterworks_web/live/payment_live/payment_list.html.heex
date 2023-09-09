@@ -3,19 +3,25 @@
     <th class="header">OR</th>
     <th class="header">Bills</th>
     <th class="header">Date</th>
-    <th class="header">Employee</th>
+    <th class="header">Cashier</th>
     <th class="header">Total</th>
   </tr>
-  <tr class="data-row">
-      <td class="data">12345</td>
+  <%= for payment <- @payments do %>
+    <tr class="data-row">
+      <td class="data"><%= payment.or %></td>
       <td class="data">
-        <div class="flex flex-row justify-between">
-          <p>July 2023</p>
-          <p>₱417.80</p>
-        </div>
+        <%= for bill <- payment.bills do %>
+          <div class="flex flex-row justify-left">
+            <p><%= "#{Display.display_period(bill.billing_period)}:" %></p>
+            <p><%= bill |> Bills.get_bill_total() |> Display.money() %></p>
+          </div>
+        <% end %>
       </td>
-      <td class="data">Sept. 9, 2023</td>
-      <td class="data">Kyle Jemino</td>
-      <td class="data">₱417.80</td>
-  </tr>
+      <td class="data"><%= Display.format_date(payment.paid_at) %></td>
+      <td class="data"><%= Display.full_name(payment.user) %></td>
+      <td class="data">
+        <%= payment.bills |> Bills.get_bill_total() |> Display.money() %>
+      </td>
+    </tr>
+  <% end %>
 </table>
