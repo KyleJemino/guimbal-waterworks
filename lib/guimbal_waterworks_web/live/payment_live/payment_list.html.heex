@@ -10,18 +10,27 @@
     <tr class="data-row">
       <td class="data"><%= payment.or %></td>
       <td class="data">
-        <%= for bill <- payment.bills do %>
-          <div class="flex flex-row justify-left">
-            <p><%= "#{Display.display_period(bill.billing_period)}:" %></p>
-            <p><%= bill |> Bills.get_bill_total() |> Display.money() %></p>
+        <%= for {period, amount} <- @payment_bill_map[payment.id] do %>
+          <div class="flex flex-row justify-between">
+            <p><%= "#{period}:" %></p>
+            <p><%= Display.money(amount) %></p>
           </div>
         <% end %>
       </td>
       <td class="data"><%= Display.format_date(payment.paid_at) %></td>
       <td class="data"><%= Display.full_name(payment.user) %></td>
-      <td class="data">
-        <%= payment.bills |> Bills.get_bill_total() |> Display.money() %>
+      <td class="data text-right">
+        <%= Display.money(@payment_total_map[payment.id]) %>
       </td>
     </tr>
   <% end %>
+    <tr class="data-row">
+      <td class="data font-bold">Total</td>
+      <td class="data"></td>
+      <td class="data"></td>
+      <td class="data"></td>
+      <td class="data font-bold text-right">
+        <%= Display.money(@total) %>
+      </td>
+    </tr>
 </table>
