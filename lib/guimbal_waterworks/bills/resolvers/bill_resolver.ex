@@ -55,7 +55,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
         %BillingPeriod{} = billing_period,
         %Member{
           type: member_type
-        }
+        },
+        payment
       )
       when member_type in [:personal, :business] do
     %{
@@ -86,7 +87,9 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
     reconnection_amount = D.new(if reconnection_fee?, do: 100, else: 0)
 
-    is_overdue = Date.diff(Date.utc_today(), due_date) > 0
+    date_to_compare = if not is_nil(payment), do: payment.paid_at, else: Date.utc_today()
+
+    is_overdue = Date.diff(date_to_compare, due_date) > 0
     surcharge_amount = D.new(if is_overdue, do: 20, else: 0)
 
     total =
@@ -109,16 +112,16 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
      }}
   end
 
-  def calculate_bill(_bill, _period, _member), do: {:error, nil}
+  def calculate_bill(_bill, _period, _member, _payment), do: {:error, nil}
 
   def get_bill_total(%Bill{} = bill) do
-    {:ok, %{total: total}} = calculate_bill(bill, bill.billing_period, bill.member)
+    {:ok, %{total: total}} = calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
     total
   end
 
   def get_bill_total(bills) when is_list(bills) do
     Enum.reduce(bills, 0, fn bill, acc ->
-      {:ok, %{total: total}} = calculate_bill(bill, bill.billing_period, bill.member)
+      {:ok, %{total: total}} = calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
       D.add(acc, total)
     end)

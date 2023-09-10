@@ -183,7 +183,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
             } = bill_acc
 
             {:ok, %{total: current_bill_amount}} =
-              Bills.calculate_bill(bill, bill.billing_period, member)
+              Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
             %{
               total: Decimal.add(running_total, current_bill_amount),
@@ -271,7 +271,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     Bills.query_bill(%{
       "order_by" => [desc: :inserted_at],
       "status" => :unpaid,
-      "preload" => [:billing_period]
+      "preload" => [:billing_period, :member, :payment]
     })
   end
 end

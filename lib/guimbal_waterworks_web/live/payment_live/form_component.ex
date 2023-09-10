@@ -21,7 +21,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
       Bills.list_bills(%{
         "member_id" => member_id,
         "status" => :unpaid,
-        "preload" => :billing_period,
+        "preload" => [:billing_period, :payment, :member],
         "order_by" => [asc: :inserted_at]
       })
 
@@ -31,7 +31,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
           %{billing_period: period} = bill
           {bills_display_acc, payment_options_acc} = acc
 
-          {:ok, %{total: bill_amount}} = Bills.calculate_bill(bill, period, member)
+          {:ok, %{total: bill_amount}} = Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
           bill_name = "#{period.month} #{period.year}"
 
