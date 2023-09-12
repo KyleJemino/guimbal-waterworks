@@ -1,0 +1,15 @@
+.page-table {
+  @apply bg-slate-200 mt-3;
+}
+
+.table-selection {
+  @apply flex flex-row items-center justify-start;
+}
+
+.table-selection > .button {
+  @apply rounded-none text-lg font-medium;
+
+  &.-active {
+    @apply bg-slate-600 text-white;
+  }
+}

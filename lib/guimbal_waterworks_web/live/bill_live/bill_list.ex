@@ -31,7 +31,8 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
       list_params
       |> Bills.list_bills()
       |> Enum.map(fn bill ->
-        {:ok, calculation} = Bills.calculate_bill(bill, bill.billing_period, bill.member)
+        {:ok, calculation} =
+          Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
         Map.put(
           bill,

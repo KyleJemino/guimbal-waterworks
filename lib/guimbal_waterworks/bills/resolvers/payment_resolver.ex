@@ -9,6 +9,13 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
   }
 
   alias GuimbalWaterworks.Bills.Resolvers.BillResolver
+  alias GuimbalWaterworks.Bills.Queries.PaymentQuery, as: PQ
+
+  def list_payments(params \\ %{}) do
+    params
+    |> PQ.query_payment()
+    |> Repo.all()
+  end
 
   def create_payment(%{"bill_ids" => bill_ids_string} = params) do
     Multi.new()
