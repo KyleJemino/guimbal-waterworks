@@ -18,5 +18,11 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     |> query_by(Map.delete(params, "status"))
   end
 
+  defp query_by(query, %{"billing_period_id" => billing_period_id} = params) do
+    query
+    |> where([q], q.billing_period_id == ^billing_period_id)
+    |> query_by(Map.delete(params, "billing_period_id"))
+  end
+
   use GuimbalWaterworks, :basic_queries
 end
