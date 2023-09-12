@@ -31,7 +31,8 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
           %{billing_period: period} = bill
           {bills_display_acc, payment_options_acc} = acc
 
-          {:ok, %{total: bill_amount}} = Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
+          {:ok, %{total: bill_amount}} =
+            Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
           bill_name = "#{period.month} #{period.year}"
 

@@ -68,7 +68,7 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
     end
   end
 
-  def active_class?(for_actions, current_action) do 
+  def active_class?(for_actions, current_action) do
     if current_action in for_actions do
       " -active"
     else

@@ -121,7 +121,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def get_bill_total(bills) when is_list(bills) do
     Enum.reduce(bills, 0, fn bill, acc ->
-      {:ok, %{total: total}} = calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
+      {:ok, %{total: total}} =
+        calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
       D.add(acc, total)
     end)

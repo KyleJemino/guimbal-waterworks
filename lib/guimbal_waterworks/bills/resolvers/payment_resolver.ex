@@ -7,6 +7,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
     Payment,
     Bill
   }
+
   alias GuimbalWaterworks.Bills.Resolvers.BillResolver
   alias GuimbalWaterworks.Bills.Queries.PaymentQuery, as: PQ
 

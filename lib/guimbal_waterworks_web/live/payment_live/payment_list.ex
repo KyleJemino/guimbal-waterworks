@@ -6,20 +6,18 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
 
   def update(assigns, socket) do
     {:ok,
-      socket
-      |> assign(assigns)
-      |> assign(:base_params, assigns.base_params || %{})
-      |> update_results()
-    }
+     socket
+     |> assign(assigns)
+     |> assign(:base_params, assigns.base_params || %{})
+     |> update_results()}
   end
 
   defp assign_payments(socket) do
     payments =
       socket.assigns.base_params
-      |> Map.put("preload", 
-        [:member, :user, 
-          bills: [:billing_period, :member, :payment]
-        ]
+      |> Map.put(
+        "preload",
+        [:member, :user, bills: [:billing_period, :member, :payment]]
       )
       |> Bills.list_payments()
 
@@ -29,21 +27,24 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   defp assign_payment_calculations(socket) do
     {payment_bill_map, payment_total_map, total_amount} =
       Enum.reduce(
-        socket.assigns.payments, {%{}, %{}, 0}, fn
-          payment, { payment_bill_map_acc, payment_total_map_acc, total_acc } ->
+        socket.assigns.payments,
+        {%{}, %{}, 0},
+        fn
+          payment, {payment_bill_map_acc, payment_total_map_acc, total_acc} ->
             {bills_map, bills_total} =
-              Enum.reduce(payment.bills, {%{}, 0}, 
-                fn bill, {bill_map_acc, payment_amount}->
-                  bill_total = Bills.get_bill_total(bill)
-                  bill_map =
-                    Map.put(
-                      bill_map_acc, 
-                      Display.display_period(bill.billing_period),
-                      bill_total
-                    )
-                  {bill_map, D.add(payment_amount, bill_total)}
-                end
-              )
+              Enum.reduce(payment.bills, {%{}, 0}, fn bill, {bill_map_acc, payment_amount} ->
+                bill_total = Bills.get_bill_total(bill)
+
+                bill_map =
+                  Map.put(
+                    bill_map_acc,
+                    Display.display_period(bill.billing_period),
+                    bill_total
+                  )
+
+                {bill_map, D.add(payment_amount, bill_total)}
+              end)
+
             {
               Map.put(payment_bill_map_acc, payment.id, bills_map),
               Map.put(payment_total_map_acc, payment.id, bills_total),
