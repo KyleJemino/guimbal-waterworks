@@ -43,3 +43,30 @@
     </td>
   </tr>
 </table>
+
+<div class="page-table">
+  <div class="table-selection">
+    <%= live_patch "Bills", to: Routes.billing_period_show_path(@socket, :show, @billing_period), class: "button#{Display.active_class?([:show, :edit, :new_bill], @live_action)}" %>
+    <%= live_patch "Payments", to: Routes.billing_period_show_path(@socket, :payments, @billing_period), class: "button#{Display.active_class?([:payments], @live_action)}" %>
+  </div>
+  <div class="table-container">
+    <%= if @live_action in [:payments] do %>
+      <.live_component
+        module={GuimbalWaterworksWeb.PaymentLive.PaymentList}
+        id={:payment_list}
+        base_params={%{
+         "billing_period_id" => @billing_period.id
+        }}
+      />
+    <% end %>
+    <%= if @live_action in [:new_bill, :show, :edit] do %>
+      <.live_component
+        module={GuimbalWaterworksWeb.BillLive.BillList}
+        id={:bill_list}
+        base_params={%{
+          "billing_period_id" => @billing_period.id
+        }}
+      />
+    <% end %>
+  </div>
+</div>

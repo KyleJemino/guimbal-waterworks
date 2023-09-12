@@ -16,6 +16,6 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
      |> assign(:billing_period, Bills.get_billing_period!(id))}
   end
 
-  defp page_title(:show), do: "Show Billing period"
   defp page_title(:edit), do: "Edit Billing period"
+  defp page_title(_), do: "Show Billing period"
 end
