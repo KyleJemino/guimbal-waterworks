@@ -1,6 +1,13 @@
 <table class="data-table">
   <tr class="header-row">
-    <th class="header">Billing Period</th>
+    <th class="header">
+      <%= if @for == :member do %>
+        Billing Period
+      <% end %>
+      <%= if @for == :billing_period do %>
+        Member
+      <% end %>
+    </th>
     <th class="header">Reading (Cu.M.)</th>
     <th class="header">Base Amount (PHP)</th>
     <th class="header">Franchise Tax (PHP)</th>
@@ -13,7 +20,14 @@
   </tr>
   <%= for bill <- @bills do %>
     <tr class="data-row">
-      <td class="data"><%= Display.display_period(bill.billing_period) %></td>
+      <td class="data">
+        <%= if @for == :member do %>
+          <%= Display.display_period(bill.billing_period) %>
+        <% end %>
+        <%= if @for == :billing_period do %>
+          <%= Display.full_name(bill.member) %>
+        <% end %>
+      </td>
       <td class="data text-right"><%= Decimal.round(bill.reading, 2) %></td>
       <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
       <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>

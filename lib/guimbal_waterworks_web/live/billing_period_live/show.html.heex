@@ -63,6 +63,7 @@
       <.live_component
         module={GuimbalWaterworksWeb.BillLive.BillList}
         id={:bill_list}
+        for={:billing_period}
         base_params={%{
           "billing_period_id" => @billing_period.id
         }}
