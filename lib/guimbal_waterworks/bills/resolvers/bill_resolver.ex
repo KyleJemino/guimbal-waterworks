@@ -138,4 +138,10 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       D.add(acc, total)
     end)
   end
+
+  def count_bills(params \\ %{}) do
+    params
+    |> BQ.query_bill()
+    |> Repo.aggregate(:count)
+  end
 end

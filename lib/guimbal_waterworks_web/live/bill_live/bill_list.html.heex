@@ -1,59 +1,71 @@
-<table class="data-table">
-  <tr class="header-row">
-    <th class="header">
-      <%= if @for == :member do %>
-        Billing Period
-      <% end %>
-      <%= if @for == :billing_period do %>
-        Member
-      <% end %>
-    </th>
-    <th class="header">Reading (Cu.M.)</th>
-    <th class="header">Base Amount</th>
-    <th class="header">Franchise Tax</th>
-    <th class="header">Membership Fee</th>
-    <th class="header">Advance Fee</th>
-    <th class="header">Reconnection Fee</th>
-    <th class="header">Surcharge Fee</th>
-    <th class="header">Death Aid</th>
-    <th class="header">Total</th>
-    <th class="header">Payment Status</th>
-  </tr>
-  <%= for bill <- @bills do %>
-    <tr class="data-row">
-      <td class="data">
+<div class="flex flex-col py-3 gap-3">
+  <Page.pagination_count_select
+    target={@myself}
+    pagination_params={@pagination_params}
+    pagination={@pagination}
+  />
+  <table class="data-table">
+    <tr class="header-row">
+      <th class="header">
         <%= if @for == :member do %>
-          <%= Display.display_period(bill.billing_period) %>
+          Billing Period
         <% end %>
         <%= if @for == :billing_period do %>
-          <%= Display.full_name(bill.member) %>
+          Member
         <% end %>
-      </td>
-      <td class="data text-right"><%= Decimal.round(bill.reading, 2) %></td>
-      <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
-      <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
-      <td class="data text-right"><%= Display.money(bill.calculation.membership_amount) %></td>
-      <td class="data text-right"><%= Display.money(bill.calculation.adv_amount) %></td>
-      <td class="data text-right"><%= Display.money(bill.calculation.reconnection_amount) %></td>
-      <td class="data text-right"><%= Display.money(bill.calculation.surcharge) %></td>
-      <td class="data text-right"><%= Display.money(bill.calculation.death_aid_amount) %></td>
-      <td class="data text-right"><%= Display.money(bill.calculation.total) %></td>
-      <td class="data">
-        <%= if not is_nil(bill.payment), do: "PAID", else: "UNPAID" %>
-      </td>
+      </th>
+      <th class="header">Reading (Cu.M.)</th>
+      <th class="header">Base Amount</th>
+      <th class="header">Franchise Tax</th>
+      <th class="header">Membership Fee</th>
+      <th class="header">Advance Fee</th>
+      <th class="header">Reconnection Fee</th>
+      <th class="header">Surcharge Fee</th>
+      <th class="header">Death Aid</th>
+      <th class="header">Total</th>
+      <th class="header">Payment Status</th>
     </tr>
-<% end %>
-  <tr class="total-row">
-      <td class="data">Total</td>
-      <td class="data text-right"></td>
-      <td class="data text-right"><%= Display.money(@total_prices.base_amount) %></td>
-      <td class="data text-right"><%= Display.money(@total_prices.franchise_tax_amount) %></td>
-      <td class="data text-right"><%= Display.money(@total_prices.membership_amount) %></td>
-      <td class="data text-right"><%= Display.money(@total_prices.adv_amount) %></td>
-      <td class="data text-right"><%= Display.money(@total_prices.reconnection_amount) %></td>
-      <td class="data text-right"><%= Display.money(@total_prices.surcharge) %></td>
-      <td class="data text-right"><%= Display.money(@total_prices.death_aid_amount) %></td>
-      <td class="data text-right"><%= Display.money(@total_prices.total) %></td>
-      <td class="data"></td>
-  </tr>
-</table>
+    <%= for bill <- @bills do %>
+      <tr class="data-row">
+        <td class="data">
+          <%= if @for == :member do %>
+            <%= Display.display_period(bill.billing_period) %>
+          <% end %>
+          <%= if @for == :billing_period do %>
+            <%= Display.full_name(bill.member) %>
+          <% end %>
+        </td>
+        <td class="data text-right"><%= Decimal.round(bill.reading, 2) %></td>
+        <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
+        <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
+        <td class="data text-right"><%= Display.money(bill.calculation.membership_amount) %></td>
+        <td class="data text-right"><%= Display.money(bill.calculation.adv_amount) %></td>
+        <td class="data text-right"><%= Display.money(bill.calculation.reconnection_amount) %></td>
+        <td class="data text-right"><%= Display.money(bill.calculation.surcharge) %></td>
+        <td class="data text-right"><%= Display.money(bill.calculation.death_aid_amount) %></td>
+        <td class="data text-right"><%= Display.money(bill.calculation.total) %></td>
+        <td class="data">
+          <%= if not is_nil(bill.payment), do: "PAID", else: "UNPAID" %>
+        </td>
+      </tr>
+  <% end %>
+    <tr class="total-row">
+        <td class="data">Total</td>
+        <td class="data text-right"></td>
+        <td class="data text-right"><%= Display.money(@total_prices.base_amount) %></td>
+        <td class="data text-right"><%= Display.money(@total_prices.franchise_tax_amount) %></td>
+        <td class="data text-right"><%= Display.money(@total_prices.membership_amount) %></td>
+        <td class="data text-right"><%= Display.money(@total_prices.adv_amount) %></td>
+        <td class="data text-right"><%= Display.money(@total_prices.reconnection_amount) %></td>
+        <td class="data text-right"><%= Display.money(@total_prices.surcharge) %></td>
+        <td class="data text-right"><%= Display.money(@total_prices.death_aid_amount) %></td>
+        <td class="data text-right"><%= Display.money(@total_prices.total) %></td>
+        <td class="data"></td>
+    </tr>
+  </table>
+  <Page.pagination_buttons 
+    target={@myself}
+    pagination_params={@pagination_params}
+    pagination={@pagination}
+  />
+</div>
