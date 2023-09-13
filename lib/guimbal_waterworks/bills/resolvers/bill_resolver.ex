@@ -96,7 +96,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       if mda? do
         billing_period.death_aid_recipients
         |> Enum.count()
-        |> D.mult(40)
+        |> D.mult(10)
       else
         D.new(0)
       end
