@@ -192,61 +192,21 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   end
 
   defp assign_pagination_information(%{assigns: assigns} = socket) do
-    %{
-      "per_page" => per_page,
-      "current_page" => current_page
-    } = assigns.pagination_params
-
     result_member_count =
       assigns.base_params
       |> Map.merge(assigns.search_params)
       |> Members.count_members()
 
-    pages_count =
-      if per_page != "All" do
-        ceil(result_member_count / per_page)
-      else
-        1
-      end
-
     display_count = Enum.count(assigns.members)
 
-    pagination_chunks =
-      cond do
-        per_page == "All" ->
-          []
+      pagination_info = 
+        Page.get_pagination_info(
+          assigns.pagination_params,
+          result_member_count,
+          display_count
+        )
 
-        pages_count < 10 ->
-          [
-            Enum.to_list(1..pages_count)
-          ]
-
-        current_page < 7 ->
-          [
-            Enum.to_list(1..10),
-            [pages_count - 1, pages_count]
-          ]
-
-        current_page > pages_count - 6 ->
-          [
-            [1, 2],
-            Enum.to_list((pages_count - 9)..pages_count)
-          ]
-
-        true ->
-          [
-            [1],
-            Enum.to_list((current_page - 4)..(current_page + 4)),
-            [pages_count]
-          ]
-      end
-
-    assign(socket, :pagination, %{
-      total_count: result_member_count,
-      display_count: display_count,
-      pages_count: pages_count,
-      pagination_chunks: pagination_chunks
-    })
+    assign(socket, :pagination, pagination_info)
   end
 
   defp update_members_and_bills(socket) do
