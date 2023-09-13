@@ -11,6 +11,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     membership_amount: 0,
     reconnection_amount: 0,
     surcharge: 0,
+    death_aid_amount: 0,
     total: 0
   }
 
