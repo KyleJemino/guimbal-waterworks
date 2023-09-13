@@ -1,9 +1,12 @@
 <div class="flex flex-col py-3 gap-3">
+  <div class="px-2">
   <Page.pagination_count_select
     target={@myself}
     pagination_params={@pagination_params}
     pagination={@pagination}
   />
+  </div>
+  <div class="overflow-auto">
   <table class="data-table">
     <tr class="header-row">
       <th class="header">
@@ -63,6 +66,7 @@
         <td class="data"></td>
     </tr>
   </table>
+  </div>
   <Page.pagination_buttons 
     target={@myself}
     pagination_params={@pagination_params}
