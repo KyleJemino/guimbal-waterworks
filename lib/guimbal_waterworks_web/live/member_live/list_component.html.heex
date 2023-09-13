@@ -54,28 +54,11 @@
     </div>
   </.form>
 
-  <.form
-    let={f}
-    for={:pagination_params}
-    id="pagination-info-form"
-    phx-target={@myself}
-    phx-change="per_page_change"
-    class="pagination-info-container"
-  >
-    <div>
-      <span>Show per page</span>
-      <%= select( 
-        f, 
-        :per_page, 
-        ["All" | Enum.to_list(10..100//10)], 
-        required: true,
-        value: @pagination_params["per_page"]
-      )%>
-    </div>
-    <p>
-      Displaying <strong><%= @pagination.display_count %></strong> results of <strong><%= @pagination.total_count %></strong>
-    </p>
-  </.form>
+  <Page.pagination_count_select 
+    target={@myself}
+    pagination_params={@pagination_params}
+    pagination={@pagination}
+  />
   <table class="data-table">
     <tr class="header-row">
       <th class="header">M#</th>
@@ -137,47 +120,9 @@
       </tr>
     <% end %>
   </table>
-  <div class="pagination-buttons-container">
-    <div class="pagination">
-      <%= if @pagination_params["current_page"] != 1 do %>
-        <button
-          class="button"
-          phx-target={@myself}
-          phx-click="turn_page"
-          phx-value-page={@pagination_params["current_page"] - 1}
-        >
-          Prev
-        </button>
-      <% end %>
-      <div class="spacer"></div> 
-      <%= for chunk <- @pagination.pagination_chunks do %>
-        <%= if chunk != List.first(@pagination.pagination_chunks) do %>
-          <span>..</span>
-        <% end %>
-        <%= for page <- chunk do %>
-          <button
-            class={
-              "button -page #{if page == @pagination_params["current_page"], do: "-active"}"
-            }
-            phx-target={@myself}
-            phx-click="turn_page"
-            phx-value-page={page}
-          >
-            <%= page %>
-          </button>
-        <% end %>
-      <% end %>
-      <div class="spacer"></div> 
-      <%= if @pagination_params["current_page"] < @pagination.pages_count do %>
-        <button
-          class="button"
-          phx-target={@myself}
-          phx-click="turn_page"
-          phx-value-page={@pagination_params["current_page"] + 1}
-        >
-          Next
-        </button>
-      <% end %>
-    </div>
-  </div>
+  <Page.pagination_buttons 
+    target={@myself}
+    pagination_params={@pagination_params}
+    pagination={@pagination}
+  />
 </div>

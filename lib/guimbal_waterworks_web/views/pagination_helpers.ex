@@ -1,4 +1,5 @@
 defmodule GuimbalWaterworksWeb.PaginationHelpers do
+  use GuimbalWaterworksWeb, :component
   @default_pagination_params %{
     "per_page" => 20,
     "current_page" => 1
@@ -68,5 +69,80 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
       pages_count: pages_count,
       pagination_chunks: pagination_chunks
     }
+  end
+
+  def pagination_buttons(assigns) do
+    ~H"""
+    <div class="pagination-buttons-container">
+      <div class="pagination">
+        <%= if @pagination_params["current_page"] != 1 do %>
+          <button
+            class="button"
+            phx-target={@target}
+            phx-click="turn_page"
+            phx-value-page={@pagination_params["current_page"] - 1}
+          >
+            Prev
+          </button>
+        <% end %>
+        <div class="spacer"></div> 
+        <%= for chunk <- @pagination.pagination_chunks do %>
+          <%= if chunk != List.first(@pagination.pagination_chunks) do %>
+            <span>..</span>
+          <% end %>
+          <%= for page <- chunk do %>
+            <button
+              class={
+                "button -page #{if page == @pagination_params["current_page"], do: "-active"}"
+              }
+              phx-target={@target}
+              phx-click="turn_page"
+              phx-value-page={page}
+            >
+              <%= page %>
+            </button>
+          <% end %>
+        <% end %>
+        <div class="spacer"></div> 
+        <%= if @pagination_params["current_page"] < @pagination.pages_count do %>
+          <button
+            class="button"
+            phx-target={@target}
+            phx-click="turn_page"
+            phx-value-page={@pagination_params["current_page"] + 1}
+          >
+            Next
+          </button>
+        <% end %>
+      </div>
+    </div>
+    """
+  end
+
+  def pagination_count_select(assigns) do
+    ~H"""
+      <.form
+        let={f}
+        for={:pagination_params}
+        id="pagination-info-form"
+        phx-target={@target}
+        phx-change="per_page_change"
+        class="pagination-info-container"
+      >
+        <div>
+          <span>Show per page</span>
+          <%= select( 
+            f, 
+            :per_page, 
+            ["All" | Enum.to_list(10..100//10)], 
+            required: true,
+            value: @pagination_params["per_page"]
+          )%>
+        </div>
+        <p>
+          Displaying <strong><%= @pagination.display_count %></strong> results of <strong><%= @pagination.total_count %></strong>
+        </p>
+      </.form>
+    """
   end
 end
