@@ -54,7 +54,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
         %Bill{} = bill,
         %BillingPeriod{} = billing_period,
         %Member{
-          type: member_type
+          type: member_type,
+          mda?: mda?
         },
         payment
       )
@@ -91,6 +92,14 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
     is_overdue = Date.diff(date_to_compare, due_date) > 0
     surcharge_amount = D.new(if is_overdue, do: 20, else: 0)
+    death_aid_amount = 
+      if mda? do
+        billing_period.death_aid_recipients
+        |> Enum.count()
+        |> D.mult(40)
+      else
+        D.new(0)
+      end
 
     total =
       base_amount
@@ -99,6 +108,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       |> D.add(membership_amount)
       |> D.add(reconnection_amount)
       |> D.add(surcharge_amount)
+      |> D.add(death_aid_amount)
 
     {:ok,
      %{
@@ -108,6 +118,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
        membership_amount: membership_amount,
        reconnection_amount: reconnection_amount,
        surcharge: surcharge_amount,
+       death_aid_amount: death_aid_amount,
        total: total
      }}
   end
