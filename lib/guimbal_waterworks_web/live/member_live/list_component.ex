@@ -43,7 +43,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
       if Map.has_key?(assigns, :pagination_params) do
         assigns.pagination_params
       else
-        @default_pagination_params
+        Page.default_pagination_params
       end
 
     base_params = %{
@@ -140,22 +140,11 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
            assigns: %{
              base_params: base_params,
              search_params: search_params,
-             pagination_params: %{
-               "per_page" => limit,
-               "current_page" => current_page
-             }
+             pagination_params: pagination_params
            }
          } = socket
        ) do
-    pagination_query_params =
-      if limit != "All" do
-        %{
-          "limit" => limit,
-          "offset" => limit * (current_page - 1)
-        }
-      else
-        %{}
-      end
+    pagination_query_params = Page.pagination_to_query_params(pagination_params)
 
     list_params =
       base_params

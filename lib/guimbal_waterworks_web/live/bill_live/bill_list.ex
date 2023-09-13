@@ -1,8 +1,8 @@
 defmodule GuimbalWaterworksWeb.BillLive.BillList do
   use GuimbalWaterworksWeb, :live_component
 
-  alias GuimbalWaterworks.Bills
   alias Decimal, as: D
+  alias GuimbalWaterworks.Bills
 
   @init_calculation_map %{
     base_amount: 0,
@@ -15,15 +15,36 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     total: 0
   }
 
+  @impl true
   def update(assigns, socket) do
     {:ok,
      socket
      |> assign(assigns)
      |> assign(:base_params, assigns.base_params || %{})
+     |> assign(:pagination_params, Page.default_pagination_params())
      |> update_results()}
   end
 
+  # @impl true
+  # def handle_event("turn_page", %{"page" => page} = _params, socket) do
+  #   updated_pagination_params =
+  #     Map.replace!(socket.assigns.pagination_params, "current_page", String.to_integer(page))
+  #
+  #   {:noreply,
+  #    socket
+  #    |> assign_pagination_params(updated_pagination_params)
+  #    |> update_members_and_bills()}
+  # end
+  #
   defp assign_bills_with_calculation(socket) do
+    %{
+      base_params: base_params,
+      pagination_params: %{
+        "per_page" => limit,
+        "current_page" => current_page
+      }
+    } = socket.assigns
+
     list_params =
       socket.assigns.base_params
       |> Map.put("preload", [:billing_period, :member, :payment])
