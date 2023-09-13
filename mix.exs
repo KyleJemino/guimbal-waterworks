@@ -53,7 +53,8 @@ defmodule GuimbalWaterworks.MixProject do
       {:dart_sass, "~> 0.5", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
       {:timex, "~> 3.0"},
-      {:faker, "~> 0.17"}
+      {:faker, "~> 0.17"},
+      {:number, "~> 1.0.1"}
     ]
   end
 
