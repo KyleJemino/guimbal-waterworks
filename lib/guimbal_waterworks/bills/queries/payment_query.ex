@@ -15,14 +15,24 @@ defmodule GuimbalWaterworks.Bills.Queries.PaymentQuery do
   end
 
   defp query_by(query, %{"paid_from" => paid_at} = params) do
+    paid_at_date = 
+      "#{paid_at} 00:00:00"
+      |> NaiveDateTime.from_iso8601!()
+      |> DateTime.from_naive!("Etc/UTC")
+
     query
-    |> where([q], q.paid_at > ^paid_at)
+    |> where([q], q.paid_at > ^paid_at_date)
     |> query_by(Map.delete(params, "paid_from"))
   end
 
   defp query_by(query, %{"paid_to" => paid_at} = params) do
+    paid_at_date = 
+      "#{paid_at} 00:00:00"
+      |> NaiveDateTime.from_iso8601!()
+      |> DateTime.from_naive!("Etc/UTC")
+
     query
-    |> where([q], q.paid_at < ^paid_at)
+    |> where([q], q.paid_at < ^paid_at_date)
     |> query_by(Map.delete(params, "paid_to"))
   end
 
