@@ -9,6 +9,11 @@
   <div class="overflow-auto">
     <table class="data-table">
       <tr class="header-row">
+        <%= if @for == :billing_period do %>
+          <th class="header">
+            Name
+          </th>
+        <% end %>
         <th class="header">OR</th>
         <th class="header">Bills</th>
         <th class="header">Date</th>
@@ -17,6 +22,11 @@
       </tr>
       <%= for payment <- @payments do %>
         <tr class="data-row">
+          <%= if @for == :billing_period do %>
+            <td class="data">
+              <%= Display.full_name(payment.member) %>
+            </td>
+          <% end %>
           <td class="data"><%= payment.or %></td>
           <td class="data">
             <%= for {period, amount} <- @payment_bill_map[payment.id] do %>

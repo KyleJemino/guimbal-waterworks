@@ -2,6 +2,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   use GuimbalWaterworksWeb, :live_component
 
   alias GuimbalWaterworks.Bills
+  alias GuimbalWaterworks.Helpers
   alias Decimal, as: D
 
   def update(assigns, socket) do
@@ -10,6 +11,19 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
      |> assign(assigns)
      |> assign(:base_params, assigns.base_params || %{})
      |> assign(:pagination_params, Page.default_pagination_params())
+     |> assign_search_params(%{})
+     |> update_results()}
+  end
+
+  @impl true
+  def handle_event("filter_change", %{"search_params" => search_params}, socket) do
+    {:noreply,
+     socket
+     |> assign_search_params(search_params)
+     |> assign(:pagination_params, %{
+       "per_page" => socket.assigns.pagination_params["per_page"],
+       "current_page" => 1
+     })
      |> update_results()}
   end
 
@@ -55,7 +69,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   defp assign_payments(socket) do
     %{
       base_params: base_params,
-      # search_params: search_params,
+      search_params: search_params,
       pagination_params: pagination_params
     } = socket.assigns
 
@@ -123,6 +137,12 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       )
 
     assign(socket, :pagination, pagination_info)
+  end
+
+  defp assign_search_params(socket, search_params) do
+    search_params_with_values = Helpers.remove_empty_map_values(search_params)
+
+    assign(socket, :search_params, search_params_with_values)
   end
 
   defp update_results(socket) do
