@@ -3,6 +3,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   alias Decimal, as: D
 
   alias GuimbalWaterworks.Bills
+  alias GuimbalWaterworks.Payments
   alias GuimbalWaterworks.Helpers
   alias GuimbalWaterworksWeb.PaymentLive.Components, as: PaymentComponents
 
@@ -125,8 +126,8 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   defp assign_pagination_information(%{assigns: assigns} = socket) do
     result_count =
       assigns.base_params
-      # |> Map.merge(assigns.search_params)
-      |> Bills.count_bills()
+      |> Map.merge(assigns.search_params)
+      |> Payments.count_payments()
 
     display_count = Enum.count(assigns.payments)
 
