@@ -80,6 +80,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
         "preload",
         [:member, :user, bills: [:billing_period, :member, :payment]]
       )
+      |> Map.put("order_by", "default")
       |> Map.merge(Page.pagination_to_query_params(pagination_params))
       |> Map.merge(search_params)
       |> Bills.list_payments()

@@ -25,6 +25,19 @@ defmodule GuimbalWaterworks.Bills.Queries.PaymentQuery do
     |> query_by(Map.delete(params, "paid_from"))
   end
 
+  defp query_by(query, %{"order_by" => "default"} = params) do
+    query
+    |> order_by([q, member: m],
+      desc: q.paid_at,
+      asc: m.last_name,
+      asc: m.first_name,
+      asc: m.last_name,
+      asc: m.unique_identifier
+    )
+    |> query_by(Map.delete(params, "order_by"))
+  end
+
+
   defp query_by(query, %{"paid_to" => paid_at} = params) do
     paid_at_date = 
       "#{paid_at} 00:00:00"
