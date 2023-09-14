@@ -26,11 +26,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     "actions?" => true
   }
 
-  @default_pagination_params %{
-    "per_page" => 20,
-    "current_page" => 1
-  }
-
   @impl true
   def update(assigns, socket) do
     search_params =

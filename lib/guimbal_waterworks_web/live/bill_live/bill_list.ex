@@ -87,7 +87,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     } = socket.assigns
 
     list_params =
-      socket.assigns.base_params
+      base_params
       |> Map.put("preload", [:billing_period, :member, :payment])
       |> Map.put("order_by", "default")
       |> Map.merge(Page.pagination_to_query_params(pagination_params))
@@ -118,7 +118,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     total_price_map =
       Enum.reduce(bills, @init_calculation_map, fn %{calculation: calculation}, acc ->
         Enum.reduce(acc, acc, fn
-          {key, value}, acc ->
+          {key, _value}, acc ->
             Map.update!(acc, key, fn current -> D.add(current, Map.fetch!(calculation, key)) end)
         end)
       end)
