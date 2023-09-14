@@ -1,9 +1,10 @@
 defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   use GuimbalWaterworksWeb, :live_component
+  alias Decimal, as: D
 
   alias GuimbalWaterworks.Bills
   alias GuimbalWaterworks.Helpers
-  alias Decimal, as: D
+  alias GuimbalWaterworksWeb.PaymentLive.Components, as: PaymentComponents
 
   def update(assigns, socket) do
     {:ok,
