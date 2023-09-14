@@ -3,7 +3,10 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
   alias GuimbalWaterworks.Bills.Bill
 
   def query_bill(params) do
-    query_by(Bill, params)
+    Bill
+    |> join(:left, [q], bp in assoc(q, :billing_period), as: :billing_period)
+    |> join(:left, [q], m in assoc(q, :member), as: :member)
+    |> query_by(params)
   end
 
   defp query_by(query, %{"member_id" => member_id} = params) do
@@ -24,24 +27,21 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     |> query_by(Map.delete(params, "billing_period_id"))
   end
 
-  defp query_by(query, %{"order_by" => "billing_period_desc"} = params) do
+  defp query_by(query, %{"order_by" => "default"} = params) do
     query
-    |> join(:left, [q], bp in assoc(q, :billing_period))
-    |> order_by([q, bp], desc: bp.due_date)
+    |> order_by([q, billing_period: bp, member: m], desc: bp.due_date, asc: m.last_name, asc: m.first_name, asc: m.last_name, asc: m.unique_identifier)
     |> query_by(Map.delete(params, "order_by"))
   end
 
   defp query_by(query, %{"due_from" => due_date} = params) do
     query
-    |> join(:left, [q], bp in assoc(q, :billing_period))
-    |> where([q, bp], bp.due_date > ^due_date)
+    |> where([q, billing_period: bp], bp.due_date > ^due_date)
     |> query_by(Map.delete(params, "due_from"))
   end
 
   defp query_by(query, %{"due_to" => due_date} = params) do
     query
-    |> join(:left, [q], bp in assoc(q, :billing_period))
-    |> where([q, bp], bp.due_date < ^due_date)
+    |> where([q, billing_period: bp], bp.due_date < ^due_date)
     |> query_by(Map.delete(params, "due_to"))
   end
 
@@ -65,7 +65,6 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     last_name_query = "%#{last_name}%"
 
     query
-    |> join(:left, [q], m in assoc(q, :member), as: :member)
     |> where([_q, member: m], ilike(m.last_name, ^last_name_query))
     |> query_by(Map.delete(params, "last_name"))
   end
@@ -74,7 +73,6 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     first_name_query = "%#{first_name}%"
 
     query
-    |> join(:left, [q], m in assoc(q, :member), as: :member)
     |> where([_q, member: m], ilike(m.first_name, ^first_name_query))
     |> query_by(Map.delete(params, "first_name"))
   end
@@ -83,7 +81,6 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     middle_name_query = "%#{middle_name}%"
 
     query
-    |> join(:left, [q], m in assoc(q, :member), as: :member)
     |> where([_q, member: m], ilike(m.middle_name, ^middle_name_query))
     |> query_by(Map.delete(params, "middle_name"))
   end
@@ -94,14 +91,12 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
 
   defp query_by(query, %{"street" => street} = params) do
     query
-    |> join(:left, [q], m in assoc(q, :member), as: :member)
     |> where([_q, member: m], m.street == ^street)
     |> query_by(Map.delete(params, "street"))
   end
 
   defp query_by(query, %{"type" => type} = params) when type in ["personal", "business"] do
     query
-    |> join(:left, [q], m in assoc(q, :member), as: :member)
     |> where([_q, member: m], m.type == ^type)
     |> query_by(Map.delete(params, "type"))
   end
