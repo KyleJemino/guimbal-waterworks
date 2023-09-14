@@ -3,6 +3,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
 
   alias GuimbalWaterworks.Members
   alias GuimbalWaterworks.Bills
+  alias GuimbalWaterworks.Helpers
 
   @status_options [
     All: :all,
@@ -122,11 +123,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
 
   defp assign_search_params(socket, search_params) do
     search_params_with_values =
-      search_params
-      |> Enum.filter(fn {_key, value} ->
-        not is_nil(value) and value !== ""
-      end)
-      |> Map.new()
+      Helpers.remove_empty_map_values(search_params)
 
     assign(socket, :search_params, search_params_with_values)
   end

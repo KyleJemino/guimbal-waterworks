@@ -51,4 +51,12 @@ defmodule GuimbalWaterworks.Helpers do
       end
     end)
   end
+
+  def remove_empty_map_values(map) do
+    map
+    |> Enum.filter(fn {_key, value} ->
+      not is_nil(value) and value !== ""
+    end)
+    |> Map.new()
+  end
 end

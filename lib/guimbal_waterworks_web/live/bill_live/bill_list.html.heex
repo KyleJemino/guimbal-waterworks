@@ -1,5 +1,12 @@
 <div class="flex flex-col py-3 gap-3">
   <div class="px-2">
+    <BillComponents.filter_form
+      target={@myself}
+      search_params={@search_params}
+      for={@for}
+    />
+  </div>
+  <div class="px-2">
     <Page.pagination_count_select
       target={@myself}
       pagination_params={@pagination_params}

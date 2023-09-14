@@ -31,5 +31,35 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     |> query_by(Map.delete(params, "order_by"))
   end
 
+  defp query_by(query, %{"due_from" => due_date} = params) do
+    query
+    |> join(:left, [q], bp in assoc(q, :billing_period))
+    |> where([q, bp], bp.due_date > ^due_date)
+    |> query_by(Map.delete(params, "due_from"))
+  end
+
+  defp query_by(query, %{"due_to" => due_date} = params) do
+    query
+    |> join(:left, [q], bp in assoc(q, :billing_period))
+    |> where([q, bp], bp.due_date < ^due_date)
+    |> query_by(Map.delete(params, "due_to"))
+  end
+
+  defp query_by(query, %{"status" => status} = params) do
+    status_query =
+      case status do
+        "unpaid" ->
+          query
+          |> where([q], is_nil(q.payment_id))
+        "paid" ->
+          query
+          |> where([q], not is_nil(q.payment_id))
+        _ ->
+          query
+      end
+
+    query_by(status_query, Map.delete(params, "status"))
+  end
+
   use GuimbalWaterworks, :basic_queries
 end

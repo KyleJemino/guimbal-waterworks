@@ -3,6 +3,8 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
 
   alias Decimal, as: D
   alias GuimbalWaterworks.Bills
+  alias GuimbalWaterworks.Helpers
+  alias GuimbalWaterworksWeb.BillLive.Components, as: BillComponents
 
   @init_calculation_map %{
     base_amount: 0,
@@ -22,6 +24,19 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
      |> assign(assigns)
      |> assign(:base_params, assigns.base_params || %{})
      |> assign(:pagination_params, Page.default_pagination_params())
+     |> assign_search_params(%{})
+     |> update_results()}
+  end
+
+  @impl true
+  def handle_event("filter_change", %{"search_params" => search_params}, socket) do
+    {:noreply,
+     socket
+     |> assign_search_params(search_params)
+     |> assign_pagination_params(%{
+       "per_page" => socket.assigns.pagination_params["per_page"],
+       "current_page" => 1
+     })
      |> update_results()}
   end
 
@@ -67,6 +82,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
   defp assign_bills_with_calculation(socket) do
     %{
       base_params: base_params,
+      search_params: search_params,
       pagination_params: pagination_params    
     } = socket.assigns
 
@@ -75,6 +91,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
       |> Map.put("preload", [:billing_period, :member, :payment])
       |> Map.put("order_by", "billing_period_desc")
       |> Map.merge(Page.pagination_to_query_params(pagination_params))
+      |> Map.merge(search_params)
 
     bills_with_calculation =
       list_params
@@ -120,6 +137,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
   defp assign_pagination_information(%{assigns: assigns} = socket) do
     result_count =
       assigns.base_params
+      |> Map.merge(assigns.search_params)
       |> Bills.count_bills()
 
     display_count = Enum.count(assigns.bills)
@@ -132,6 +150,13 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
       )
 
     assign(socket, :pagination, pagination_info)
+  end
+
+  defp assign_search_params(socket, search_params) do
+    search_params_with_values =
+      Helpers.remove_empty_map_values(search_params)
+
+    assign(socket, :search_params, search_params_with_values)
   end
 
   defp update_results(socket) do
