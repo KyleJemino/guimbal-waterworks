@@ -1,5 +1,6 @@
 defmodule GuimbalWaterworksWeb.PaginationHelpers do
   use GuimbalWaterworksWeb, :component
+
   @default_pagination_params %{
     "per_page" => 20,
     "current_page" => 1
@@ -8,9 +9,9 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
   def default_pagination_params, do: @default_pagination_params
 
   def pagination_to_query_params(%{
-    "per_page" => limit,
-    "current_page" => current_page
-  }) do
+        "per_page" => limit,
+        "current_page" => current_page
+      }) do
     if limit != "All" do
       %{
         "limit" => limit,
@@ -63,6 +64,7 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
             [pages_count]
           ]
       end
+
     %{
       total_count: result_count,
       display_count: display_count,

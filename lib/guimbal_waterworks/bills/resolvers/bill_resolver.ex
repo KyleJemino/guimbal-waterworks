@@ -92,7 +92,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
     is_overdue = Date.diff(date_to_compare, due_date) > 0
     surcharge_amount = D.new(if is_overdue, do: 20, else: 0)
-    death_aid_amount = 
+
+    death_aid_amount =
       if mda? do
         billing_period.death_aid_recipients
         |> Enum.count()

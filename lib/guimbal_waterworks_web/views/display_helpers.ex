@@ -37,8 +37,8 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
 
   def format_date(date), do: Timex.format!(date, "%b %d %Y", :strftime)
 
-  def money(decimal) do 
-    amount = 
+  def money(decimal) do
+    amount =
       decimal
       |> D.round(2)
       |> Number.Delimit.number_to_delimited()

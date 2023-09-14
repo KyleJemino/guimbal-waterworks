@@ -29,7 +29,13 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
 
   defp query_by(query, %{"order_by" => "default"} = params) do
     query
-    |> order_by([q, billing_period: bp, member: m], desc: bp.due_date, asc: m.last_name, asc: m.first_name, asc: m.last_name, asc: m.unique_identifier)
+    |> order_by([q, billing_period: bp, member: m],
+      desc: bp.due_date,
+      asc: m.last_name,
+      asc: m.first_name,
+      asc: m.last_name,
+      asc: m.unique_identifier
+    )
     |> query_by(Map.delete(params, "order_by"))
   end
 
@@ -51,9 +57,11 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
         "unpaid" ->
           query
           |> where([q], is_nil(q.payment_id))
+
         "paid" ->
           query
           |> where([q], not is_nil(q.payment_id))
+
         _ ->
           query
       end

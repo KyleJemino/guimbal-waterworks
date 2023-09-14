@@ -83,7 +83,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     %{
       base_params: base_params,
       search_params: search_params,
-      pagination_params: pagination_params    
+      pagination_params: pagination_params
     } = socket.assigns
 
     list_params =
@@ -142,7 +142,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
 
     display_count = Enum.count(assigns.bills)
 
-    pagination_info = 
+    pagination_info =
       Page.get_pagination_info(
         assigns.pagination_params,
         result_count,
@@ -153,8 +153,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
   end
 
   defp assign_search_params(socket, search_params) do
-    search_params_with_values =
-      Helpers.remove_empty_map_values(search_params)
+    search_params_with_values = Helpers.remove_empty_map_values(search_params)
 
     assign(socket, :search_params, search_params_with_values)
   end

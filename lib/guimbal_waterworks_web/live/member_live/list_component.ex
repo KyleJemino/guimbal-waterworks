@@ -44,7 +44,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
       if Map.has_key?(assigns, :pagination_params) do
         assigns.pagination_params
       else
-        Page.default_pagination_params
+        Page.default_pagination_params()
       end
 
     base_params = %{
@@ -122,8 +122,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   end
 
   defp assign_search_params(socket, search_params) do
-    search_params_with_values =
-      Helpers.remove_empty_map_values(search_params)
+    search_params_with_values = Helpers.remove_empty_map_values(search_params)
 
     assign(socket, :search_params, search_params_with_values)
   end
@@ -196,12 +195,12 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
 
     display_count = Enum.count(assigns.members)
 
-      pagination_info = 
-        Page.get_pagination_info(
-          assigns.pagination_params,
-          result_member_count,
-          display_count
-        )
+    pagination_info =
+      Page.get_pagination_info(
+        assigns.pagination_params,
+        result_member_count,
+        display_count
+      )
 
     assign(socket, :pagination, pagination_info)
   end
