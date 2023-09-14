@@ -1,36 +1,52 @@
-<table class="data-table">
-  <tr class="header-row">
-    <th class="header">OR</th>
-    <th class="header">Bills</th>
-    <th class="header">Date</th>
-    <th class="header">Cashier</th>
-    <th class="header">Total</th>
-  </tr>
-  <%= for payment <- @payments do %>
-    <tr class="data-row">
-      <td class="data"><%= payment.or %></td>
-      <td class="data">
-        <%= for {period, amount} <- @payment_bill_map[payment.id] do %>
-          <div class="flex flex-row justify-between">
-            <p><%= "#{period}:" %></p>
-            <p><%= Display.money(amount) %></p>
-          </div>
-        <% end %>
-      </td>
-      <td class="data"><%= Display.format_date(payment.paid_at) %></td>
-      <td class="data"><%= Display.full_name(payment.user) %></td>
-      <td class="data text-right">
-        <%= Display.money(@payment_total_map[payment.id]) %>
-      </td>
-    </tr>
-  <% end %>
-    <tr class="data-row">
-      <td class="data font-bold">Total</td>
-      <td class="data"></td>
-      <td class="data"></td>
-      <td class="data"></td>
-      <td class="data font-bold text-right">
-        <%= Display.money(@total) %>
-      </td>
-    </tr>
-</table>
+<div class="flex flex-col py-3 gap-3">
+  <div class="px-2">
+    <Page.pagination_count_select
+      target={@myself}
+      pagination_params={@pagination_params}
+      pagination={@pagination}
+    />
+  </div>
+  <div class="overflow-auto">
+    <table class="data-table">
+      <tr class="header-row">
+        <th class="header">OR</th>
+        <th class="header">Bills</th>
+        <th class="header">Date</th>
+        <th class="header">Cashier</th>
+        <th class="header">Total</th>
+      </tr>
+      <%= for payment <- @payments do %>
+        <tr class="data-row">
+          <td class="data"><%= payment.or %></td>
+          <td class="data">
+            <%= for {period, amount} <- @payment_bill_map[payment.id] do %>
+              <div class="flex flex-row justify-between">
+                <p><%= "#{period}:" %></p>
+                <p><%= Display.money(amount) %></p>
+              </div>
+            <% end %>
+          </td>
+          <td class="data"><%= Display.format_date(payment.paid_at) %></td>
+          <td class="data"><%= Display.full_name(payment.user) %></td>
+          <td class="data text-right">
+            <%= Display.money(@payment_total_map[payment.id]) %>
+          </td>
+        </tr>
+      <% end %>
+        <tr class="data-row">
+          <td class="data font-bold">Total</td>
+          <td class="data"></td>
+          <td class="data"></td>
+          <td class="data"></td>
+          <td class="data font-bold text-right">
+            <%= Display.money(@total) %>
+          </td>
+        </tr>
+    </table>
+  </div>
+  <Page.pagination_buttons 
+    target={@myself}
+    pagination_params={@pagination_params}
+    pagination={@pagination}
+  />
+</div>
