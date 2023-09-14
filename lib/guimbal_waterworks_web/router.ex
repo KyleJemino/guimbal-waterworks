@@ -124,6 +124,7 @@ defmodule GuimbalWaterworksWeb.Router do
 
       live "/billing_periods", BillingPeriodLive.Index, :index
       live "/billing_periods/:id", BillingPeriodLive.Show, :show
+      live "/billing_periods/:id/payments", BillingPeriodLive.Show, :payments
     end
   end
 end

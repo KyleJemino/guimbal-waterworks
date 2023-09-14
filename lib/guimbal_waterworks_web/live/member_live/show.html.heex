@@ -74,6 +74,7 @@
     <%= if @live_action in [:new_bill, :show, :edit] do %>
       <.live_component
         module={GuimbalWaterworksWeb.BillLive.BillList}
+        for={:member}
         id={:bill_list}
         base_params={%{
           "member_id" => @member.id

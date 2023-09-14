@@ -3,13 +3,13 @@
 }
 
 .table-selection {
-  @apply flex flex-row items-center justify-start;
+  @apply flex flex-row items-center justify-start bg-slate-300;
 }
 
 .table-selection > .button {
-  @apply rounded-none text-lg font-medium;
+  @apply rounded-none text-lg font-medium bg-slate-300;
 
   &.-active {
-    @apply bg-slate-600 text-white;
+    @apply bg-slate-200 text-black underline font-bold;
   }
 }

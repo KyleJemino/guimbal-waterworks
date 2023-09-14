@@ -101,6 +101,7 @@ defmodule GuimbalWaterworksWeb do
       alias GuimbalWaterworksWeb.Router.Helpers, as: Routes
       alias GuimbalWaterworksWeb.DisplayHelpers, as: Display
       alias GuimbalWaterworksWeb.Components.SharedComponents, as: SC
+      alias GuimbalWaterworksWeb.PaginationHelpers, as: Page
     end
   end
 
