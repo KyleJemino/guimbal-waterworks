@@ -73,6 +73,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     list_params =
       socket.assigns.base_params
       |> Map.put("preload", [:billing_period, :member, :payment])
+      |> Map.put("order_by", "billing_period_desc")
       |> Map.merge(Page.pagination_to_query_params(pagination_params))
 
     bills_with_calculation =

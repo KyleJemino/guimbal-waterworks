@@ -24,5 +24,12 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     |> query_by(Map.delete(params, "billing_period_id"))
   end
 
+  defp query_by(query, %{"order_by" => "billing_period_desc"} = params) do
+    query
+    |> join(:left, [q], bp in assoc(q, :billing_period))
+    |> order_by([q, bp], desc: bp.due_date)
+    |> query_by(Map.delete(params, "order_by"))
+  end
+
   use GuimbalWaterworks, :basic_queries
 end
