@@ -61,5 +61,50 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     query_by(status_query, Map.delete(params, "status"))
   end
 
+  defp query_by(query, %{"last_name" => last_name} = params) do
+    last_name_query = "%#{last_name}%"
+
+    query
+    |> join(:left, [q], m in assoc(q, :member), as: :member)
+    |> where([_q, member: m], ilike(m.last_name, ^last_name_query))
+    |> query_by(Map.delete(params, "last_name"))
+  end
+
+  defp query_by(query, %{"first_name" => first_name} = params) do
+    first_name_query = "%#{first_name}%"
+
+    query
+    |> join(:left, [q], m in assoc(q, :member), as: :member)
+    |> where([_q, member: m], ilike(m.first_name, ^first_name_query))
+    |> query_by(Map.delete(params, "first_name"))
+  end
+
+  defp query_by(query, %{"middle_name" => middle_name} = params) do
+    middle_name_query = "%#{middle_name}%"
+
+    query
+    |> join(:left, [q], m in assoc(q, :member), as: :member)
+    |> where([_q, member: m], ilike(m.middle_name, ^middle_name_query))
+    |> query_by(Map.delete(params, "middle_name"))
+  end
+
+  defp query_by(query, %{"street" => "All"} = params) do
+    query_by(query, Map.delete(params, "street"))
+  end
+
+  defp query_by(query, %{"street" => street} = params) do
+    query
+    |> join(:left, [q], m in assoc(q, :member), as: :member)
+    |> where([_q, member: m], m.street == ^street)
+    |> query_by(Map.delete(params, "street"))
+  end
+
+  defp query_by(query, %{"type" => type} = params) when type in ["personal", "business"] do
+    query
+    |> join(:left, [q], m in assoc(q, :member), as: :member)
+    |> where([_q, member: m], m.type == ^type)
+    |> query_by(Map.delete(params, "type"))
+  end
+
   use GuimbalWaterworks, :basic_queries
 end
