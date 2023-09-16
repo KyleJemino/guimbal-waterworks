@@ -52,6 +52,9 @@
       <% end %>
         <tr class="data-row">
           <td class="data font-bold">Total</td>
+          <%= if @for == :billing_period do %>
+            <td class="data"></td>
+          <% end %>
           <td class="data"></td>
           <td class="data"></td>
           <td class="data"></td>
