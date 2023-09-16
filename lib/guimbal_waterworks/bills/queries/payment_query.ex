@@ -89,5 +89,11 @@ defmodule GuimbalWaterworks.Bills.Queries.PaymentQuery do
     |> query_by(Map.delete(params, "type"))
   end
 
+  defp query_by(query, %{"or" => or_param} = params) do
+    query
+    |> where([q], q.or == ^or_param)
+    |> query_by(Map.delete(params, "or"))
+  end
+
   use GuimbalWaterworks, :basic_queries
 end

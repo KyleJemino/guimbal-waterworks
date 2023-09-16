@@ -33,16 +33,6 @@ defmodule GuimbalWaterworksWeb.PaymentLive.Components do
             value: @search_params["street"]
           )%>
         </div>
-      <% end %>
-      <div class="search-input-group">
-        <%= label f, :paid_from %>
-        <%= date_input f, :paid_from, value: @search_params["paid_from"] %>
-      </div>
-      <div class="search-input-group">
-        <%= label f, :paid_to %>
-        <%= date_input f, :paid_to, value: @search_params["paid_to"] %>
-      </div>
-      <%= if @for == :billing_period do %>
         <div class="search-input-group">
           <%= label f, :type %>
           <%= select( 
@@ -54,6 +44,18 @@ defmodule GuimbalWaterworksWeb.PaymentLive.Components do
           )%>
         </div>
       <% end %>
+      <div class="search-input-group">
+        <%= label f, :or %>
+        <%= number_input f, :or, value: @search_params["or"] %>
+      </div>
+      <div class="search-input-group">
+        <%= label f, :paid_from %>
+        <%= date_input f, :paid_from, value: @search_params["paid_from"] %>
+      </div>
+      <div class="search-input-group">
+        <%= label f, :paid_to %>
+        <%= date_input f, :paid_to, value: @search_params["paid_to"] %>
+      </div>
     </.form>
     """
   end
