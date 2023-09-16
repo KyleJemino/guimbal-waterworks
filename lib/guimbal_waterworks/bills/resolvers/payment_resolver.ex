@@ -65,4 +65,10 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
   end
 
   def change_payment(%Payment{} = payment, params \\ %{}), do: Payment.changeset(payment, params)
+
+  def count_payments(params \\ %{}) do
+    params
+    |> PQ.query_payment()
+    |> Repo.aggregate(:count)
+  end
 end

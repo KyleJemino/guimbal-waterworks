@@ -65,6 +65,7 @@
     <%= if @live_action in [:payments] do %>
       <.live_component
         module={GuimbalWaterworksWeb.PaymentLive.PaymentList}
+        for={:member}
         id={:payment_list}
         base_params={%{
          "member_id" => @member.id
