@@ -53,7 +53,7 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
       0 -> "With No Unpaid"
       1 -> "With 1 Unpaid"
       2 -> "Disconnection Warning"
-      3 -> "For Disconnection"
+      _ -> "For Disconnection"
     end
   end
 
