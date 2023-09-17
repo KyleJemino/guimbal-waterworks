@@ -1,9 +1,10 @@
 defmodule GuimbalWaterworks.Bills.Queries.PaymentQuery do
   import Ecto.Query
   alias GuimbalWaterworks.Bills.Payment
+  alias GuimbalWaterworks.Bills.BillingPeriod
 
   def query_payment(params) do
-    Payment
+    from(p in Payment, as: :payment)
     |> join(:left, [q], m in assoc(q, :member), as: :member)
     |> query_by(params)
   end
@@ -12,6 +13,19 @@ defmodule GuimbalWaterworks.Bills.Queries.PaymentQuery do
     query
     |> where([q], q.member_id == ^member_id)
     |> query_by(Map.delete(params, "member_id"))
+  end
+
+  defp query_by(query, %{"billing_period_id" => billing_period_id} = params) do
+    query
+    |> where([q],
+      subquery(
+        from(bp in BillingPeriod,
+          select: bp.due_date,
+          where: bp.id === ^billing_period_id
+        )
+      ) >= q.paid_at
+    )
+    |> query_by(Map.delete(params, "billing_period_id"))
   end
 
   defp query_by(query, %{"paid_from" => paid_at} = params) do
