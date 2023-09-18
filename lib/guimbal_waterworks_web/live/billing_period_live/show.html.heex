@@ -56,7 +56,8 @@
         for={:billing_period}
         id={:payment_list}
         base_params={%{
-         "billing_period_id" => @billing_period.id
+          "min_paid_at" => Date.beginning_of_month(@billing_period.due_date),
+          "max_paid_at" => @billing_period.due_date
         }}
       />
     <% end %>

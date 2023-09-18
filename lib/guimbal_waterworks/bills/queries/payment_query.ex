@@ -3,7 +3,7 @@ defmodule GuimbalWaterworks.Bills.Queries.PaymentQuery do
   alias GuimbalWaterworks.Bills.Payment
 
   def query_payment(params) do
-    Payment
+    from(p in Payment, as: :payment)
     |> join(:left, [q], m in assoc(q, :member), as: :member)
     |> query_by(params)
   end
@@ -12,6 +12,28 @@ defmodule GuimbalWaterworks.Bills.Queries.PaymentQuery do
     query
     |> where([q], q.member_id == ^member_id)
     |> query_by(Map.delete(params, "member_id"))
+  end
+
+  defp query_by(query, %{"min_paid_at" => paid_at} = params) do
+    paid_at_date =
+      "#{paid_at} 00:00:00"
+      |> NaiveDateTime.from_iso8601!()
+      |> DateTime.from_naive!("Etc/UTC")
+
+    query
+    |> where([q], q.paid_at > ^paid_at_date)
+    |> query_by(Map.delete(params, "min_paid_at"))
+  end
+
+  defp query_by(query, %{"max_paid_at" => paid_at} = params) do
+    paid_at_date =
+      "#{paid_at} 00:00:00"
+      |> NaiveDateTime.from_iso8601!()
+      |> DateTime.from_naive!("Etc/UTC")
+
+    query
+    |> where([q], q.paid_at < ^paid_at_date)
+    |> query_by(Map.delete(params, "max_paid_at"))
   end
 
   defp query_by(query, %{"paid_from" => paid_at} = params) do
