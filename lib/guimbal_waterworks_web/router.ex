@@ -103,9 +103,9 @@ defmodule GuimbalWaterworksWeb.Router do
       live "/members/:id/edit", MemberLive.Index, :edit
       live "/members/:id/new_bill", MemberLive.Index, :new_bill
       live "/members/:id/pay_bills", MemberLive.Index, :payment
-
       live "/members/:id/show/edit", MemberLive.Show, :edit
       live "/members/:id/show/new_bill", MemberLive.Show, :new_bill
+      live "/bills", BillLive.Index
     end
 
     scope "/", GuimbalWaterworksWeb do
