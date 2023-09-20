@@ -79,6 +79,19 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
      |> update_results()}
   end
 
+  def handle_event("print", _params, socket) do
+    %{
+      base_params: base_params,
+      search_params: search_params,
+      pagination_params: pagination_params
+    } = socket.assigns
+
+    list_params =
+      base_params
+      |> Map.merge(Page.pagination_to_query_params(pagination_params))
+      |> Map.merge(search_params)
+  end
+
   defp assign_bills_with_calculation(socket) do
     %{
       base_params: base_params,

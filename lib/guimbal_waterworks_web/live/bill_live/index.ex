@@ -8,7 +8,6 @@ defmodule GuimbalWaterworksWeb.BillLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
-    IO.inspect params
     {:noreply,
      socket
      |> assign(:page_title, "Bills")}
