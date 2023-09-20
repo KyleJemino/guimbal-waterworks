@@ -15,6 +15,7 @@
 
 <div class="page-button-container mt-3">
   <%= live_patch "Edit", to: Routes.billing_period_show_path(@socket, :edit, @billing_period), class: "button -dark" %>
+  <%= live_redirect "Print Bills", to: Routes.bill_print_path(@socket, :index, @billing_period), class: "button -dark" %>
 </div>
 
 

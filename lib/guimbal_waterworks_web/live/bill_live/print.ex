@@ -1,4 +1,4 @@
-defmodule GuimbalWaterworksWeb.BillLive.Index do
+defmodule GuimbalWaterworksWeb.BillLive.Print do
   use GuimbalWaterworksWeb, :live_view
 
   @impl true
@@ -10,6 +10,6 @@ defmodule GuimbalWaterworksWeb.BillLive.Index do
   def handle_params(params, _url, socket) do
     {:noreply,
      socket
-     |> assign(:page_title, "Bills")}
+     |> assign(:page_title, Atom.to_string(socket.assigns.live_action))}
   end
 end
