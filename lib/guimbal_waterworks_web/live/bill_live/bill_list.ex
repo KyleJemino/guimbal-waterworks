@@ -55,7 +55,16 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
 
   @impl true
   def handle_event("filter_submit", %{"search_params" => search_params}, socket) do
-    {:noreply, patch_params_path(socket)}
+    {:noreply, 
+      socket
+      |> assign_pagination_params(
+        %{
+          socket.assigns.pagination_params |
+          "current_page" => 1
+        }
+      )
+      |> patch_params_path()
+    }
   end
 
   @impl true
@@ -80,7 +89,11 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
       "current_page" => 1
     }
 
-    {:noreply, socket}
+    {:noreply, 
+      socket
+      |> assign_pagination_params(formatted_pagination_params)
+      |> patch_params_path()
+    }
   end
 
   @impl true
@@ -88,7 +101,11 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     updated_pagination_params =
       Map.replace!(socket.assigns.pagination_params, "current_page", String.to_integer(page))
 
-    {:noreply, socket}
+    {:noreply, 
+      socket
+      |> assign_pagination_params(updated_pagination_params)
+      |> patch_params_path()
+    }
   end
 
   defp assign_bills_with_calculation(socket) do
@@ -165,6 +182,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     |> Helpers.remove_empty_map_values()
     |> Map.take(@pagination_keys ++ @valid_filter_keys)
     |> Map.merge(Page.default_pagination_params, fn _k, v1, _v2 -> v1 end)
+    |> Page.sanitize_pagination_params()
   end
 
   defp assign_filter_params(socket, filter_params) do
@@ -228,6 +246,14 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
       socket, 
       :pagination_params, 
       Map.take(socket.assigns.filter_params, @pagination_keys)
+    )
+  end
+
+  defp assign_pagination_params(socket, pagination_params) do
+    assign(
+      socket, 
+      :pagination_params, 
+      pagination_params
     )
   end
 end

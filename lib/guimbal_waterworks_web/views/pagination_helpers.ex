@@ -2,30 +2,35 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
   use GuimbalWaterworksWeb, :component
 
   @default_pagination_params %{
-    "per_page" => "20",
-    "current_page" => "1"
+    "per_page" => 20,
+    "current_page" => 1
   }
 
   def default_pagination_params, do: @default_pagination_params
+
+  def sanitize_pagination_params(%{
+    "per_page" => limit,
+    "current_page" => _current_page
+  } = params) when limit != "All" do
+    maybe_to_int = fn val ->
+      if is_binary(val) do
+        String.to_integer(val)
+      else
+        val
+      end
+    end
+
+    params
+    |> Map.update!("per_page", maybe_to_int)
+    |> Map.update!("current_page", maybe_to_int)
+  end
+
+  def sanitize_pagination_params(params), do: params
 
   def pagination_to_query_params(%{
         "per_page" => limit,
         "current_page" => current_page
       } = params) do
-    limit = 
-      if is_binary(limit) do
-        String.to_integer(limit)
-      else
-        limit
-      end
-
-    current_page = 
-      if is_binary(current_page) do
-        String.to_integer(current_page)
-      else
-        current_page
-      end
-
     pagination_query_params =
       if limit != "All" do
         %{
@@ -95,7 +100,7 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
     ~H"""
     <div class="pagination-buttons-container">
       <div class="pagination">
-        <%= if @pagination_params["current_page"] != 1 do %>
+        <%= if @pagination_params["current_page"] not in [1, "1"] do %>
           <button
             class="button"
             phx-target={@target}
