@@ -9,6 +9,7 @@ defmodule GuimbalWaterworksWeb.BillLive.Components do
       id="search-form"
       phx-target={@target}
       phx-change="filter_change"
+      phx-submit="filter_submit"
       class="filter-form container max-w-[unset]"
     >
       <%= if @for == :billing_period do %>
@@ -64,6 +65,7 @@ defmodule GuimbalWaterworksWeb.BillLive.Components do
           value: @search_params["status"]
         )%>
       </div>
+      <%= submit "Search", phx_disable_with: "Saving...", class: "submit" %>
     </.form>
     """
   end
