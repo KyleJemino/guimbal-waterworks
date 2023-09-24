@@ -77,21 +77,12 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
         },
         socket
       ) do
-    formatted_per_page =
-      if per_page == "All" do
-        per_page
-      else
-        String.to_integer(per_page)
-      end
-
-    formatted_pagination_params = %{
-      "per_page" => formatted_per_page,
-      "current_page" => 1
-    }
-
     {:noreply, 
       socket
-      |> assign_pagination_params(formatted_pagination_params)
+      |> assign_pagination_params(%{
+        "per_page" => per_page,
+        "current_page" => 1
+      })
       |> patch_params_path()
     }
   end
@@ -99,7 +90,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
   @impl true
   def handle_event("turn_page", %{"page" => page} = _params, socket) do
     updated_pagination_params =
-      Map.replace!(socket.assigns.pagination_params, "current_page", String.to_integer(page))
+      Map.replace!(socket.assigns.pagination_params, "current_page", page)
 
     {:noreply, 
       socket
@@ -245,7 +236,9 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     assign(
       socket, 
       :pagination_params, 
-      Map.take(socket.assigns.filter_params, @pagination_keys)
+      socket.assigns.filter_params
+      |> Map.take(@pagination_keys)
+      |> Page.sanitize_pagination_params()
     )
   end
 
@@ -253,7 +246,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     assign(
       socket, 
       :pagination_params, 
-      pagination_params
+      Page.sanitize_pagination_params(pagination_params) 
     )
   end
 end
