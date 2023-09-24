@@ -6,7 +6,14 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
     "current_page" => 1
   }
 
-  def default_pagination_params, do: @default_pagination_params
+  @pagination_param_keys [
+    "per_page",
+    "current_page"
+  ]
+
+  def default_pagination_params(), do: @default_pagination_params
+
+  def param_keys(), do: @pagination_param_keys
 
   def sanitize_pagination_params(%{
     "per_page" => limit,

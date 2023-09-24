@@ -59,6 +59,7 @@
           "min_paid_at" => Date.beginning_of_month(@billing_period.due_date),
           "max_paid_at" => @billing_period.due_date
         }}
+        filter_params={@filter_params}
       />
     <% end %>
     <%= if @live_action in [:new_bill, :show, :edit] do %>

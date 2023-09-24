@@ -6,13 +6,25 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   alias GuimbalWaterworks.Helpers
   alias GuimbalWaterworksWeb.PaymentLive.Components, as: PaymentComponents
 
+  @valid_filter_keys [
+    "last_name",
+    "first_name",
+    "middle_name",
+    "street",
+    "type", 
+    "or",
+    "paid_from",
+    "paid_to"
+  ]
+
   def update(assigns, socket) do
     {:ok,
      socket
      |> assign(assigns)
      |> assign(:base_params, assigns.base_params || %{})
-     |> assign(:pagination_params, Page.default_pagination_params())
-     |> assign_search_params(%{})
+     |> assign_filter_params(assigns.filter_params)
+     |> assign_search_params()
+     |> assign_pagination_params()
      |> update_results()}
   end
 
@@ -70,19 +82,19 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   defp assign_payments(socket) do
     %{
       base_params: base_params,
-      search_params: search_params,
-      pagination_params: pagination_params
+      filter_params: filter_params,
     } = socket.assigns
 
     payments =
-      base_params
+      filter_params
       |> Map.put(
         "preload",
         [:member, :user, bills: [:billing_period, :member, :payment]]
       )
       |> Map.put("order_by", "default")
-      |> Map.merge(Page.pagination_to_query_params(pagination_params))
-      |> Map.merge(search_params)
+      |> Map.merge(base_params)
+      |> Page.pagination_to_query_params()
+      |> IO.inspect()
       |> Bills.list_payments()
 
     assign(socket, :payments, payments)
@@ -142,10 +154,36 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     assign(socket, :pagination, pagination_info)
   end
 
-  defp assign_search_params(socket, search_params) do
-    search_params_with_values = Helpers.remove_empty_map_values(search_params)
+  defp assign_search_params(socket, search_params \\ nil) do
+    current_params =
+      if is_nil(search_params) do
+        socket.assigns.filter_params
+      else
+        search_params
+      end
 
-    assign(socket, :search_params, search_params_with_values)
+    clean_params =
+      current_params
+      |> Map.take(@valid_filter_keys)
+      |> Helpers.remove_empty_map_values()
+    
+    assign(socket, :search_params, clean_params)
+  end
+
+  defp assign_pagination_params(socket, pagination_params \\ nil) do
+    current_params =
+      if is_nil(pagination_params) do
+        socket.assigns.filter_params
+      else
+        pagination_params
+      end
+
+    clean_params =
+      current_params
+      |> Map.take(Page.param_keys())
+      |> Page.sanitize_pagination_params()
+
+    assign(socket, :pagination_params, clean_params)
   end
 
   defp update_results(socket) do
@@ -153,5 +191,19 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     |> assign_payments()
     |> assign_payment_calculations()
     |> assign_pagination_information()
+  end
+
+  defp sanitize_query_params(filter_params) do
+    filter_params
+    |> Helpers.remove_empty_map_values()
+    |> Map.take(Page.param_keys() ++ @valid_filter_keys)
+    |> Map.merge(Page.default_pagination_params, fn _k, v1, _v2 -> v1 end)
+    |> Page.sanitize_pagination_params()
+  end
+
+  defp assign_filter_params(socket, filter_params) do
+    assign(socket, :filter_params,
+      sanitize_query_params(filter_params)
+    )
   end
 end
