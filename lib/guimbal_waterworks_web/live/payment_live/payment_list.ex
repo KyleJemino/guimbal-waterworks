@@ -30,14 +30,22 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
 
   @impl true
   def handle_event("filter_change", %{"search_params" => search_params}, socket) do
-    {:noreply,
-     socket
-     |> assign_search_params(search_params)
-     |> assign(:pagination_params, %{
-       "per_page" => socket.assigns.pagination_params["per_page"],
-       "current_page" => 1
-     })
-     |> update_results()}
+    {:noreply, assign_search_params(socket, search_params)}
+  end
+
+  @impl true
+  def handle_event("filter_submit", %{"search_params" => search_params}, socket) do
+    {:noreply, 
+      socket
+      |> assign_search_params(search_params)
+      |> assign_pagination_params(
+        %{
+          socket.assigns.pagination_params |
+          "current_page" => 1
+        }
+      )
+      |> patch_params_path()
+    }
   end
 
   @impl true
@@ -50,33 +58,24 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
         },
         socket
       ) do
-    formatted_per_page =
-      if per_page == "All" do
-        per_page
-      else
-        String.to_integer(per_page)
-      end
-
-    formatted_pagination_params = %{
-      "per_page" => formatted_per_page,
-      "current_page" => 1
-    }
-
     {:noreply,
      socket
-     |> assign(:pagination_params, formatted_pagination_params)
-     |> update_results()}
+     |> assign_pagination_params(%{
+       "per_page" => per_page,
+       "current_page" => 1
+     })
+     |> patch_params_path()}
   end
 
   @impl true
   def handle_event("turn_page", %{"page" => page} = _params, socket) do
     updated_pagination_params =
-      Map.replace!(socket.assigns.pagination_params, "current_page", String.to_integer(page))
+      Map.replace!(socket.assigns.pagination_params, "current_page", page)
 
     {:noreply,
      socket
-     |> assign(:pagination_params, updated_pagination_params)
-     |> update_results()}
+     |> assign_pagination_params(updated_pagination_params)
+     |> patch_params_path()}
   end
 
   defp assign_payments(socket) do
@@ -94,7 +93,6 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       |> Map.put("order_by", "default")
       |> Map.merge(base_params)
       |> Page.pagination_to_query_params()
-      |> IO.inspect()
       |> Bills.list_payments()
 
     assign(socket, :payments, payments)
@@ -205,5 +203,37 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     assign(socket, :filter_params,
       sanitize_query_params(filter_params)
     )
+  end
+
+  defp patch_params_path(socket) do
+    %{ 
+      assigns: %{ 
+        for: for, 
+        base_params: base_params, 
+        search_params: search_params,
+        pagination_params: pagination_params
+      } 
+    } = socket
+
+    id =
+      if for == :member do
+        base_params["member_id"]
+      else
+        base_params["billing_period_id"]
+      end
+
+    updated_filter_params =
+      search_params
+      |> Map.merge(pagination_params)
+      |> sanitize_query_params()
+
+    route =
+      if for == :member do
+        Routes.member_show_path(socket, :payments, id, updated_filter_params)
+      else
+        Routes.billing_period_show_path(socket, :payments, id, updated_filter_params)
+      end
+
+    push_patch(socket, to: route)
   end
 end

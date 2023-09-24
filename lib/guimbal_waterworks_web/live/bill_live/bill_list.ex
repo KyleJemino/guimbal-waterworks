@@ -47,10 +47,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
 
   @impl true
   def handle_event("filter_change", %{"search_params" => search_params}, socket) do
-    {:noreply,
-      socket
-      |> assign_search_params(search_params)
-    }
+    {:noreply, assign_search_params(socket, search_params)}
   end
 
   @impl true
