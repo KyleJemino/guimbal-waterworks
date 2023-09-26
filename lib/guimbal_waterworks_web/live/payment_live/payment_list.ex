@@ -11,7 +11,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     "first_name",
     "middle_name",
     "street",
-    "type", 
+    "type",
     "or",
     "paid_from",
     "paid_to"
@@ -35,17 +35,14 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
 
   @impl true
   def handle_event("filter_submit", %{"search_params" => search_params}, socket) do
-    {:noreply, 
-      socket
-      |> assign_search_params(search_params)
-      |> assign_pagination_params(
-        %{
-          socket.assigns.pagination_params |
-          "current_page" => 1
-        }
-      )
-      |> patch_params_path()
-    }
+    {:noreply,
+     socket
+     |> assign_search_params(search_params)
+     |> assign_pagination_params(%{
+       socket.assigns.pagination_params
+       | "current_page" => 1
+     })
+     |> patch_params_path()}
   end
 
   @impl true
@@ -81,7 +78,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   defp assign_payments(socket) do
     %{
       base_params: base_params,
-      filter_params: filter_params,
+      filter_params: filter_params
     } = socket.assigns
 
     payments =
@@ -164,7 +161,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       current_params
       |> Map.take(@valid_filter_keys)
       |> Helpers.remove_empty_map_values()
-    
+
     assign(socket, :search_params, clean_params)
   end
 
@@ -195,24 +192,22 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     filter_params
     |> Helpers.remove_empty_map_values()
     |> Map.take(Page.param_keys() ++ @valid_filter_keys)
-    |> Map.merge(Page.default_pagination_params, fn _k, v1, _v2 -> v1 end)
+    |> Map.merge(Page.default_pagination_params(), fn _k, v1, _v2 -> v1 end)
     |> Page.sanitize_pagination_params()
   end
 
   defp assign_filter_params(socket, filter_params) do
-    assign(socket, :filter_params,
-      sanitize_query_params(filter_params)
-    )
+    assign(socket, :filter_params, sanitize_query_params(filter_params))
   end
 
   defp patch_params_path(socket) do
-    %{ 
-      assigns: %{ 
-        for: for, 
-        base_params: base_params, 
+    %{
+      assigns: %{
+        for: for,
+        base_params: base_params,
         search_params: search_params,
         pagination_params: pagination_params
-      } 
+      }
     } = socket
 
     id =

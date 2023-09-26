@@ -15,10 +15,13 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
 
   def param_keys(), do: @pagination_param_keys
 
-  def sanitize_pagination_params(%{
-    "per_page" => limit,
-    "current_page" => _current_page
-  } = params) when limit != "All" do
+  def sanitize_pagination_params(
+        %{
+          "per_page" => limit,
+          "current_page" => _current_page
+        } = params
+      )
+      when limit != "All" do
     maybe_to_int = fn val ->
       if is_binary(val) do
         String.to_integer(val)
@@ -34,10 +37,12 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
 
   def sanitize_pagination_params(params), do: params
 
-  def pagination_to_query_params(%{
-        "per_page" => limit,
-        "current_page" => current_page
-      } = params) do
+  def pagination_to_query_params(
+        %{
+          "per_page" => limit,
+          "current_page" => current_page
+        } = params
+      ) do
     pagination_query_params =
       if limit != "All" do
         %{
@@ -47,6 +52,7 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
       else
         %{}
       end
+
     params
     |> Map.drop(["per_page", "current_page"])
     |> Map.merge(pagination_query_params)
