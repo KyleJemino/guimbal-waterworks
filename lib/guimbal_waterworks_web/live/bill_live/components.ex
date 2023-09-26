@@ -68,7 +68,7 @@ defmodule GuimbalWaterworksWeb.BillLive.Components do
         </div>
       </div>
       <div class="submit-container">
-        <%= submit "Search", phx_disable_with: "Saving...", class: "button -dark w-1/3" %>
+        <%= submit "Search", phx_disable_with: "Saving...", class: "button -filter" %>
       </div>
     </.form>
     """
