@@ -6,20 +6,56 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
     "current_page" => 1
   }
 
-  def default_pagination_params, do: @default_pagination_params
+  @pagination_param_keys [
+    "per_page",
+    "current_page"
+  ]
 
-  def pagination_to_query_params(%{
-        "per_page" => limit,
-        "current_page" => current_page
-      }) do
-    if limit != "All" do
-      %{
-        "limit" => limit,
-        "offset" => limit * (current_page - 1)
-      }
-    else
-      %{}
+  def default_pagination_params(), do: @default_pagination_params
+
+  def param_keys(), do: @pagination_param_keys
+
+  def sanitize_pagination_params(
+        %{
+          "per_page" => limit,
+          "current_page" => _current_page
+        } = params
+      )
+      when limit != "All" do
+    maybe_to_int = fn val ->
+      if is_binary(val) do
+        String.to_integer(val)
+      else
+        val
+      end
     end
+
+    params
+    |> Map.update!("per_page", maybe_to_int)
+    |> Map.update!("current_page", maybe_to_int)
+  end
+
+  def sanitize_pagination_params(params), do: params
+
+  def pagination_to_query_params(
+        %{
+          "per_page" => limit,
+          "current_page" => current_page
+        } = params
+      ) do
+    pagination_query_params =
+      if limit != "All" do
+        %{
+          "limit" => limit,
+          "offset" => limit * (current_page - 1)
+        }
+      else
+        %{}
+      end
+
+    params
+    |> Map.drop(["per_page", "current_page"])
+    |> Map.merge(pagination_query_params)
   end
 
   def get_pagination_info(pagination_params, result_count, display_count) do
@@ -77,7 +113,7 @@ defmodule GuimbalWaterworksWeb.PaginationHelpers do
     ~H"""
     <div class="pagination-buttons-container">
       <div class="pagination">
-        <%= if @pagination_params["current_page"] != 1 do %>
+        <%= if @pagination_params["current_page"] not in [1, "1"] do %>
           <button
             class="button"
             phx-target={@target}

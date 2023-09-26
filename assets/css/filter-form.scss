@@ -1,5 +1,9 @@
 .filter-form {
-  @apply grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-between gap-4;
+  @apply flex flex-col items-center gap-8;
+}
+
+.filter-form > .fields {
+  @apply w-full grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 justify-between gap-4;
 }
 
 .search-input-group {
@@ -11,4 +15,8 @@
 }
 .search-input-group > input, select {
   @apply flex-1;
+}
+
+.submit-container {
+  @apply w-full flex items-center justify-center;
 }

@@ -70,6 +70,7 @@
         base_params={%{
          "member_id" => @member.id
         }}
+       filter_params={@filter_params}
       />
     <% end %>
     <%= if @live_action in [:new_bill, :show, :edit] do %>
@@ -80,6 +81,7 @@
         base_params={%{
           "member_id" => @member.id
         }}
+       filter_params={@filter_params}
       />
     <% end %>
   </div>
