@@ -1,9 +1,9 @@
 <div class="sub-nav">
   <%= if @current_users do %>
     <div class="nav-item"><%= @current_users.username %></div>
-    <div class="nav-item"><%= link "Log out", to: Routes.users_session_path(@conn, :delete), method: :delete %></div>
+    <%= link "Log out", to: Routes.users_session_path(@conn, :delete), method: :delete, class: "nav-item" %>
   <% else %>
-    <div class="nav-item"><%= link "Register", to: Routes.users_registration_path(@conn, :new) %></div>
-    <div class="nav-item"><%= link "Log in", to: Routes.users_session_path(@conn, :new) %></div>
+    <%= link "Register", to: Routes.users_registration_path(@conn, :new), class: "nav-item" %>
+    <%= link "Log in", to: Routes.users_session_path(@conn, :new), class: "nav-item" %>
   <% end %>
 </div>
