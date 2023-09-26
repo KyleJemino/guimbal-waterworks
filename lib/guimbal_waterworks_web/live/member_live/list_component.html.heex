@@ -7,50 +7,54 @@
     phx-change="filter_change"
     class="filter-form container max-w-[unset]"
   >
-    <div class="search-input-group">
-      <%= label f, :last_name %>
-      <%= text_input f, :last_name, value: @search_params["last_name"] %>
+    <div class="fields">
+      <div class="search-input-group">
+        <%= label f, :last_name %>
+        <%= text_input f, :last_name, value: @search_params["last_name"] %>
+      </div>
+      <div class="search-input-group">
+        <%= label f, :first_name %>
+        <%= text_input f, :first_name, value: @search_params["first_name"] %>
+      </div>
+      <div class="search-input-group">
+        <%= label f, :middle_name %>
+        <%= text_input f, :middle_name, value: @search_params["middle_name"] %>
+      </div>
+      <div class="search-input-group">
+        <%= label f, :street %>
+        <%= select( 
+          f, 
+          :street, 
+          ["All" | GuimbalWaterworks.Constants.streets()], 
+          value: @search_params["street"]
+        )%>
+      </div>
+      <div class="search-input-group">
+        <%= label f, :type %>
+        <%= select( 
+          f, 
+          :type, 
+          ["All": :all, "Personal": :personal, "Business": :business], 
+          required: true,
+          value: @search_params["type"]
+        )%>
+      </div>
+      <div class="search-input-group">
+        <%= label f, :status %>
+        <%= select( 
+          f, 
+          :status, 
+          @status_options, 
+          required: true,
+          value: @search_params["status"]
+        )%>
+      </div>
     </div>
-    <div class="search-input-group">
-      <%= label f, :first_name %>
-      <%= text_input f, :first_name, value: @search_params["first_name"] %>
-    </div>
-    <div class="search-input-group">
-      <%= label f, :middle_name %>
-      <%= text_input f, :middle_name, value: @search_params["middle_name"] %>
-    </div>
-    <div class="search-input-group">
-      <%= label f, :street %>
-      <%= select( 
-        f, 
-        :street, 
-        ["All" | GuimbalWaterworks.Constants.streets()], 
-        value: @search_params["street"]
-      )%>
-    </div>
-    <div class="search-input-group">
-      <%= label f, :type %>
-      <%= select( 
-        f, 
-        :type, 
-        ["All": :all, "Personal": :personal, "Business": :business], 
-        required: true,
-        value: @search_params["type"]
-      )%>
-    </div>
-    <div class="search-input-group">
-      <%= label f, :status %>
-      <%= select( 
-        f, 
-        :status, 
-        @status_options, 
-        required: true,
-        value: @search_params["status"]
-      )%>
-    </div>
-    <div class="flex flex-row items-center gap-2">
-      <%= checkbox(f, :actions?, value: @search_params["actions?"], class: "checkbox") %>
-      <span>Show Actions</span>
+    <div class="w-full flex justify-start">
+      <div class="flex flex-row items-center gap-2">
+        <%= checkbox(f, :actions?, value: @search_params["actions?"], class: "checkbox") %>
+        <span>Show Actions</span>
+      </div>
     </div>
   </.form>
 

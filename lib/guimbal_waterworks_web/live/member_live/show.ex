@@ -10,7 +10,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
+  def handle_params(%{"id" => id} = params, _, socket) do
     member = Members.get_member!(id)
 
     bill =
@@ -23,7 +23,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:member, member)
-     |> assign(:bill, bill)}
+     |> assign(:bill, bill)
+     |> assign(:filter_params, params)}
   end
 
   @impl true

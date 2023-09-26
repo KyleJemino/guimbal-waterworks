@@ -24,4 +24,8 @@
   &.-page.-active {
     @apply bg-slate-600 text-white;
   }
+
+  &.-filter {
+    @apply bg-slate-600 text-white font-bold min-w-[200px];
+  }
 }

@@ -9,11 +9,12 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
+  def handle_params(%{"id" => id} = params, _, socket) do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:billing_period, Bills.get_billing_period!(id))}
+     |> assign(:billing_period, Bills.get_billing_period!(id))
+     |> assign(:filter_params, params)}
   end
 
   defp page_title(:edit), do: "Edit Billing period"

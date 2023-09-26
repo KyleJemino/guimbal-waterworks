@@ -58,8 +58,10 @@
         id={:payment_list}
         base_params={%{
           "min_paid_at" => Date.beginning_of_month(@billing_period.due_date),
-          "max_paid_at" => @billing_period.due_date
+          "max_paid_at" => @billing_period.due_date,
+          "billing_period_id" => @billing_period.id
         }}
+        filter_params={@filter_params}
       />
     <% end %>
     <%= if @live_action in [:new_bill, :show, :edit] do %>
@@ -70,6 +72,7 @@
         base_params={%{
           "billing_period_id" => @billing_period.id
         }}
+        filter_params={@filter_params}
       />
     <% end %>
   </div>
