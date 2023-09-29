@@ -106,6 +106,8 @@ defmodule GuimbalWaterworksWeb.Router do
 
       live "/members/:id/show/edit", MemberLive.Show, :edit
       live "/members/:id/show/new_bill", MemberLive.Show, :new_bill
+
+      live "/members/print", MemberLive.Print, :print
     end
 
     scope "/", GuimbalWaterworksWeb do

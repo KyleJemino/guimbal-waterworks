@@ -46,6 +46,7 @@
 
 <div class="page-button-container mt-3">
   <%= live_patch "New Member", to: Routes.member_index_path(@socket, :new), class: "button -dark" %>
+  <%= live_patch "Print Unpaid Bills", to: Routes.member_print_path(@socket, :print), class: "button -dark" %>
 </div>
 
 <.live_component
