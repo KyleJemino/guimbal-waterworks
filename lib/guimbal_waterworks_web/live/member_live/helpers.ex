@@ -12,7 +12,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
     "type",
     "due_from",
     "due_to",
-    "status"
+    "status",
+    "id"
   ]
 
   def build_member_bill_map(members) do

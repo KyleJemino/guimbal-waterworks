@@ -10,7 +10,12 @@ defmodule GuimbalWaterworksWeb.MemberLive.Print do
   end
 
   def handle_params(params, _uri, socket) do
-    {:noreply, socket}
+    {:noreply, 
+      socket
+      |> assign_filter_params(params)
+      |> assign_members()
+      |> assign_member_bill_map()
+    }
   end
 
   defp assign_filter_params(socket, filter_params) do
@@ -21,7 +26,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Print do
     )
   end
 
-  defp assign_members(socket) do
+  defp assign_members(%{assigns: %{filter_params: filter_params}} = socket) do
     list_params =
       socket.assigns.filter_params
       |> Map.merge(%{
@@ -38,5 +43,11 @@ defmodule GuimbalWaterworksWeb.MemberLive.Print do
     members = Members.list_members(list_params)
 
     assign(socket, :members, members)
+  end
+
+  defp assign_member_bill_map(%{assigns: %{members: members}} = socket) do
+    member_bill_map = MLHelpers.build_member_bill_map(members)
+
+    assign(socket, :member_bill_map, member_bill_map)
   end
 end

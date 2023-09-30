@@ -1,1 +1,6 @@
-<h1>Print</h1>
+<%= for member <- @members do %>
+  <div class="flex flex-row gap-4">
+    <p><%= Display.full_name(member) %></p>
+    <p><%= Display.money(@member_bill_map[member.id].total) %></p>
+  </div>
+<% end %>
