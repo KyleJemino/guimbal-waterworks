@@ -1,6 +1,19 @@
 defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
   alias GuimbalWaterworks.Bills
+  alias GuimbalWaterworks.Helpers, as: GeneralHelpers
   alias GuimbalWaterworksWeb.DisplayHelpers, as: Display
+  alias GuimbalWaterworksWeb.PaginationHelpers, as: Page
+
+  @valid_filter_keys [
+    "last_name",
+    "first_name",
+    "middle_name",
+    "street",
+    "type",
+    "due_from",
+    "due_to",
+    "status"
+  ]
 
   def build_member_bill_map(members) do
     Enum.reduce(members, %{}, fn member, member_map_acc ->
@@ -32,5 +45,21 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
 
       Map.put(member_map_acc, member.id, bills_with_amount)
     end)
+  end
+
+  def unpaid_bill_preload_query do
+    Bills.query_bill(%{
+      "order_by" => [desc: :inserted_at],
+      "status" => "unpaid",
+      "preload" => [:billing_period, :member, :payment]
+    })
+  end
+
+  def sanitize_member_filters(filter_params) do
+    filter_params
+    |> GeneralHelpers.remove_empty_map_values()
+    |> Map.take(Page.param_keys() ++ @valid_filter_keys)
+    |> Map.merge(Page.default_pagination_params(), fn _k, v1, _v2 -> v1 end)
+    |> Page.sanitize_pagination_params()
   end
 end

@@ -105,14 +105,11 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   end
 
   defp assign_filter_params(socket, filter_params) do
-    sanitized_params =
-      filter_params
-      |> Helpers.remove_empty_map_values()
-      |> Map.take(Page.param_keys() ++ @valid_filter_keys)
-      |> Map.merge(Page.default_pagination_params(), fn _k, v1, _v2 -> v1 end)
-      |> Page.sanitize_pagination_params()
-
-    assign(socket, :filter_params, sanitized_params)
+    assign(
+      socket, 
+      :filter_params, 
+      MLHelpers.sanitize_member_filters(filter_params)
+    )
   end
 
   defp assign_search_params(socket, search_params \\ nil) do
@@ -154,7 +151,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     list_params =
       filter_params
       |> Map.merge(%{
-        "preload" => [bills: bill_preload_query()],
+        "preload" => [bills: MLHelpers.unpaid_bill_preload_query()],
         "order_by" => [
           asc: :last_name,
           asc: :first_name,
@@ -197,14 +194,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     |> assign_pagination_information()
   end
 
-  defp bill_preload_query do
-    Bills.query_bill(%{
-      "order_by" => [desc: :inserted_at],
-      "status" => "unpaid",
-      "preload" => [:billing_period, :member, :payment]
-    })
-  end
-
   defp patch_params_path(socket) do
     %{
       assigns: %{
@@ -216,6 +205,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     updated_filter_params =
       search_params
       |> Map.merge(pagination_params)
+      |> MLHelpers.sanitize_member_filters()
 
     route = Routes.member_index_path(socket, :index, updated_filter_params)
 
