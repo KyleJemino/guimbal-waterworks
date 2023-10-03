@@ -4,9 +4,13 @@ defmodule GuimbalWaterworksWeb.MemberLive.Print do
   alias GuimbalWaterworks.Members
   alias GuimbalWaterworks.Bills
   alias GuimbalWaterworksWeb.MemberLive.Helpers, as: MLHelpers
+  alias GuimbalWaterworksWeb.MemberLive.Components, as: MemberComponents
 
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, 
+      socket,
+      layout: {GuimbalWaterworksWeb.LayoutView, "print_app.html"}
+    }
   end
 
   def handle_params(params, _uri, socket) do

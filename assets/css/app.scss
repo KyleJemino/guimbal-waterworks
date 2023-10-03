@@ -23,6 +23,10 @@ body {
   @apply h-screen w-full bg-slate-300;
 }
 
+.print-body {
+  @apply w-full bg-transparent;
+}
+
 h1 {
   @apply text-3xl font-bold;
 }

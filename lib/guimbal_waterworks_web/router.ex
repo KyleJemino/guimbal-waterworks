@@ -87,6 +87,16 @@ defmodule GuimbalWaterworksWeb.Router do
     delete "/users/log_out", UsersSessionController, :delete
   end
 
+  live_session :printing, 
+    on_mount: GuimbalWaterworksWeb.AssignUsers,
+    root_layout: {GuimbalWaterworksWeb.LayoutView, "print_root.html"}
+  do
+    scope "/", GuimbalWaterworksWeb do
+      pipe_through [:browser, :require_authenticated_users, :require_admin]
+      live "/members/print", MemberLive.Print, :print
+    end
+  end
+
   live_session :authenticated, on_mount: GuimbalWaterworksWeb.AssignUsers do
     scope "/", GuimbalWaterworksWeb do
       pipe_through [:browser, :require_authenticated_users, :require_manager]
@@ -106,8 +116,6 @@ defmodule GuimbalWaterworksWeb.Router do
 
       live "/members/:id/show/edit", MemberLive.Show, :edit
       live "/members/:id/show/new_bill", MemberLive.Show, :new_bill
-
-      live "/members/print", MemberLive.Print, :print
     end
 
     scope "/", GuimbalWaterworksWeb do
