@@ -27,5 +27,7 @@
 }
 
 .print-container {
-  @apply flex flex-row;
+  @apply flex flex-row flex-wrap;
+
+  max-width: 29.7cm;
 }

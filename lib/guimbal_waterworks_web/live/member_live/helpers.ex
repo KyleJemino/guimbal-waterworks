@@ -50,7 +50,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
 
   def unpaid_bill_preload_query do
     Bills.query_bill(%{
-      "order_by" => [desc: :inserted_at],
+      "order_by" => "default",
       "status" => "unpaid",
       "preload" => [:billing_period, :member, :payment]
     })

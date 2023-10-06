@@ -1,11 +1,12 @@
 .bill-card {
   @apply font-bold uppercase;
 
-  width: 10.5cm;
-  height: 16cm;
+  width: 10cm;
+  height: 14cm;
   padding: 1.5cm 0.5cm 0cm 0.5cm;
 
   font-size: 12px;
+  border: 1px dotted black;
 }
 
 .bill-header {
@@ -29,4 +30,8 @@
   > .contact {
     font-size: 10px;
   }
+}
+
+.bill-content {
+  @apply pt-4;
 }

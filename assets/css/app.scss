@@ -20,6 +20,12 @@
   box-sizing: border-box; 
 }
 
+@media print{
+  @page {
+    margin: 1mm;
+  }
+}
+
 body {
   @apply h-screen w-full bg-slate-300;
 }

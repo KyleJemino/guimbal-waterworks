@@ -1,6 +1,8 @@
 defmodule GuimbalWaterworksWeb.MemberLive.Components do
   use GuimbalWaterworksWeb, :component
 
+  alias GuimbalWaterworks.Bills
+
   def bill_card(assigns) do
     ~H"""
       <div class="bill-card">
@@ -12,8 +14,85 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             <p class="contact">Contact #: 09778039982 / (033) 517-4642</p>
           </div>
         </div>
-        <p><%= Display.full_name(@member) %></p>
-        <p><%= Display.money(@bill_map.total) %></p>
+        <div class="bill-content">
+          <h5 class="text-right">Date Due: <%= Display.format_date(@latest_bill.billing_period.due_date) %></h5>
+          <p class="uppercase"><span class="mr-2">Name:</span><%= Display.full_name(@member) %></p>
+          <p class="uppercase"><span class="mr-2">Address:</span><%= @member.street %></p>
+          <div class="grid grid-cols-3 grid-row-2">
+            <div>From</div>
+            <div>To</div>
+            <div>Reading</div>
+            <div><%= Display.format_date(@latest_bill.billing_period.from, "%m/%d/%y") %></div>
+            <div><%= Display.format_date(@latest_bill.billing_period.to, "%m/%d/%y") %></div>
+            <div><%= @latest_bill.reading %></div>
+          </div>
+          <p class="text-center mt-2">Price Breakdown</p>
+          <div class="flex flex-col">
+            <div class="grid grid-cols-2">
+              <p><%= @latest_bill.reading %> Cu.M.</p>
+              <p class="text-right"><%= Display.money(@latest_bill_calc.base_amount) %></p>
+            </div>
+            <div class="grid grid-cols-2">
+              <p>
+              Franchise Tax (
+              <%= 
+                @latest_bill.billing_period.franchise_tax_rate
+                |> Decimal.mult(100)
+                |> Number.Percentage.number_to_percentage(precision: 2)
+              %>
+              )
+              </p>
+              <p class="text-right"><%= Display.money(@latest_bill_calc.franchise_tax_amount) %></p>
+            </div>
+            <%= if Decimal.gt?(@latest_bill_calc.death_aid_amount, 0) do %>
+              <div class="grid grid-cols-2">
+                <p>Death Aid</p>
+                <p class="text-right"><%= Display.money(@latest_bill_calc.death_aid_amount) %></p>
+              </div>
+            <% end %>
+            <%= if Decimal.gt?(@latest_bill_calc.adv_amount, 0) do %>
+              <div class="grid grid-cols-2">
+                <p>Advance Fee</p>
+                <p class="text-right"><%= Display.money(@latest_bill_calc.adv_amount) %></p>
+              </div>
+            <% end %>
+            <%= if Decimal.gt?(@latest_bill_calc.membership_amount, 0) do %>
+              <div class="grid grid-cols-2">
+                <p>Membership Fee</p>
+                <p class="text-right"><%= Display.money(@latest_bill_calc.membership_amount) %></p>
+              </div>
+            <% end %>
+            <%= if Decimal.gt?(@latest_bill_calc.reconnection_amount, 0) do %>
+              <div class="grid grid-cols-2">
+                <p>Reconnection Fee</p>
+                <p class="text-right"><%= Display.money(@latest_bill_calc.reconnection_amount) %></p>
+              </div>
+            <% end %>
+            <%= if Decimal.gt?(@latest_bill_calc.surcharge, 0) do %>
+              <div class="grid grid-cols-2">
+                <p>Late Fee</p>
+                <p class="text-right"><%= Display.money(@latest_bill_calc.surcharge) %></p>
+              </div>
+            <% end %>
+            <div class="grid grid-cols-2">
+              <p>Current Total</p>
+              <p class="text-right"><%= Display.money(@latest_bill_calc.total) %></p>
+            </div>
+            <%= if Enum.count(@previous_bills) > 0 do %>
+              <p>Previous Unpaid Bills</p>
+              <%= for bill <- @previous_bills do %>
+                <div class="grid grid-cols-2">
+                  <p><%= Display.display_period bill.billing_period %></p>
+                  <p class="text-right"><%= Display.money(Bills.calculate_bill!(bill).total)  %></p>
+                </div>
+              <% end %>
+            <% end %>
+            <div class="grid grid-cols-2">
+              <p>Total Unpaid</p>
+              <p class="text-right"><%= Display.money(@total)  %></p>
+            </div>
+          </div>
+        </div>
       </div>
     """
   end
