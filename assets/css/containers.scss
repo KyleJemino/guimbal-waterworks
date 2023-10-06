@@ -25,3 +25,7 @@
   @extend .container;
   @apply w-[640px] max-h-[90vh] overflow-auto;
 }
+
+.print-container {
+  @apply flex flex-row;
+}

@@ -1,6 +1,9 @@
-<%= for member <- @members do %>
-  <MemberComponents.bill_card
-    member={member}
-    bill_map={@member_bill_map[member.id]}
-  />
-<% end %>
+<div class="print-container">
+  <%= for member <- @members do %>
+    <MemberComponents.bill_card
+      member={member}
+      bill_map={@member_bill_map[member.id]}
+      bill_logo_src={Routes.static_path(@socket, "/images/gww-logo.jpg")}
+    />
+  <% end %>
+</div>

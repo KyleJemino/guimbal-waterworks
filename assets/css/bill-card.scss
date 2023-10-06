@@ -1,0 +1,32 @@
+.bill-card {
+  @apply font-bold uppercase;
+
+  width: 10.5cm;
+  height: 16cm;
+  padding: 1.5cm 0.5cm 0cm 0.5cm;
+
+  font-size: 12px;
+}
+
+.bill-header {
+  @apply flex flex-row gap-4 items-center;
+}
+
+.bill-header > .logo {
+  @apply rounded-full;
+
+  height: 50px;
+  width: 50px;
+}
+
+.header-text {
+  @apply flex flex-col gap-1 items-center;
+
+  > * {
+    @apply text-center;
+  }
+
+  > .contact {
+    font-size: 10px;
+  }
+}
