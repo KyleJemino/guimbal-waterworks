@@ -57,7 +57,14 @@
         <span>Show Actions</span>
       </div>
       <%= submit "Search", phx_disable_with: "Saving...", class: "button -filter" %>
-      <%= live_patch "Print Unpaid Bills From Result", to: Routes.member_print_path(@socket, :print, @filter_params), class: "button -filter" %>
+      <a 
+        href={Routes.member_print_path(@socket, :print, @filter_params)} 
+        class="button -filter"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Print Unpaid Bills From Result
+      </a>
     </div>
   </.form>
 

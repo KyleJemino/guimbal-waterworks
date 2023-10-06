@@ -44,7 +44,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.Print do
       })
       |> Page.pagination_to_query_params()
 
-    members = Members.list_members(list_params)
+    members = 
+      list_params
+      |> Members.list_members() 
+      |> Enum.filter(&(Enum.count(&1.bills) > 0))
 
     assign(socket, :members, members)
   end
