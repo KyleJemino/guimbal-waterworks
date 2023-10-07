@@ -24,6 +24,8 @@
           Member
         <% end %>
       </th>
+      <th class="header">Before</th>
+      <th class="header">After</th>
       <th class="header">Reading (Cu.M.)</th>
       <th class="header">Base Amount</th>
       <th class="header">Franchise Tax</th>
@@ -45,6 +47,8 @@
             <%= Display.full_name(bill.member) %>
           <% end %>
         </td>
+        <td class="data text-right"><%= Decimal.round(bill.before, 2) %></td>
+        <td class="data text-right"><%= Decimal.round(bill.after, 2) %></td>
         <td class="data text-right"><%= Decimal.round(bill.reading, 2) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
@@ -61,6 +65,8 @@
   <% end %>
     <tr class="total-row">
         <td class="data">Total</td>
+        <td class="data text-right"></td>
+        <td class="data text-right"></td>
         <td class="data text-right"></td>
         <td class="data text-right"><%= Display.money(@total_prices.base_amount) %></td>
         <td class="data text-right"><%= Display.money(@total_prices.franchise_tax_amount) %></td>
