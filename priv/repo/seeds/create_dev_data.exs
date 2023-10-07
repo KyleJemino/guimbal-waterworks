@@ -121,8 +121,11 @@ IO.puts "Creating bils and payments"
 Enum.each(members, fn member ->
   bills =
     Enum.map(billing_periods, fn period ->
+      reading = Enum.random(1..30)
       bill_attrs = %{
-        reading: Enum.random(1..30),
+        before: 0,
+        after: reading,
+        reading: reading,
         membership_fee?: false,
         adv_fee?: false,
         reconnection_fee?: false,
@@ -150,7 +153,7 @@ Enum.each(members, fn member ->
         |> Enum.join(",")
 
       payment_attrs = %{
-        "or" => Enum.random(0..10_000_000),
+        "or" => Enum.random(0..1_000_000_000),
         "bill_ids" => bill_ids,
         "member_id" => member.id,
         "user_id" => cashier.id
