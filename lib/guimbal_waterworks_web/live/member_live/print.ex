@@ -7,25 +7,21 @@ defmodule GuimbalWaterworksWeb.MemberLive.Print do
   alias GuimbalWaterworksWeb.MemberLive.Components, as: MemberComponents
 
   def mount(_params, _session, socket) do
-    {:ok, 
-      socket,
-      layout: {GuimbalWaterworksWeb.LayoutView, "print_app.html"}
-    }
+    {:ok, socket, layout: {GuimbalWaterworksWeb.LayoutView, "print_app.html"}}
   end
 
   def handle_params(params, _uri, socket) do
-    {:noreply, 
-      socket
-      |> assign_filter_params(params)
-      |> assign_members()
-      |> assign_member_bill_map()
-    }
+    {:noreply,
+     socket
+     |> assign_filter_params(params)
+     |> assign_members()
+     |> assign_member_bill_map()}
   end
 
   defp assign_filter_params(socket, filter_params) do
     assign(
-      socket, 
-      :filter_params, 
+      socket,
+      :filter_params,
       MLHelpers.sanitize_member_filters(filter_params)
     )
   end
@@ -44,9 +40,9 @@ defmodule GuimbalWaterworksWeb.MemberLive.Print do
       })
       |> Page.pagination_to_query_params()
 
-    members = 
+    members =
       list_params
-      |> Members.list_members() 
+      |> Members.list_members()
       |> Enum.filter(&(Enum.count(&1.bills) > 0))
 
     assign(socket, :members, members)

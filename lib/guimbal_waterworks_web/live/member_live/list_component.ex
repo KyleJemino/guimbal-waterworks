@@ -106,8 +106,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
 
   defp assign_filter_params(socket, filter_params) do
     assign(
-      socket, 
-      :filter_params, 
+      socket,
+      :filter_params,
       MLHelpers.sanitize_member_filters(filter_params)
     )
   end

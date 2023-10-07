@@ -126,13 +126,14 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def calculate_bill(_bill, _period, _member, _payment), do: {:error, nil}
 
-  def calculate_bill!(%{
-    billing_period: period,
-    member: member,
-    payment: payment
-  } = bill) do
-    {:ok, result} = 
-      calculate_bill(bill, period, member, payment)
+  def calculate_bill!(
+        %{
+          billing_period: period,
+          member: member,
+          payment: payment
+        } = bill
+      ) do
+    {:ok, result} = calculate_bill(bill, period, member, payment)
 
     result
   end
