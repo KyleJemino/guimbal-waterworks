@@ -1,8 +1,24 @@
 .log-in-column {
-  @apply flex flex-col;
+  @apply flex flex-col gap-8;
 }
 
 .log-in-container {
   @apply flex flex-col bg-slate-200 p-4 justify-center gap-4;
 }
 
+.landing-image {
+  width: 300px;
+  height: 300px;
+}
+
+.contact-us-container {
+  @apply flex flex-col bg-slate-200 p-4 justify-center gap-2;
+}
+
+.contact-group {
+  @apply flex flex-row gap-2;
+}
+
+.contact-group > .contact {
+  @apply font-bold;
+}
