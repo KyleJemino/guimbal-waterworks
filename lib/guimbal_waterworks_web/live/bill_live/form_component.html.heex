@@ -15,6 +15,18 @@
     <%= hidden_input f, :user_id, required: true %>
   
   <div class="field-group">
+    <%= label f, :before %>
+    <%= number_input f, :before, required: true %>
+    <%= error_tag f, :before %>
+  </div>
+  
+  <div class="field-group">
+    <%= label f, :after %>
+    <%= number_input f, :after, required: true %>
+    <%= error_tag f, :after %>
+  </div>
+  
+  <div class="field-group">
     <%= label f, :reading %>
     <%= number_input f, :reading, required: true %>
     <%= error_tag f, :reading %>
