@@ -15,6 +15,8 @@ defmodule GuimbalWaterworks.Bills.Bill do
   @foreign_key_type :binary_id
 
   schema "bills" do
+    field :before, :integer
+    field :after, :integer
     field :reading, :integer
     field :membership_fee?, :boolean
     field :adv_fee?, :boolean
@@ -38,9 +40,13 @@ defmodule GuimbalWaterworks.Bills.Bill do
       :reconnection_fee?,
       :member_id,
       :billing_period_id,
-      :user_id
+      :user_id,
+      :before,
+      :after
     ])
     |> validate_required([
+      :before,
+      :after,
       :reading,
       :membership_fee?,
       :adv_fee?,
@@ -52,6 +58,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:billing_period_id)
     |> foreign_key_constraint(:user_id)
+    |> validate_number(:reading, greater_than_or_equal_to: 0)
     |> unique_constraint(
       :billing_period_id,
       name: :bills_members_periods_uniq_idx,
