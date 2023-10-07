@@ -4,6 +4,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   alias GuimbalWaterworks.Members
   alias GuimbalWaterworks.Bills
   alias GuimbalWaterworks.Helpers
+  alias GuimbalWaterworksWeb.MemberLive.Helpers, as: MLHelpers
 
   @status_options [
     All: :all,
@@ -104,14 +105,11 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   end
 
   defp assign_filter_params(socket, filter_params) do
-    sanitized_params =
-      filter_params
-      |> Helpers.remove_empty_map_values()
-      |> Map.take(Page.param_keys() ++ @valid_filter_keys)
-      |> Map.merge(Page.default_pagination_params(), fn _k, v1, _v2 -> v1 end)
-      |> Page.sanitize_pagination_params()
-
-    assign(socket, :filter_params, sanitized_params)
+    assign(
+      socket,
+      :filter_params,
+      MLHelpers.sanitize_member_filters(filter_params)
+    )
   end
 
   defp assign_search_params(socket, search_params \\ nil) do
@@ -153,7 +151,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     list_params =
       filter_params
       |> Map.merge(%{
-        "preload" => [bills: bill_preload_query()],
+        "preload" => [bills: MLHelpers.unpaid_bill_preload_query()],
         "order_by" => [
           asc: :last_name,
           asc: :first_name,
@@ -169,36 +167,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   end
 
   defp assign_member_bill_map(%{assigns: %{members: members}} = socket) do
-    member_bill_map =
-      Enum.reduce(members, %{}, fn member, member_map_acc ->
-        initial_bills_with_amount = %{
-          total: 0,
-          period_amount_map: %{}
-        }
-
-        bills_with_amount =
-          Enum.reduce(member.bills, initial_bills_with_amount, fn bill, bill_acc ->
-            %{
-              total: running_total,
-              period_amount_map: period_amount_map
-            } = bill_acc
-
-            {:ok, %{total: current_bill_amount}} =
-              Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
-
-            %{
-              total: Decimal.add(running_total, current_bill_amount),
-              period_amount_map:
-                Map.put(
-                  period_amount_map,
-                  Display.display_period(bill.billing_period),
-                  current_bill_amount
-                )
-            }
-          end)
-
-        Map.put(member_map_acc, member.id, bills_with_amount)
-      end)
+    member_bill_map = MLHelpers.build_member_bill_map(members)
 
     assign(socket, :member_bill_map, member_bill_map)
   end
@@ -225,14 +194,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     |> assign_pagination_information()
   end
 
-  defp bill_preload_query do
-    Bills.query_bill(%{
-      "order_by" => [desc: :inserted_at],
-      "status" => "unpaid",
-      "preload" => [:billing_period, :member, :payment]
-    })
-  end
-
   defp patch_params_path(socket) do
     %{
       assigns: %{
@@ -244,6 +205,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     updated_filter_params =
       search_params
       |> Map.merge(pagination_params)
+      |> MLHelpers.sanitize_member_filters()
 
     route = Routes.member_index_path(socket, :index, updated_filter_params)
 

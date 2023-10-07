@@ -1,0 +1,41 @@
+.bill-card {
+  @apply font-medium flex flex-col gap-4;
+
+  width: 10cm;
+  height: 14cm;
+  padding: 1.0cm 0.5cm 0.5cm 0.5cm;
+
+  font-size: 12px;
+  border: 1px dotted black;
+}
+
+.bill-header {
+  @apply font-bold uppercase flex flex-row gap-4 items-center;
+}
+
+.bill-header > .logo {
+  @apply rounded-full;
+
+  height: 75px;
+  width: 75px;
+}
+
+.header-text {
+  @apply flex flex-col gap-1 items-center;
+
+  > * {
+    @apply text-center;
+  }
+
+  > .contact {
+    font-size: 10px;
+  }
+}
+
+.bill-content {
+  @apply pt-4 h-max;
+}
+
+.death-aid-section {
+  @apply flex flex-col justify-end h-max flex-grow;
+}

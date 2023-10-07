@@ -9,6 +9,7 @@
 @use 'pagination';
 @use 'inputs';
 @use 'page-table';
+@use 'bill-card';
 
 @tailwind base;
 @tailwind components;
@@ -19,8 +20,18 @@
   box-sizing: border-box; 
 }
 
+@media print{
+  @page {
+    margin: 1mm;
+  }
+}
+
 body {
   @apply h-screen w-full bg-slate-300;
+}
+
+.print-body {
+  @apply w-full bg-transparent;
 }
 
 h1 {

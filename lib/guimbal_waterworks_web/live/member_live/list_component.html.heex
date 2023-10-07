@@ -52,12 +52,19 @@
       </div>
     </div>
     <div class="w-full flex justify-between">
-      <div class="flex flex-row items-center gap-2 w-1/3">
+      <div class="flex flex-row items-center gap-2">
         <%= checkbox(f, :actions?, value: @search_params["actions?"], class: "checkbox") %>
         <span>Show Actions</span>
       </div>
       <%= submit "Search", phx_disable_with: "Saving...", class: "button -filter" %>
-      <div class="w-1/3" />
+      <a 
+        href={Routes.member_print_path(@socket, :print, @filter_params)} 
+        class="button -filter"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Print Unpaid Bills From Result
+      </a>
     </div>
   </.form>
 
