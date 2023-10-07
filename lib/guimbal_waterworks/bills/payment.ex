@@ -26,6 +26,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
     payment
     |> cast(attrs, [:or, :member_id, :user_id, :bill_ids])
     |> validate_required([:or, :member_id, :user_id, :bill_ids])
+    |> unique_constraint(:or, name: :payments_ors_uniq_idx)
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:user_id)
     |> validate_bill_ids_length()
