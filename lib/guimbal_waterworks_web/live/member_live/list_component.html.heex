@@ -133,6 +133,19 @@
         </td>
       </tr>
     <% end %>
+      <tr class="data-row">
+        <td class="data font-bold">TOTAL</td>
+        <td class="data"></td>
+        <td class="data"></td>
+        <td class="data text-right">
+          <%= Display.money(@total_unpaid) %>
+        </td>
+        <td class="data"></td>
+        <td class="data"></td>
+        <td 
+          class={"actions #{!@search_params["actions?"] && "hidden"}"}
+        ></td>
+      </tr>
   </table>
   <Page.pagination_buttons 
     target={@myself}

@@ -187,10 +187,25 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     assign(socket, :pagination, pagination_info)
   end
 
+  defp assign_total_unpaid(socket) do
+    total_unpaid =
+      Enum.reduce(
+        socket.assigns.member_bill_map,
+        0,
+        fn entry, acc ->
+          {_key, bill_map} = entry
+          Decimal.add(bill_map.total, acc)
+        end
+      )
+
+    assign(socket, :total_unpaid, total_unpaid)
+  end
+
   defp update_members_and_bills(socket) do
     socket
     |> assign_members()
     |> assign_member_bill_map()
+    |> assign_total_unpaid()
     |> assign_pagination_information()
   end
 
