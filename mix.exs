@@ -70,6 +70,13 @@ defmodule GuimbalWaterworks.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds/create_super_user.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      deploy: [
+        "deps.get --only prod", 
+        "compile",
+        "assets.deploy",
+        "ecto.migrate",
+        "phx.server"
+      ],
       "assets.deploy": [
         "esbuild default --minify",
         "sass default --no-source-map --style=compressed",
