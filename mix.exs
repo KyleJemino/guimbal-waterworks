@@ -77,6 +77,7 @@ defmodule GuimbalWaterworks.MixProject do
         "phx.digest"
       ],
       "assets.setup": [
+        "sass.install --if-missing",
         "tailwind.install --if-missing"
       ],
       "assets.build": [
