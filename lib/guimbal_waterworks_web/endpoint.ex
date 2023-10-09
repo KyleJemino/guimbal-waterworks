@@ -10,7 +10,7 @@ defmodule GuimbalWaterworksWeb.Endpoint do
     signing_salt: "hPJCTJe/"
   ]
 
-  socket "/live", Phoenix.LiveView.Socket, 
+  socket "/live", Phoenix.LiveView.Socket,
     websocket: [
       connect_info: [session: @session_options],
       timeout: 45_000
