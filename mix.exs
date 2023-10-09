@@ -71,7 +71,7 @@ defmodule GuimbalWaterworks.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       deploy: [
-        "deps.get --only prod", 
+        "deps.get --only prod",
         "compile",
         "assets.deploy",
         "ecto.migrate",
