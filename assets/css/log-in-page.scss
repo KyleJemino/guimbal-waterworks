@@ -21,3 +21,10 @@
 .contact-group > .contact {
   @apply font-bold;
 }
+
+.landing-text-container {
+  @apply container flex flex-col gap-8 items-center h-full justify-center;
+
+  height: calc(100vh - 122px);
+  min-height: 768px;
+}
