@@ -2,8 +2,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   use GuimbalWaterworksWeb, :live_component
 
   alias GuimbalWaterworks.Members
-  alias GuimbalWaterworks.Bills
-  alias GuimbalWaterworks.Helpers
   alias GuimbalWaterworksWeb.MemberLive.Helpers, as: MLHelpers
 
   @status_options [
@@ -11,7 +9,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     Connected: :connected,
     Disconnected: :disconnected,
     "With Unpaid Bills": :with_unpaid,
-    "With No Unpaid": :with_no_unpaid,
+    "Updated Payments": :with_no_unpaid,
     "Disconnection Warning": :disconnection_warning,
     "For Disconnection": :for_disconnection,
     "For Reconnection": :for_reconnection
