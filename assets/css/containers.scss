@@ -13,7 +13,9 @@
 }
 
 .header-content-container {
-  @apply flex flex-col gap-3;
+  @apply flex flex-col gap-3 w-3/4;
+
+  max-width: 420px;
 }
 
 .page-button-container {
