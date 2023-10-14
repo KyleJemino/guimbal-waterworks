@@ -56,7 +56,7 @@ if config_env() == :prod do
     force_ssl: [rewrite_on: [:x_forwarded_proto]],
     https: [
       port: port,
-      cipher_suite: strong,
+      cipher_suite: :strong,
       otp_app: :guimbal_waterworks,
       keyfile: System.get_env("KEY_PATH"),
       certfile: System.get_env("CERT_PATH")
