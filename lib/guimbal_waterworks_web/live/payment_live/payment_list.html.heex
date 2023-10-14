@@ -23,8 +23,8 @@
         <% end %>
         <th class="header">OR</th>
         <th class="header">Bills</th>
-        <th class="header">Total</th>
-        <th class="header">Paid</th>
+        <th class="header">Total (Calculated)</th>
+        <th class="header">Total (Paid)</th>
         <th class="header">Date</th>
         <th class="header">Cashier</th>
       </tr>
@@ -61,10 +61,10 @@
           <% end %>
           <td class="data"></td>
           <td class="data font-bold text-right">
-            <%= Display.money(@total) %>
+            <%= Display.money(@calculated_total) %>
           </td>
           <td class="data font-bold text-right">
-            <%= Display.money(@total) %>
+            <%= Display.money(@paid_total) %>
           </td>
           <td class="data"></td>
           <td class="data"></td>
