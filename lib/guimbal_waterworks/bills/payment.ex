@@ -14,6 +14,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
     field :or, :integer
     field :paid_at, :utc_datetime
     field :bill_ids, :string, virtual: true
+    field :amount, :decimal
     belongs_to :member, Member
     belongs_to :user, Users
 
@@ -24,7 +25,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
 
   def changeset(payment, attrs) do
     payment
-    |> cast(attrs, [:or, :member_id, :user_id, :bill_ids])
+    |> cast(attrs, [:or, :member_id, :user_id, :bill_ids, :amount])
     |> validate_required([:or, :member_id, :user_id, :bill_ids])
     |> unique_constraint(:or, name: :payments_ors_uniq_idx)
     |> foreign_key_constraint(:member_id)
