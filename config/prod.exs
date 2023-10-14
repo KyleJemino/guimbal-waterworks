@@ -23,7 +23,7 @@ config :guimbal_waterworks, GuimbalWaterworksWeb.Endpoint,
     ip: {0, 0, 0, 0, 0, 0, 0, 0},
     port: port
   ],
-  secret_key_base: secret_key_base,
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
