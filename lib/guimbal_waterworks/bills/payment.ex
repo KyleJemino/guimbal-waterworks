@@ -14,6 +14,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
     field :or, :integer
     field :paid_at, :utc_datetime
     field :bill_ids, :string, virtual: true
+    field :amount, :decimal
     belongs_to :member, Member
     belongs_to :user, Users
 
@@ -31,6 +32,13 @@ defmodule GuimbalWaterworks.Bills.Payment do
     |> foreign_key_constraint(:user_id)
     |> validate_bill_ids_length()
     |> put_change(:paid_at, Helpers.db_now())
+  end
+
+  def save_changeset(payment, attrs) do
+    payment
+    |> changeset(attrs)
+    |> cast(attrs, [:amount])
+    |> validate_required([:amount])
   end
 
   defp validate_bill_ids_length(changeset) do
