@@ -54,13 +54,12 @@ if config_env() == :prod do
   config :guimbal_waterworks, GuimbalWaterworksWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     force_ssl: [rewrite_on: [:x_forwarded_proto]],
-    http: [
-      # Enable IPv6 and bind on all interfaces.
-      # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
-      # See the documentation on https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html
-      # for details about using IPv6 vs IPv4 and loopback vs public addresses.
-      ip: {0, 0, 0, 0, 0, 0, 0, 0},
-      port: port
+    https: [
+      port: port,
+      cipher_suite: strong,
+      otp_app: :guimbal_waterworks,
+      keyfile: System.get_env("KEY_PATH"),
+      certfile: System.get_env("CERT_PATH")
     ],
     secret_key_base: secret_key_base
 
