@@ -23,7 +23,6 @@
         <% end %>
         <th class="header">OR</th>
         <th class="header">Bills</th>
-        <th class="header">Total (Calculated)</th>
         <th class="header">Total (Paid)</th>
         <th class="header">Date</th>
         <th class="header">Cashier</th>
@@ -37,15 +36,16 @@
           <% end %>
           <td class="data"><%= payment.or %></td>
           <td class="data">
-            <%= for {period, amount} <- @payment_bill_map[payment.id] do %>
+            <%= for bill <- @payment_bill_map[payment.id] do %>
               <div class="flex flex-row justify-between">
-                <p><%= "#{period}:" %></p>
-                <p><%= Display.money(amount) %></p>
+                <p><%= "#{Display.display_period(bill.billing_period)}:" %></p>
+                <p><%= Display.money(bill.amount) %></p>
               </div>
             <% end %>
-          </td>
-          <td class="data text-right">
-            <%= Display.money(@payment_total_map[payment.id]) %>
+            <div class="flex flex-row justify-between border-t border-black">
+              <p>TOTAL</p>
+              <p><%= Display.money(@payment_total_map[payment.id]) %></p>
+            </div>
           </td>
           <td class="data text-right">
             <%= Display.money(payment.amount) %>
@@ -59,7 +59,6 @@
           <%= if @for == :billing_period do %>
             <td class="data"></td>
           <% end %>
-          <td class="data"></td>
           <td class="data font-bold text-right">
             <%= Display.money(@calculated_total) %>
           </td>

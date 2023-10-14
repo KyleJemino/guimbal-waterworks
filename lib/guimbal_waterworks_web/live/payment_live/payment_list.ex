@@ -102,22 +102,24 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
         {%{}, %{}, 0, 0},
         fn
           payment, {payment_bill_map_acc, payment_total_map_acc, calculated_total_acc, paid_total_acc} ->
-            {bills_map, bills_total} =
-              Enum.reduce(payment.bills, {%{}, 0}, fn bill, {bill_map_acc, payment_amount} ->
-                bill_total = Bills.get_bill_total(bill)
+            {bill_list, bills_total} =
+              Enum.reduce(
+                payment.bills, 
+                {[], 0}, 
+                fn bill, {bill_list, payment_amount} ->
+                  bill_total = Bills.get_bill_total(bill)
 
-                bill_map =
-                  Map.put(
-                    bill_map_acc,
-                    Display.display_period(bill.billing_period),
-                    bill_total
-                  )
+                  bill_with_total =
+                    bill
+                    |> Map.from_struct()
+                    |> Map.put(:amount, bill_total)
 
-                {bill_map, D.add(payment_amount, bill_total)}
-              end)
+                  {[ bill_with_total | bill_list ], D.add(payment_amount, bill_total)}
+                end
+              )
 
             {
-              Map.put(payment_bill_map_acc, payment.id, bills_map),
+              Map.put(payment_bill_map_acc, payment.id, Enum.reverse(bill_list)),
               Map.put(payment_total_map_acc, payment.id, bills_total),
               D.add(calculated_total_acc, bills_total),
               D.add(paid_total_acc, payment.amount)
