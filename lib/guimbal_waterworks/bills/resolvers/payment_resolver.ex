@@ -33,7 +33,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
 
             bill_params = %{
               "id" => bill_id,
-              "member_id" => member_id
+              "member_id" => member_id,
+              "preload" => [:billing_period, :member, :payment]
             }
 
             case BillResolver.get_bill(bill_params) do
@@ -42,7 +43,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
                 {:ok, 
                   %{
                     bill_ids: [bill_id | bill_ids],
-                    total: D.add(total, bill_amount)
+                    total: Decimal.add(total, bill_amount)
                   }
                 }
 
