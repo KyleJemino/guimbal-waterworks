@@ -23,9 +23,10 @@
         <% end %>
         <th class="header">OR</th>
         <th class="header">Bills</th>
+        <th class="header">Total</th>
+        <th class="header">Paid</th>
         <th class="header">Date</th>
         <th class="header">Cashier</th>
-        <th class="header">Total</th>
       </tr>
       <%= for payment <- @payments do %>
         <tr class="data-row">
@@ -43,11 +44,14 @@
               </div>
             <% end %>
           </td>
-          <td class="data"><%= Display.format_date(payment.paid_at) %></td>
-          <td class="data"><%= Display.full_name(payment.user) %></td>
           <td class="data text-right">
             <%= Display.money(@payment_total_map[payment.id]) %>
           </td>
+          <td class="data text-right">
+            <%= Display.money(payment.amount) %>
+          </td>
+          <td class="data"><%= Display.format_date(payment.paid_at) %></td>
+          <td class="data"><%= Display.full_name(payment.user) %></td>
         </tr>
       <% end %>
         <tr class="data-row">
@@ -56,11 +60,14 @@
             <td class="data"></td>
           <% end %>
           <td class="data"></td>
-          <td class="data"></td>
-          <td class="data"></td>
           <td class="data font-bold text-right">
             <%= Display.money(@total) %>
           </td>
+          <td class="data font-bold text-right">
+            <%= Display.money(@total) %>
+          </td>
+          <td class="data"></td>
+          <td class="data"></td>
         </tr>
     </table>
   </div>
