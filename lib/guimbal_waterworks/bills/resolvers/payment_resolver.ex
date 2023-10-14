@@ -17,24 +17,34 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
     |> Repo.all()
   end
 
-  def create_payment(%{"bill_ids" => bill_ids_string} = params) do
+  def create_payment(%{"bill_ids" => bill_ids_string, "member_id" => member_id} = params) do
     Multi.new()
-    |> Multi.insert(:payment, change_payment(%Payment{}, params))
-    |> Multi.run(:check_member_bills, fn _repo, %{payment: payment} ->
+    |> Multi.run(:bills_and_total, fn _repo, _ops ->
       bill_ids_string
       |> String.split(",")
       |> Enum.reduce(
-        {:ok, []},
+        {:ok, { bill_ids: [], total: 0 }},
         fn
-          bill_id, {:ok, list} ->
+          bill_id, {:ok, acc} ->
+            {
+              bill_ids: bill_ids,
+              total: total
+            } = acc
+
             bill_params = %{
               "id" => bill_id,
-              "member_id" => payment.member_id
+              "member_id" => member_id
             }
 
             case BillResolver.get_bill(bill_params) do
-              %Bill{} ->
-                {:ok, [bill_id | list]}
+              %Bill{} = bill ->
+                bill_amount = BillResolver.get_bill_total(bill)
+                {:ok, 
+                  {
+                    bill_ids: [bill_id | bill_ids],
+                    total: D.add(total, bill_amount)
+                  }
+                }
 
               _ ->
                 payment_changeset =
@@ -50,13 +60,18 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
         end
       )
     end)
+    |> Multi.insert(:payment, fn %{bills_and_total: bills_and_total} ->
+      params_with_total = Map.put(params, "amount", bills_and_total.total)
+
+      Payment.save_changeset(%Payment{}, params_with_total)
+    end)
     |> Multi.update_all(
       :pay_bills,
-      fn %{payment: payment, check_member_bills: validated_bill_ids} ->
+      fn %{payment: payment, bills_and_total: bills_and_total} ->
         import Ecto.Query
 
         Bill
-        |> where([b], b.id in ^validated_bill_ids)
+        |> where([b], b.id in ^bills_and_total.bill_ids)
         |> update(set: [payment_id: ^payment.id])
       end,
       []

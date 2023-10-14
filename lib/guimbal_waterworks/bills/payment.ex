@@ -25,13 +25,20 @@ defmodule GuimbalWaterworks.Bills.Payment do
 
   def changeset(payment, attrs) do
     payment
-    |> cast(attrs, [:or, :member_id, :user_id, :bill_ids, :amount])
+    |> cast(attrs, [:or, :member_id, :user_id, :bill_ids])
     |> validate_required([:or, :member_id, :user_id, :bill_ids])
     |> unique_constraint(:or, name: :payments_ors_uniq_idx)
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:user_id)
     |> validate_bill_ids_length()
     |> put_change(:paid_at, Helpers.db_now())
+  end
+
+  def save_changeset(payment, attrs) do
+    payment
+    |> changeset(attrs)
+    |> cast(attrs, [:amount])
+    |> validate_required([:amount])
   end
 
   defp validate_bill_ids_length(changeset) do
