@@ -101,11 +101,12 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
         socket.assigns.payments,
         {%{}, %{}, 0, 0},
         fn
-          payment, {payment_bill_map_acc, payment_total_map_acc, calculated_total_acc, paid_total_acc} ->
+          payment,
+          {payment_bill_map_acc, payment_total_map_acc, calculated_total_acc, paid_total_acc} ->
             {bill_list, bills_total} =
               Enum.reduce(
-                payment.bills, 
-                {[], 0}, 
+                payment.bills,
+                {[], 0},
                 fn bill, {bill_list, payment_amount} ->
                   bill_total = Bills.get_bill_total(bill)
 
@@ -114,7 +115,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
                     |> Map.from_struct()
                     |> Map.put(:amount, bill_total)
 
-                  {[ bill_with_total | bill_list ], D.add(payment_amount, bill_total)}
+                  {[bill_with_total | bill_list], D.add(payment_amount, bill_total)}
                 end
               )
 

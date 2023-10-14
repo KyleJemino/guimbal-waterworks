@@ -23,7 +23,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
       bill_ids_string
       |> String.split(",")
       |> Enum.reduce(
-        {:ok, %{ bill_ids: [], total: 0 }},
+        {:ok, %{bill_ids: [], total: 0}},
         fn
           bill_id, {:ok, acc} ->
             %{
@@ -40,12 +40,12 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
             case BillResolver.get_bill(bill_params) do
               %Bill{} = bill ->
                 bill_amount = BillResolver.get_bill_total(bill)
-                {:ok, 
-                  %{
-                    bill_ids: [bill_id | bill_ids],
-                    total: Decimal.add(total, bill_amount)
-                  }
-                }
+
+                {:ok,
+                 %{
+                   bill_ids: [bill_id | bill_ids],
+                   total: Decimal.add(total, bill_amount)
+                 }}
 
               _ ->
                 payment_changeset =
