@@ -33,3 +33,7 @@
 
   max-width: 29.7cm;
 }
+
+.page-container {
+  @apply bg-blue-200 p-4 rounded-lg;
+}

@@ -11,68 +11,70 @@
   </.modal>
 <% end %>
 
-<h1><%= Display.display_period(@billing_period) %></h1>
+<div class="page-container">
+  <h1><%= Display.display_period(@billing_period) %></h1>
 
-<div class="page-button-container mt-3">
-  <%= live_patch "Edit", to: Routes.billing_period_show_path(@socket, :edit, @billing_period), class: "button -dark" %>
-</div>
-
-
-<table class="data-table mt-3">
-  <tr class="header-row">
-    <th class="header">From</th>
-    <th class="header">To</th>
-    <th class="header">Due Date</th>
-    <th class="header">
-      <p>Rate</p>
-      <p>(Personal | Business)</p>
-    </th>
-    <th class="header">Death Aid</th>
-  </tr>
-  <tr class="data-row">
-    <td class="data text-center"><%= Display.format_date(@billing_period.from) %></td>
-    <td class="data text-center"><%= Display.format_date(@billing_period.to) %></td>
-    <td class="data text-center"><%= Display.format_date(@billing_period.due_date) %></td>
-    <td class="data text-center"><%= "#{@billing_period.personal_rate} | #{@billing_period.business_rate}" %></td>
-    <td class="data text-center">
-      <div class="flex flex-col">
-        <%= for recipient <- @billing_period.death_aid_recipients do %>
-          <p><%= recipient.name %></p>
-        <% end %>
-      </div>
-    </td>
-  </tr>
-</table>
-
-<div class="page-table">
-  <div class="table-selection">
-    <%= live_patch "Bills", to: Routes.billing_period_show_path(@socket, :show, @billing_period), class: "button#{Display.active_class?([:show, :edit, :new_bill], @live_action)}" %>
-    <%= live_patch "Payments", to: Routes.billing_period_show_path(@socket, :payments, @billing_period), class: "button#{Display.active_class?([:payments], @live_action)}" %>
+  <div class="page-button-container mt-3">
+    <%= live_patch "Edit", to: Routes.billing_period_show_path(@socket, :edit, @billing_period), class: "button -dark" %>
   </div>
-  <div class="table-container">
-    <%= if @live_action in [:payments] do %>
-      <.live_component
-        module={GuimbalWaterworksWeb.PaymentLive.PaymentList}
-        for={:billing_period}
-        id={:payment_list}
-        base_params={%{
-          "min_paid_at" => Date.beginning_of_month(@billing_period.due_date),
-          "max_paid_at" => @billing_period.due_date,
-          "billing_period_id" => @billing_period.id
-        }}
-        filter_params={@filter_params}
-      />
-    <% end %>
-    <%= if @live_action in [:new_bill, :show, :edit] do %>
-      <.live_component
-        module={GuimbalWaterworksWeb.BillLive.BillList}
-        id={:bill_list}
-        for={:billing_period}
-        base_params={%{
-          "billing_period_id" => @billing_period.id
-        }}
-        filter_params={@filter_params}
-      />
-    <% end %>
+
+
+  <table class="data-table mt-3">
+    <tr class="header-row">
+      <th class="header">From</th>
+      <th class="header">To</th>
+      <th class="header">Due Date</th>
+      <th class="header">
+        <p>Rate</p>
+        <p>(Personal | Business)</p>
+      </th>
+      <th class="header">Death Aid</th>
+    </tr>
+    <tr class="data-row">
+      <td class="data text-center"><%= Display.format_date(@billing_period.from) %></td>
+      <td class="data text-center"><%= Display.format_date(@billing_period.to) %></td>
+      <td class="data text-center"><%= Display.format_date(@billing_period.due_date) %></td>
+      <td class="data text-center"><%= "#{@billing_period.personal_rate} | #{@billing_period.business_rate}" %></td>
+      <td class="data text-center">
+        <div class="flex flex-col">
+          <%= for recipient <- @billing_period.death_aid_recipients do %>
+            <p><%= recipient.name %></p>
+          <% end %>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="page-table">
+    <div class="table-selection">
+      <%= live_patch "Bills", to: Routes.billing_period_show_path(@socket, :show, @billing_period), class: "button#{Display.active_class?([:show, :edit, :new_bill], @live_action)}" %>
+      <%= live_patch "Payments", to: Routes.billing_period_show_path(@socket, :payments, @billing_period), class: "button#{Display.active_class?([:payments], @live_action)}" %>
+    </div>
+    <div class="table-container">
+      <%= if @live_action in [:payments] do %>
+        <.live_component
+         module={GuimbalWaterworksWeb.PaymentLive.PaymentList}
+         for={:billing_period}
+         id={:payment_list}
+         base_params={%{
+         "min_paid_at" => Date.beginning_of_month(@billing_period.due_date),
+         "max_paid_at" => @billing_period.due_date,
+         "billing_period_id" => @billing_period.id
+         }}
+         filter_params={@filter_params}
+         />
+       <% end %>
+       <%= if @live_action in [:new_bill, :show, :edit] do %>
+         <.live_component
+         module={GuimbalWaterworksWeb.BillLive.BillList}
+         id={:bill_list}
+         for={:billing_period}
+         base_params={%{
+         "billing_period_id" => @billing_period.id
+         }}
+         filter_params={@filter_params}
+         />
+       <% end %>
+    </div>
   </div>
 </div>

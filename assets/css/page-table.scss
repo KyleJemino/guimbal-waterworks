@@ -1,15 +1,15 @@
 .page-table {
-  @apply bg-slate-200 mt-3;
+  @apply mt-3;
 }
 
 .table-selection {
-  @apply flex flex-row items-center justify-start bg-slate-300;
+  @apply flex flex-row items-center justify-start gap-4;
 }
 
 .table-selection > .button {
-  @apply rounded-none text-lg font-medium bg-slate-300;
+  @apply text-lg font-medium bg-blue-50;
 
   &.-active {
-    @apply bg-slate-200 text-black underline font-bold;
+    @apply bg-blue-900 text-white font-bold;
   }
 }

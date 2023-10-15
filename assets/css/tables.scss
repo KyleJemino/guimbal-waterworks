@@ -3,11 +3,11 @@ table, tr, th, td {
 }
 
 .data-table {
-  @apply w-full bg-slate-100;
+  @apply w-full bg-blue-100;
 }
 
 .header-row {
-  @apply bg-slate-600 text-white;
+  @apply bg-blue-900 text-white;
 }
 
 .header-row > .header {
@@ -15,7 +15,7 @@ table, tr, th, td {
 }
 
 .data-row:nth-child(odd) {
-  @apply bg-slate-300;
+  @apply bg-blue-300;
 }
 
 .data-row > .data {
