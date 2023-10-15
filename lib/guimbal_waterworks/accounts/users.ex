@@ -144,6 +144,13 @@ defmodule GuimbalWaterworks.Accounts.Users do
     change(users, archived_at: Helpers.db_now())
   end
 
+  def role_changeset(users, attrs) do
+    users
+    |> cast(attrs, [:role])
+    |> validate_required([:role])
+    |> validate_inclusion(:role, [:manager, :admin, :cashier])
+  end
+
   @doc """
   Verifies the password.
 
