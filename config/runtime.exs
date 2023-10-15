@@ -53,7 +53,6 @@ if config_env() == :prod do
 
   config :guimbal_waterworks, GuimbalWaterworksWeb.Endpoint,
     url: [host: host, port: 443, scheme: "http"],
-    force_ssl: [rewrite_on: [:x_forwarded_proto]],
     http: [port: port],
     cache_static_manifest: "priv/static/cache_manifest.json",
     secret_key_base: secret_key_base
