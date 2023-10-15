@@ -16,16 +16,16 @@
   <div class="overflow-auto">
     <table class="data-table mt-4">
       <tr class="header-row">
-        <th class="header">Username</th>
         <th class="header">Full name</th>
-        <th class="header">Approved</th>
+        <th class="header">Username</th>
+        <th class="header">Role</th>
         <th class="header">Edit</th>
       </tr>
       <%= for employee <- @employees do %>
         <tr class="data-row">
           <td class="data"><%= Display.full_name(employee) %></td>
           <td class="data"><%= employee.username %></td>
-          <td class="data uppercase"><%= not is_nil(employee.approved_at)%></td>
+          <td class="data"><%= employee.role %></td>
           <td class="actions">
             <div class="inline-flex gap-2 flex-row">
               <%= if is_nil(employee.approved_at) do %>
