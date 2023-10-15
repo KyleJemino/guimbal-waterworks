@@ -14,14 +14,6 @@ port = String.to_integer(System.get_env("PORT") || "4000")
 
 config :guimbal_waterworks, GuimbalWaterworksWeb.Endpoint,
   url: [host: host, port: 443, scheme: "https"],
-  force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  https: [
-    port: port,
-    cipher_suite: :strong,
-    otp_app: :guimbal_waterworks,
-    keyfile: System.get_env("KEY_PATH"),
-    certfile: System.get_env("CERT_PATH")
-  ],
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   cache_static_manifest: "priv/static/cache_manifest.json"
 
