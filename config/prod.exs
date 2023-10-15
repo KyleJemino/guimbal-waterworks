@@ -13,7 +13,7 @@ host = System.get_env("PHX_HOST") || "example.com"
 port = String.to_integer(System.get_env("PORT") || "4000")
 
 config :guimbal_waterworks, GuimbalWaterworksWeb.Endpoint,
-  url: [host: host, port: 443, scheme: "https"],
+  url: [host: host, port: port, scheme: "https"],
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   cache_static_manifest: "priv/static/cache_manifest.json"
 

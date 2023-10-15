@@ -52,7 +52,7 @@ if config_env() == :prod do
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :guimbal_waterworks, GuimbalWaterworksWeb.Endpoint,
-    url: [host: host, port: 443, scheme: "https"],
+    url: [host: host, port: port, scheme: "https"],
     secret_key_base: secret_key_base
 
   # ## Configuring the mailer
