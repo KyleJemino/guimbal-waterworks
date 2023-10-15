@@ -18,7 +18,7 @@
   @apply flex flex-row items-center justify-center gap-2;
 
   > .submit {
-    @apply bg-blue-600 text-slate-50 text-lg py-2 px-6 font-medium min-w-[120px] rounded;
+    @apply bg-blue-600 text-white text-lg py-2 px-6 font-medium min-w-[120px] rounded;
   }
 
   > .neutral {
