@@ -118,5 +118,5 @@ defmodule GuimbalWaterworks.Accounts do
     |> Repo.update()
   end
 
-  def change_user_role(user, attrs), do Users.role_changeset(user, attrs)
+  def change_user_role(user, attrs), do: Users.role_changeset(user, attrs)
 end
