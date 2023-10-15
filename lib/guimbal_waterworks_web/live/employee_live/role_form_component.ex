@@ -7,11 +7,10 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.RoleFormComponent do
     changeset = Accounts.change_user_role(employee)
 
     {:ok,
-      socket
-      |> assign(assigns)
-      |> assign(:employee, employee)
-      |> assign(:changeset, changeset)
-    }
+     socket
+     |> assign(assigns)
+     |> assign(:employee, employee)
+     |> assign(:changeset, changeset)}
   end
 
   def handle_event("validate", %{"users" => user_params}, socket) do
@@ -24,10 +23,10 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.RoleFormComponent do
     case Accounts.update_user_role(socket.assigns.employee, user_params) do
       {:ok, _user} ->
         {:noreply,
-          socket
-          |> put_flash(:info, "Changed role successfully")
-          |> push_redirect(to: socket.assigns.return_to)
-        }
+         socket
+         |> put_flash(:info, "Changed role successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
+
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end

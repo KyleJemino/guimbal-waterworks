@@ -23,11 +23,12 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.Index do
 
   defp apply_action(socket, :role_change, %{"employee_id" => employee_id}) do
     case Accounts.get_users!(employee_id) do
-      %Users{role: :manager, id: employee_id} 
+      %Users{role: :manager, id: employee_id}
       when employee_id != socket.assigns.current_users.id ->
         socket
         |> put_flash(:error, "Invalid action")
         |> push_patch(to: Routes.employee_index_path(socket, :index))
+
       %Users{} = employee ->
         socket
         |> assign(:page_title, "Edit Employee Role")
