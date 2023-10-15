@@ -55,7 +55,8 @@ if config_env() == :prod do
     url: [host: host, port: 443, scheme: "http"],
     http: [port: port],
     cache_static_manifest: "priv/static/cache_manifest.json",
-    secret_key_base: secret_key_base
+    secret_key_base: secret_key_base,
+    check_origin: ["https://guimbalwater.com"]
 
   # ## Configuring the mailer
   #
