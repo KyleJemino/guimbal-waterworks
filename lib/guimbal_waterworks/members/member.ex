@@ -10,11 +10,11 @@ defmodule GuimbalWaterworks.Members.Member do
   schema "members" do
     field :first_name, :string
     field :last_name, :string
-    field :meter_no, :integer
     field :middle_name, :string
+    field :unique_identifier, :string
     field :street, :string
     field :type, Ecto.Enum, values: [:personal, :business]
-    field :unique_identifier, :string
+    field :meter_no, :string
     field :connected?, :boolean
     field :mda?, :boolean
     field :archived_at, :utc_datetime
@@ -38,9 +38,10 @@ defmodule GuimbalWaterworks.Members.Member do
       :connected?,
       :mda?
     ])
-    |> validate_required([:first_name, :last_name, :street, :type, :meter_no, :connected?, :mda?])
+    |> validate_required([:first_name, :last_name, :street, :type, :connected?, :mda?])
     |> validate_inclusion(:type, [:personal, :business])
     |> validate_inclusion(:street, Constants.streets())
+    |> validate_format(:meter_no, ~r/^[0-9]*$/, message: "Numbers only")
     |> unique_constraint(
       :unique_identifier,
       name: :name_combination_unique_idx,
@@ -49,7 +50,7 @@ defmodule GuimbalWaterworks.Members.Member do
     )
     |> unique_constraint(
       :meter_no,
-      name: :uniq_active_meter_no_idx,
+      name: :members_meter_no_unique_idx,
       message: "Meter number already exists."
     )
   end

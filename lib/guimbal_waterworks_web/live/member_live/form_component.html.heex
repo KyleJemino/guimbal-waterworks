@@ -59,7 +59,7 @@
   
   <div class="field-group">
     <%= label f, :meter_no %>
-    <%= number_input f, :meter_no %>
+    <%= text_input f, :meter_no, pattern: "[0-9]*" %>
     <%= error_tag f, :meter_no %>
   </div>
 
