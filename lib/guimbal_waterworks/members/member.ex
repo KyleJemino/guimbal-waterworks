@@ -41,6 +41,7 @@ defmodule GuimbalWaterworks.Members.Member do
     |> validate_required([:first_name, :last_name, :street, :type, :connected?, :mda?])
     |> validate_inclusion(:type, [:personal, :business])
     |> validate_inclusion(:street, Constants.streets())
+    |> validate_format(:meter_no, ~r/^[0-9]*$/, message: "Numbers only")
     |> unique_constraint(
       :unique_identifier,
       name: :name_combination_unique_idx,
