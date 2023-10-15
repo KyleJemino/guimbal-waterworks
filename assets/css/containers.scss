@@ -9,7 +9,7 @@
 }
 
 .container {
-  @apply bg-slate-200 p-4;
+  @apply bg-blue-200 p-4;
 }
 
 .header-content-container {
@@ -32,4 +32,8 @@
   @apply flex flex-row flex-wrap;
 
   max-width: 29.7cm;
+}
+
+.page-container {
+  @apply bg-blue-200 p-4 rounded-lg;
 }

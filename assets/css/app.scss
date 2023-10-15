@@ -27,7 +27,7 @@
 }
 
 body {
-  @apply h-screen w-full bg-slate-300;
+  @apply h-screen w-full bg-blue-100;
 }
 
 .print-body {
@@ -112,7 +112,7 @@ h4 {
 }
 
 .phx-modal-content {
-  @apply bg-slate-200;
+  @apply bg-blue-200;
   padding: 20px;
   width: auto;
 }

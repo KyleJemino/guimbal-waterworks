@@ -1,5 +1,5 @@
 .main-nav {
-  @apply flex flex-row items-center justify-between w-full bg-slate-400 lg:px-16 px-12;
+  @apply flex flex-row items-center justify-between w-full bg-blue-900 lg:px-16 px-12;
 
   min-height: 60px;
 }
@@ -9,5 +9,5 @@
 }
 
 .nav-item {
-  @apply flex justify-center items-center bg-slate-200 p-2 min-w-[120px] rounded;
+  @apply flex justify-center items-center bg-white p-2 min-w-[120px] rounded;
 }
