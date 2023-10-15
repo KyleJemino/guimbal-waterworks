@@ -100,6 +100,7 @@ defmodule GuimbalWaterworksWeb.Router do
     scope "/", GuimbalWaterworksWeb do
       pipe_through [:browser, :require_authenticated_users, :require_manager]
       live "/employees", EmployeeLive.Index, :index
+      live "/employees/:employee_id/change-role", EmployeeLive.Index, :role_change
 
       live "/billing_periods/new", BillingPeriodLive.Index, :new
       live "/billing_periods/:id/edit", BillingPeriodLive.Index, :edit
@@ -110,10 +111,10 @@ defmodule GuimbalWaterworksWeb.Router do
       pipe_through [:browser, :require_authenticated_users, :require_admin]
       live "/members/new", MemberLive.Index, :new
       live "/members/:id/edit", MemberLive.Index, :edit
-      live "/members/:id/new_bill", MemberLive.Index, :new_bill
+      live "/members/:id/new-bill", MemberLive.Index, :new_bill
 
       live "/members/:id/show/edit", MemberLive.Show, :edit
-      live "/members/:id/show/new_bill", MemberLive.Show, :new_bill
+      live "/members/:id/show/new-bill", MemberLive.Show, :new_bill
     end
 
     scope "/", GuimbalWaterworksWeb do

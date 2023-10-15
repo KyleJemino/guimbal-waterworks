@@ -1,19 +1,31 @@
+<%= if @live_action in [:role_change] do %>
+  <.modal return_to={Routes.employee_index_path(@socket, :index)}>
+    <.live_component
+      module={GuimbalWaterworksWeb.EmployeeLive.RoleFormComponent}
+      id={@employee.id}
+      title={@page_title}
+      employee={@employee}
+      return_to={Routes.employee_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
 <div class="page-container">
   <h1>Employee List</h1>
 
   <div class="overflow-auto">
     <table class="data-table mt-4">
       <tr class="header-row">
-        <th class="header">Username</th>
         <th class="header">Full name</th>
-        <th class="header">Approved</th>
+        <th class="header">Username</th>
+        <th class="header">Role</th>
         <th class="header">Edit</th>
       </tr>
       <%= for employee <- @employees do %>
         <tr class="data-row">
           <td class="data"><%= Display.full_name(employee) %></td>
           <td class="data"><%= employee.username %></td>
-          <td class="data uppercase"><%= not is_nil(employee.approved_at)%></td>
+          <td class="data"><%= employee.role %></td>
           <td class="actions">
             <div class="inline-flex gap-2 flex-row">
               <%= if is_nil(employee.approved_at) do %>
@@ -26,6 +38,7 @@
                 </button>
               <% end %>
               <%= if employee.role !== :manager do %>
+                <%= live_patch "Change Role", to: Routes.employee_index_path(@socket, :role_change, employee.id), class: "button -dark" %>
                 <button
                   class="button -table -caution"
                   phx-click="remove_employee"
