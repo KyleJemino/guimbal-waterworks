@@ -45,9 +45,6 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
       end
 
     {:ok, token, _claims} = Token.generate_and_sign(token_content)
-    IO.inspect token
-    {:ok, claims} = Token.verify_and_validate(token)
-    IO.inspect claims
 
     token
   end
