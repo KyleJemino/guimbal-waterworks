@@ -34,9 +34,8 @@ defmodule GuimbalWaterworksWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/forgot_password", RequestController, :forgot_password_user
-    post "/forgot_password", RequestController, :forgot_password_change
-    post "/forgot_password/token", RequestController, :forgot_password_token
+    get "/forgot_password", RequestController, :forgot_password
+    post "/forgot_password", RequestController, :forgot_password_token
   end
 
   # Other scopes may use custom stacks.

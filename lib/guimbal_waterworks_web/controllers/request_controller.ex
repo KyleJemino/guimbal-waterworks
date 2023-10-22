@@ -1,20 +1,20 @@
 defmodule GuimbalWaterworksWeb.RequestController do
   use GuimbalWaterworksWeb, :controller
 
-  alias GuimbalWaterworks.Accounts
+  alias GuimbalWaterworks.Requests
   alias GuimbalWaterworks.Requests.Request
-  alias Accounts.Users
 
-  def forgot_password(conn, params) do
+  def forgot_password(conn, _params) do
+    render(conn, "forgot_password.html",
+      changeset: Requests.password_request_changeset(%Request{}, %{})
+    )
   end
 
-  def forgot_password_token(conn, %{"password" => password_params}) do
-    %{
-      "user_id" => _user_id,
-      "password" => _password,
-      "password_confirmation" => _password_confirmation
-    } = password_params
+  def forgot_password_token(conn, %{"request" => request_params}) do
+    IO.inspect request_params
 
-    render(conn, "forgot_password_user.html", error_message: "User doesn't exist")
+    render(conn, "forgot_password.html",
+      changeset: Requests.password_request_changeset(%Request{}, %{})
+    )
   end
 end

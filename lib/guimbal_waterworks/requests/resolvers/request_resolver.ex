@@ -7,6 +7,10 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
   @types ["password_change"]
   @token_secret Application.get_env(:guimbal_waterworks, :config)[:jwt_secret]
 
+  def create_request(params) do
+    IO.inspect params
+  end
+
   def password_request_changeset(request, attrs) do
     request
     |> cast(attrs, [
