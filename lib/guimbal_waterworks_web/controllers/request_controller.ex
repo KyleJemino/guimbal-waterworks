@@ -19,8 +19,13 @@ defmodule GuimbalWaterworksWeb.RequestController do
     end
   end
 
-  def forgot_password_token(conn, %{"password" => password_change_params}) do
-    IO.inspect(password_change_params) 
-    render(conn, "forgot_password_change.html", user_id: password_change_params.user_id)
+  def forgot_password_token(conn, %{"password" => password_params}) do
+    %{
+      "user_id" => _user_id,
+      "password" => _password,
+      "password_confirmation" => _password_confirmation
+    } = password_params
+
+    render(conn, "forgot_password_user.html", error_message: "User doesn't exist")
   end
 end
