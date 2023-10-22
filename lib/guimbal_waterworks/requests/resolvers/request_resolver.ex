@@ -2,7 +2,7 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
   import Ecto.Changeset
 
   alias GuimbalWaterworks.Requests.Request
-  alias JsonWebToken, as: JWT
+  alias GuimbalWaterworks.Token
 
   @types ["password_change"]
   @token_secret Application.get_env(:guimbal_waterworks, :config)[:jwt_secret]
@@ -38,13 +38,18 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
   defp build_jwt(changeset) do
     token_content =
       case fetch_field!(changeset, :type) do
-        "password_change" -> Jason.encode!(%{
+        "password_change" -> %{
           password: fetch_field!(changeset, :password)
-        })
+        }
         _ -> nil
       end
 
-    token = JWT.sign(token_content, %{key: @token_secret})
+    {:ok, token, _claims} = Token.generate_and_sign(token_content)
+    IO.inspect token
+    {:ok, claims} = Token.verify_and_validate(token)
+    IO.inspect claims
+
+    token
   end
 
   defp validate_password(changeset) do
