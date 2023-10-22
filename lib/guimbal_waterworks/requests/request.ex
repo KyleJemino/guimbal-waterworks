@@ -14,7 +14,7 @@ defmodule GuimbalWaterworks.Requests.Request do
     field :password_confirmation, :string, virtual: true, redact: true
     field :username, :string, virtual: true
 
-    belongs to :user, Users
+    belongs_to :user, Users
 
     timestamps()
   end
