@@ -1,6 +1,5 @@
 defmodule GuimbalWaterworks.Requests.Request do
   use Ecto.Schema
-  import Ecto.Changeset
 
   alias GuimbalWaterworks.Accounts.Users
 
@@ -11,6 +10,9 @@ defmodule GuimbalWaterworks.Requests.Request do
     field :type, :string
     field :used_at, :utc_datetime
     field :archived_at, :utc_datetime
+    field :password, :string, virtual: true, redact: true
+    field :password_confirmation, :string, virtual: true, redact: true
+    field :username, :string, virtual: true
 
     belongs to :user, Users
 
