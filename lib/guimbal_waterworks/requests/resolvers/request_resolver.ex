@@ -1,19 +1,42 @@
 defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
   import Ecto.Changeset
 
+  alias Ecto.Multi
+  alias GuimbalWaterworks.Repo
   alias GuimbalWaterworks.Requests.Request
   alias GuimbalWaterworks.Token
+  alias GuimbalWaterworks.Accounts
+  alias Accounts.Users
 
   @types ["password_change"]
-  @token_secret Application.get_env(:guimbal_waterworks, :config)[:jwt_secret]
 
   def create_request(params) do
-    IO.inspect params
+    Multi.new()
+    |> Multi.run(:user, fn _repo, _ops ->
+      case Accounts.get_users_by_username(params["username"]) do
+        %Users{} = user -> {:ok, user}
+        _ -> {:error,
+          %Request{}
+          |> password_request_changeset(params)
+          |> add_error(:username, "User doesn't exist")
+          |> Map.put(:action, :validate)
+        }
+      end
+    end)
+    |> Multi.insert(:create, fn %{user: user} ->
+      params_with_user =
+        params
+        |> Map.put("user_id", user.id)
+
+      password_request_changeset(%Request{}, params_with_user)
+    end)
+    |> Repo.transaction()
   end
 
   def password_request_changeset(request, attrs) do
     request
     |> cast(attrs, [
+      :username,
       :type,
       :user_id,
       :password,
