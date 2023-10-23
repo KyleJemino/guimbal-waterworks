@@ -1,6 +1,5 @@
 alias Ecto.Multi
 alias GuimbalWaterworks.Repo
-alias GuimbalWaterworks.Helpers
 alias GuimbalWaterworks.Members.Member
 
 sheet_path = Path.join(:code.priv_dir(:guimbal_waterworks), "/static/gww-member-sheet.xlsx")
@@ -23,13 +22,16 @@ sheet_path = Path.join(:code.priv_dir(:guimbal_waterworks), "/static/gww-member-
         first_name: first_name,
         middle_name: middle_name,
         last_name: last_name,
-        unique_identifier: "#{unique_identifier}",
+        unique_identifier: if not is_nil(unique_identifier) do
+          "#{unique_identifier}"
+        else
+          nil
+        end,
         street: street,
         type: 
           type
           |> String.downcase()
-          |> String.to_atom()
-          |> IO.inspect(),
+          |> String.to_atom(),
         meter_no: meter_no,
         connected?: true,
         mda?: true,
