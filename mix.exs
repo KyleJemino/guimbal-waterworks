@@ -20,8 +20,7 @@ defmodule GuimbalWaterworks.MixProject do
   def application do
     [
       mod: {GuimbalWaterworks.Application, []},
-      extra_applications: [:logger, :runtime_tools],
-      applications: [:xlsxir]
+      extra_applications: [:logger, :runtime_tools, :xlsxir]
     ]
   end
 
