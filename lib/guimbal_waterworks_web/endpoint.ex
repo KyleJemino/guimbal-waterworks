@@ -24,7 +24,7 @@ defmodule GuimbalWaterworksWeb.Endpoint do
     at: "/",
     from: :guimbal_waterworks,
     gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only: ~w(assets fonts images favicon.ico robots.txt gww-member-sheet.xlsx)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
