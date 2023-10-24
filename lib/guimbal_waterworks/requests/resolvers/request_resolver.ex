@@ -7,8 +7,21 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
   alias GuimbalWaterworks.Token
   alias GuimbalWaterworks.Accounts
   alias Accounts.Users
+  alias GuimbalWaterworks.Requests.Queries.RequestQuery, as: RQ
 
   @types ["password_change"]
+
+  def list_requests(params \\ %{}) do
+    params
+    |> RQ.query_request()
+    |> Repo.all()
+  end
+
+  def get_request(params \\ %{}) do
+    params
+    |> RQ.query_request()
+    |> Repo.one()
+  end
 
   def create_request(params) do
     Multi.new()
