@@ -7,7 +7,7 @@ defmodule GuimbalWaterworks.Requests.Queries.RequestQuery do
     |> query_by(params)
   end
 
-  def query_by(query, %{"active?" => active?} = params) do
+  defp query_by(query, %{"active?" => active?} = params) do
     final_query =
       if active? do
         where(query, [q], is_nil(q.archived_at) and is_nil(q.used_at))
