@@ -11,10 +11,16 @@ defmodule GuimbalWaterworksWeb.RequestController do
   end
 
   def forgot_password_token(conn, %{"request" => request_params}) do
-    IO.inspect request_params
+    case Requests.create_request(request_params) do
+      {:ok, _} ->
+        conn
+        |> redirect(to: Routes.page_path(conn, :index))
+        |> halt()
 
-    render(conn, "forgot_password.html",
-      changeset: Requests.password_request_changeset(%Request{}, %{})
-    )
+      {:error, _operation, changeset, _changes} ->
+        render(conn, "forgot_password.html",
+          changeset: changeset
+        )
+    end
   end
 end
