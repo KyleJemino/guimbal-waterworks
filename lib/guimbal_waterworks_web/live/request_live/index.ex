@@ -16,6 +16,6 @@ defmodule GuimbalWaterworksWeb.RequestLive.Index do
   end
 
   defp assign_requests(socket) do
-    assign(socket, :requests, [])
+    assign(socket, :requests, Requests.list_requests())
   end
 end
