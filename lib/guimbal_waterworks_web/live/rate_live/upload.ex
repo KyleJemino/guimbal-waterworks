@@ -20,16 +20,19 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
   @impl true
   def handle_event("save", _params, socket) do
     raw_rate_data =
-      consume_uploaded_entries(socket, :excel, fn %{path: path}, _entry ->
-        raw_data =
-          path
-          |> Xlsxir.stream_list(0)
-          |> Enum.to_list()
-
-        IO.inspect raw_data
-        {:ok, %{}}
-      end)
 
     {:noreply, socket}
+  end
+
+  defp save_rate_data(socket) do
+    consume_uploaded_entries(socket, :excel, fn %{path: path}, _entry ->
+      [ _headers | raw_data ] =
+        path
+        |> Xlsxir.stream_list(0)
+        |> Enum.to_list()
+
+      IO.inspect raw_data
+      {:ok, %{}}
+    end)
   end
 end
