@@ -1,0 +1,12 @@
+<div class="form-modal-container">
+  <h1 class="text-center">Upload Rate Excel Sheet</h1>
+  <form
+    id="upload-form"
+    phx-change="validate"
+    phx-submit="save"
+    class="form-component"
+  >
+    <%= live_file_input @uploads.excel %>
+    <button type="submit">Upload</button>
+  </form>
+</div>
