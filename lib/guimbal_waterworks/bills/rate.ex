@@ -1,4 +1,4 @@
-defmodule GuimbalWaterworks.Bills.Rates do
+defmodule GuimbalWaterworks.Bills.Rate do
   use Ecto.Schema
   import Ecto.Changeset
 
