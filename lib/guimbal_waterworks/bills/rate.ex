@@ -5,6 +5,7 @@ defmodule GuimbalWaterworks.Bills.Rate do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "rates" do
+    field :title, :string
     field :reconnection_fee, :decimal
     field :membership_fee, :decimal
     field :surcharge_fee, :decimal
@@ -24,13 +25,15 @@ defmodule GuimbalWaterworks.Bills.Rate do
       :reconnection_fee,
       :surcharge_fee,
       :membership_fee,
-      :tax_rate
+      :tax_rate,
+      :title
     ])
     |> validate_required([
       :reconnection_fee,
       :surcharge_fee,
       :membership_fee,
-      :tax_rate
+      :tax_rate,
+      :title
     ])
     |> cast_embed(:usage_rates, with: &usage_rate_changeset/2)
   end
