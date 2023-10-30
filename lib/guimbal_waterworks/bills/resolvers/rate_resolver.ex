@@ -1,5 +1,6 @@
 defmodule GuimbalWaterworks.Bills.Resolvers.RateResolver do
   alias GuimbalWaterworks.Bills.Rate
+  alias GuimbalWaterworks.Repo
 
   def create_rate(attrs \\ %{}) do
     %Rate{}
