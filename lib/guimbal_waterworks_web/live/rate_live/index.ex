@@ -1,9 +1,11 @@
 defmodule GuimbalWaterworksWeb.RateLive.Index do
   use GuimbalWaterworksWeb, :live_view
+  alias GuimbalWaterworks.Bills
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    rates = Bills.list_rates(%{"order_by" => "default"})
+    {:ok, assign(socket, :rates, rates)}
   end
 
   @impl true
