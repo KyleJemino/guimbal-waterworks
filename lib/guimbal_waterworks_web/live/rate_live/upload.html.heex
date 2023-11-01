@@ -7,6 +7,11 @@
     class="form-component max-w-[560px] mt-9"
   >
     <%= live_file_input @uploads.excel %>
+    <%= if @error_message do %>
+      <div class="alert alert-danger mt-3">
+        <p><%= @error_message %></p>
+      </div>
+    <% end %>
     <div class="form-button-group">
       <button type="submit" class="submit">Upload</button>
     </div>

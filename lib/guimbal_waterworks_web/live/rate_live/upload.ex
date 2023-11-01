@@ -2,13 +2,13 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
   use GuimbalWaterworksWeb, :live_view
 
   alias GuimbalWaterworks.Bills
-  alias GuimbalWaterworks.Bills.Rate
 
   @impl true
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> allow_upload(:excel, accept: [".xlsx"], max_entries: 1)}
+     |> allow_upload(:excel, accept: [".xlsx"], max_entries: 1)
+     |> assign(:error_message, nil)}
   end
 
   @impl true
@@ -27,7 +27,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
         }
       {:error, _changeset} ->
         {:noreply,
-          assign(socket, :error, "Invalid rate data")
+          assign(socket, :error_message, "Invalid rate data")
         }
     end
   end
