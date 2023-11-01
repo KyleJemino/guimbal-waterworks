@@ -33,5 +33,10 @@ defmodule GuimbalWaterworks.Bills.Rate do
       :title,
       :usage_rates
     ])
+    |> unique_constraint(
+      :title,
+      name: :rates_title_uniq_idx,
+      message: "Title must be unique"
+    )
   end
 end
