@@ -15,9 +15,9 @@ defmodule GuimbalWaterworks.Repo.Migrations.CreateRatesTable do
     end
 
     create unique_index(
-      :rates,
-      [:title],
-      name: :rates_title_uniq_idx
-    )
+             :rates,
+             [:title],
+             name: :rates_title_uniq_idx
+           )
   end
 end

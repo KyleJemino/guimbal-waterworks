@@ -13,7 +13,8 @@ defmodule GuimbalWaterworksWeb.RateLive.Show do
     rate = Bills.get_rate(%{"id" => rate_id})
 
     sorted_rates =
-      Enum.sort(rate.usage_rates,
+      Enum.sort(
+        rate.usage_rates,
         fn first, last ->
           {usage1, _rates} = first
           {usage2, _rates} = last
@@ -22,9 +23,10 @@ defmodule GuimbalWaterworksWeb.RateLive.Show do
         end
       )
 
-    {:noreply, assign(socket, %{
-      rate: rate,
-      sorted_rates: sorted_rates
-    })}
+    {:noreply,
+     assign(socket, %{
+       rate: rate,
+       sorted_rates: sorted_rates
+     })}
   end
 end

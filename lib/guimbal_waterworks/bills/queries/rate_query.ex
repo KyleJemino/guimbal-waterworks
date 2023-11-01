@@ -8,7 +8,7 @@ defmodule GuimbalWaterworks.Bills.Queries.RateQuery do
 
   defp query_by(query, %{"order_by" => "default"} = params) do
     query
-    |> order_by([q], [desc: q.inserted_at])
+    |> order_by([q], desc: q.inserted_at)
     |> query_by(Map.delete(params, "order_by"))
   end
 
