@@ -117,4 +117,6 @@ defmodule GuimbalWaterworks.Bills do
 
   defdelegate create_rate(attrs \\ %{}), to: RR
   defdelegate rate_changeset(rate, attrs \\ %{}), to: RR
+  defdelegate list_rates(params \\ %{}), to: RR
+  defdelegate get_rate(params \\ %{}), to: RR
 end

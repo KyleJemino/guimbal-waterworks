@@ -7,7 +7,8 @@ defmodule GuimbalWaterworksWeb.RateLive.Show do
   end
 
   @impl true
-  def handle_params(_params, _url, socket) do
+  def handle_params(%{"id" => rate_id}, _url, socket) do
+    IO.inspect rate_id
     {:noreply, socket}
   end
 end
