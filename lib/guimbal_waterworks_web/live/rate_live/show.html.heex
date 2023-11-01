@@ -1,11 +1,24 @@
 <div class="page-container">
-  <h1></h1>
-  <ul>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
+  <h1><%= @rate.title %></h1>
+  <ul class="mt-3">
+    <li>Membership Fee: <%= Display.money(@rate.membership_fee) %></li>
+    <li>Reconnection Fee: <%= Display.money(@rate.reconnection_fee) %></li>
+    <li>Surcharge Fee: <%= Display.money(@rate.surcharge_fee) %></li>
+    <li>Tax Rate: <%= "#{@rate.tax_rate}" %></li>
   </ul>
+  <h3 class="mt-6">Usage Rates</h3>
+  <table class="data-table mt-3">
+    <tr class="header-row">
+      <th class="header">Usage</th>
+      <th class="header">Personal</th>
+      <th class="header">Business</th>
+    </tr>
+    <%= for {usage, rate} <- @sorted_rates do %>
+      <tr class="data-row">
+        <td class="data text-center"><%= usage %></td>
+        <td class="data text-right"><%= Display.money(rate["personal"]) %></td>
+        <td class="data text-right"><%= Display.money(rate["business"]) %></td>
+      </tr>
+    <% end %>
+  </table>
 </div>
