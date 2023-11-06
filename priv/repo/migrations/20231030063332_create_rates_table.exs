@@ -5,7 +5,8 @@ defmodule GuimbalWaterworks.Repo.Migrations.CreateRatesTable do
     create table(:rates, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :title, :string, null: false
-      add :usage_rates, :map, null: false
+      add :personal_prices, :map, null: false
+      add :business_rate, :decimal, precision: 10, scale: 2, null: false
       add :reconnection_fee, :decimal, precision: 10, scale: 2, null: false
       add :membership_fee, :decimal, precision: 10, scale: 2, null: false
       add :surcharge_fee, :decimal, precision: 10, scale: 2, null: false

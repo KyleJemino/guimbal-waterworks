@@ -10,7 +10,8 @@ defmodule GuimbalWaterworks.Bills.Rate do
     field :membership_fee, :decimal
     field :surcharge_fee, :decimal
     field :tax_rate, :decimal
-    field :usage_rates, :map
+    field :personal_prices, :map
+    field :business_rate, :decimal
 
     timestamps()
   end
@@ -23,7 +24,8 @@ defmodule GuimbalWaterworks.Bills.Rate do
       :membership_fee,
       :tax_rate,
       :title,
-      :usage_rates
+      :personal_prices,
+      :business_rate
     ])
     |> validate_required([
       :reconnection_fee,
@@ -31,7 +33,8 @@ defmodule GuimbalWaterworks.Bills.Rate do
       :membership_fee,
       :tax_rate,
       :title,
-      :usage_rates
+      :personal_prices,
+      :business_rate
     ])
     |> unique_constraint(
       :title,
@@ -40,3 +43,5 @@ defmodule GuimbalWaterworks.Bills.Rate do
     )
   end
 end
+      # add :personal_prices, :map, null: false
+      # add :business_rate, :decimal, precision: 10, scale: 2, null: false
