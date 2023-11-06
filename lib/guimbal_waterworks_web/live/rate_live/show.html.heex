@@ -16,7 +16,7 @@
     <%= for {usage, price} <- @sorted_rates do %>
       <tr class="data-row">
         <td class="data text-center"><%= usage %></td>
-        <td class="data text-right"><%= Display.money(rate["personal"]) %></td>
+        <td class="data text-right"><%= Display.money(price) %></td>
       </tr>
     <% end %>
   </table>

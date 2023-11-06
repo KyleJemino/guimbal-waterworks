@@ -55,7 +55,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
             Map.put(personal_price_map, "#{reading}", personal_rate)
           end)
 
-        rate_attrs = %{
+        %{
           title: title,
           reconnection_fee: reconnection_fee,
           membership_fee: membership_fee,
