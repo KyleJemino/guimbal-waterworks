@@ -6,6 +6,12 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.FormComponent do
   alias Bills.BillingPeriod
 
   @impl true
+  def mount(socket) do
+    # query 5 latest rates
+    {:ok, socket}  
+  end
+
+  @impl true
   def update(%{billing_period: billing_period} = assigns, socket) do
     changeset = Bills.change_billing_period(billing_period)
 

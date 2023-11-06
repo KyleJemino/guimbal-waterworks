@@ -45,37 +45,20 @@
 
   <div class="flex flex-row gap-4">
     <div class="field-group w-1/2">
-      <%= label f, :personal_rate, "Personal Rate (₱/ Cu.M.)" %>
-      <div class="date-input">
-      <%= number_input f, :personal_rate, class: "w-full", min: 0, step: 0.01 %>
-      </div>
-      <%= error_tag f, :personal_rate %>
-    </div>
-    
-    <div class="field-group w-1/2">
-      <%= label f, :business_rate, "Business Rate (₱/Cu.M.)"  %>
-      <div class="date-input">
-      <%= number_input f, :business_rate, class: "w-full", min: 0, step: 0.01 %>
-      </div>
-      <%= error_tag f, :business_rate %>
-    </div>
-  </div>
-  
-  <div class="flex flex-row gap-4">
-    <div class="field-group w-1/2">
-      <%= label f, :franchise_tax_rate %>
-      <div class="date-input">
-      <%= number_input f, :franchise_tax_rate, class: "w-full", min: 0, max: 1, step: 0.01 %>
-      </div>
-      <%= error_tag f, :franchise_tax_rate %>
-    </div>
-
-    <div class="field-group w-1/2">
       <%= label f, :due_date %>
       <%= date_input f, :due_date, class: "w-full" %>
       <%= error_tag f, :due_date %>
     </div>
-
+    <div class="field-group w-1/2">
+      <%= label f, :rate_id %>
+      <%= select( 
+        f, 
+        :rate_id, 
+        [All: :all, Paid: :paid, Unpaid: :unpaid], 
+        required: true
+      )%>
+      <%= error_tag f, :rate_id %>
+    </div>
   </div>
 
   <div class="field-group flex flex-col items-center">
