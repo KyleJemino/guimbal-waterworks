@@ -5,19 +5,18 @@
     <li>Reconnection Fee: <%= Display.money(@rate.reconnection_fee) %></li>
     <li>Surcharge Fee: <%= Display.money(@rate.surcharge_fee) %></li>
     <li>Tax Rate: <%= "#{@rate.tax_rate}" %></li>
+    <li>Business Rate: <%= "#{@rate.business_rate}" %></li>
   </ul>
-  <h3 class="mt-6">Usage Rates</h3>
+  <h3 class="mt-6">Personal Prices</h3>
   <table class="data-table mt-3">
     <tr class="header-row">
       <th class="header">Usage</th>
       <th class="header">Personal</th>
-      <th class="header">Business</th>
     </tr>
-    <%= for {usage, rate} <- @sorted_rates do %>
+    <%= for {usage, price} <- @sorted_rates do %>
       <tr class="data-row">
         <td class="data text-center"><%= usage %></td>
         <td class="data text-right"><%= Display.money(rate["personal"]) %></td>
-        <td class="data text-right"><%= Display.money(rate["business"]) %></td>
       </tr>
     <% end %>
   </table>

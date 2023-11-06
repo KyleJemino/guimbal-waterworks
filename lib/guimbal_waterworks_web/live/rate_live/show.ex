@@ -14,7 +14,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Show do
 
     sorted_rates =
       Enum.sort(
-        rate.usage_rates,
+        rate.personal_prices,
         fn first, last ->
           {usage1, _rates} = first
           {usage2, _rates} = last
