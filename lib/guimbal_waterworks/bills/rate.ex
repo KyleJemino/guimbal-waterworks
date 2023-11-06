@@ -43,5 +43,3 @@ defmodule GuimbalWaterworks.Bills.Rate do
     )
   end
 end
-      # add :personal_prices, :map, null: false
-      # add :business_rate, :decimal, precision: 10, scale: 2, null: false
