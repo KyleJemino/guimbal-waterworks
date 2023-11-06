@@ -41,23 +41,18 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
         [
           title,
           _reading,
-          _personal_rate,
-          _business_rate,
+          _personal_prices,
+          business_rate,
           tax_rate,
           reconnection_fee,
           membership_fee,
           surcharge_fee
         ] = Enum.at(raw_data, 0)
 
-        usage_rate_map =
-          Enum.reduce(raw_data, %{}, fn [_title, reading, personal_rate, business_rate | _tail],
-                                        usage_rate_map ->
-            reading_rates = %{
-              personal: personal_rate,
-              business: business_rate
-            }
-
-            Map.put(usage_rate_map, "#{reading}", reading_rates)
+        personal_price_map =
+          Enum.reduce(raw_data, %{}, fn [_title, reading, personal_rate | _tail],
+                                        personal_price_map ->
+            Map.put(personal_price_map, "#{reading}", personal_rate)
           end)
 
         rate_attrs = %{
@@ -66,7 +61,8 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
           membership_fee: membership_fee,
           surcharge_fee: surcharge_fee,
           tax_rate: tax_rate,
-          usage_rates: usage_rate_map
+          personal_prices: personal_prices,
+          business_rate: business_rate
         }
       end)
 
