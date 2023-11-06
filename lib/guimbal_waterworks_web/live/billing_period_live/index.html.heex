@@ -25,8 +25,7 @@
     <th class="header">To</th>
     <th class="header">Due date</th>
     <th class="header">
-      <p>Rate</p>
-      <p>(Personal | Business)</p>
+      <p>Rates</p>
     </th>
     <th class="header">D.A. Count</th>
 
@@ -38,7 +37,9 @@
       <td class="data text-center"><%= Display.format_date(billing_period.from) %></td>
       <td class="data text-center"><%= Display.format_date(billing_period.to) %></td>
       <td class="data text-center"><%= Display.format_date(billing_period.due_date) %></td>
-      <td class="data text-center"><%= "#{billing_period.personal_rate} | #{billing_period.business_rate}" %></td>
+      <td class="data text-center">
+          <%= live_redirect billing_period.rate.title, to: Routes.rate_show_path(@socket, :show, billing_period.rate.id), class: "link" %>
+      </td>
       <td class="data text-right"><%= Enum.count(billing_period.death_aid_recipients) %></td>
 
       <td class="actions">

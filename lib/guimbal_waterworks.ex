@@ -51,6 +51,12 @@ defmodule GuimbalWaterworks do
         |> query_by(Map.delete(params, "limit"))
       end
 
+      defp query_by(query, %{"select" => select} = params) do
+        query
+        |> select(^select)
+        |> query_by(Map.delete(params, "select"))
+      end
+
       defp query_by(query, _params), do: query
     end
   end

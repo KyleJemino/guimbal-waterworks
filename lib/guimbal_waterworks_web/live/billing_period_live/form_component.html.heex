@@ -54,7 +54,7 @@
       <%= select( 
         f, 
         :rate_id, 
-        [All: :all, Paid: :paid, Unpaid: :unpaid], 
+        @rate_options,
         required: true
       )%>
       <%= error_tag f, :rate_id %>

@@ -7,8 +7,17 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.FormComponent do
 
   @impl true
   def mount(socket) do
-    # query 5 latest rates
-    {:ok, socket}  
+    rates =
+      Bills.list_rates(%{
+        "limit" => 5,
+        "order_by" => "default",
+        "select" => [:id, :title]
+      })
+
+    rate_options =
+      Enum.map(rates, &({&1.title, &1.id}))
+
+    {:ok, assign(socket, :rate_options, rate_options)}
   end
 
   @impl true
