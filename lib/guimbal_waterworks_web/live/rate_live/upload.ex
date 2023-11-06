@@ -61,7 +61,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
           membership_fee: membership_fee,
           surcharge_fee: surcharge_fee,
           tax_rate: tax_rate,
-          personal_prices: personal_prices,
+          personal_prices: personal_price_map,
           business_rate: business_rate
         }
       end)
