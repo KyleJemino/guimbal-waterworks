@@ -30,7 +30,6 @@
       <th class="header">Base Amount</th>
       <th class="header">Franchise Tax</th>
       <th class="header">Membership Fee</th>
-      <th class="header">Advance Fee</th>
       <th class="header">Reconnection Fee</th>
       <th class="header">Surcharge Fee</th>
       <th class="header">Death Aid</th>
@@ -53,7 +52,6 @@
         <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.membership_amount) %></td>
-        <td class="data text-right"><%= Display.money(bill.calculation.adv_amount) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.reconnection_amount) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.surcharge) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.death_aid_amount) %></td>
@@ -71,7 +69,6 @@
         <td class="data text-right"><%= Display.money(@total_prices.base_amount) %></td>
         <td class="data text-right"><%= Display.money(@total_prices.franchise_tax_amount) %></td>
         <td class="data text-right"><%= Display.money(@total_prices.membership_amount) %></td>
-        <td class="data text-right"><%= Display.money(@total_prices.adv_amount) %></td>
         <td class="data text-right"><%= Display.money(@total_prices.reconnection_amount) %></td>
         <td class="data text-right"><%= Display.money(@total_prices.surcharge) %></td>
         <td class="data text-right"><%= Display.money(@total_prices.death_aid_amount) %></td>

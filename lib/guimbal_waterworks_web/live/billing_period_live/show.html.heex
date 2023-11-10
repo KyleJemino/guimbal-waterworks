@@ -24,17 +24,12 @@
       <th class="header">From</th>
       <th class="header">To</th>
       <th class="header">Due Date</th>
-      <th class="header">
-        <p>Rate</p>
-        <p>(Personal | Business)</p>
-      </th>
       <th class="header">Death Aid</th>
     </tr>
     <tr class="data-row">
       <td class="data text-center"><%= Display.format_date(@billing_period.from) %></td>
       <td class="data text-center"><%= Display.format_date(@billing_period.to) %></td>
       <td class="data text-center"><%= Display.format_date(@billing_period.due_date) %></td>
-      <td class="data text-center"><%= "#{@billing_period.personal_rate} | #{@billing_period.business_rate}" %></td>
       <td class="data text-center">
         <div class="flex flex-col">
           <%= for recipient <- @billing_period.death_aid_recipients do %>

@@ -44,7 +44,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
               <p>
               Franchise Tax (
               <%= 
-                @latest_bill.billing_period.franchise_tax_rate
+                @latest_bill.billing_period.rate.tax_rate
                 |> Decimal.mult(100)
                 |> Number.Percentage.number_to_percentage(precision: 2)
               %>
@@ -56,12 +56,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
               <div class="grid grid-cols-2">
                 <p>Death Aid</p>
                 <p class="text-right"><%= Display.money(@latest_bill_calc.death_aid_amount) %></p>
-              </div>
-            <% end %>
-            <%= if Decimal.gt?(@latest_bill_calc.adv_amount, 0) do %>
-              <div class="grid grid-cols-2">
-                <p>Advance Fee</p>
-                <p class="text-right"><%= Display.money(@latest_bill_calc.adv_amount) %></p>
               </div>
             <% end %>
             <%= if Decimal.gt?(@latest_bill_calc.membership_amount, 0) do %>
