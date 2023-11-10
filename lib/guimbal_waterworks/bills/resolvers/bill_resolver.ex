@@ -74,13 +74,16 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       due_date: due_date
     } = billing_period
 
-    base_rate =
+    base_amount = 
       case member_type do
-        :personal -> personal_rate
-        :business -> business_rate
+        :personal ->
+          rate.personal_prices
+          |> Map.get("#{reading}")
+          |> D.new()
+        :business ->
+          D.mult(rate.business_rate, reading)
       end
 
-    base_amount = D.mult(base_rate, reading)
     tax_rate = D.new(rate.tax_rate)
 
     franchise_tax_amount = D.mult(base_amount, tax_rate)
