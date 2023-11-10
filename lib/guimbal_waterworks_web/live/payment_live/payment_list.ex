@@ -89,9 +89,9 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
           :member, 
           :user, 
           bills: [
-            billing_period: [:rate], 
             :member, 
-            :payment
+            :payment,
+            billing_period: [:rate]
           ]
         ]
       )

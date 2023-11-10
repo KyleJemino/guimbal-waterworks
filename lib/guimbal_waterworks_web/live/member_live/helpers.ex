@@ -53,9 +53,9 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
       "order_by" => "default",
       "status" => "unpaid",
       "preload" => [
-        billing_period: [:rate], 
+        :payment,
         :member, 
-        :payment
+        billing_period: [:rate]
       ]
     })
   end
