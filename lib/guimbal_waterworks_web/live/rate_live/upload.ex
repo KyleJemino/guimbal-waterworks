@@ -52,7 +52,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
         personal_price_map =
           Enum.reduce(raw_data, %{}, fn [_title, reading, personal_rate | _tail],
                                         personal_price_map ->
-            Map.put(personal_price_map, "#{reading}", personal_rate)
+            Map.put(personal_price_map, "#{reading}", Decimal.new("#{personal_rate}"))
           end)
 
         %{
