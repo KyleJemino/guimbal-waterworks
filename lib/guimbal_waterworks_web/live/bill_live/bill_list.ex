@@ -99,7 +99,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
 
     list_params =
       filter_params
-      |> Map.put("preload", [:billing_period, :member, :payment])
+      |> Map.put("preload", [billing_period: [:rate], :member, :payment])
       |> Map.put("order_by", "default")
       |> Map.merge(base_params)
       |> Page.pagination_to_query_params()
