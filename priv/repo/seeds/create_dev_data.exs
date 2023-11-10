@@ -12,7 +12,7 @@ alias GuimbalWaterworks.Bills.{
 alias GuimbalWaterworks.Accounts.Queries.UserQuery
 
 superuser =
-  %{"role" => :manager}
+  %{"role" => :manager, "limit" => 1}
   |> UserQuery.query_user()
   |> Repo.one()
 
