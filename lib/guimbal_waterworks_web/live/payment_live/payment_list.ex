@@ -86,10 +86,10 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       |> Map.put(
         "preload",
         [
-          :member, 
-          :user, 
+          :member,
+          :user,
           bills: [
-            :member, 
+            :member,
             :payment,
             billing_period: [:rate]
           ]

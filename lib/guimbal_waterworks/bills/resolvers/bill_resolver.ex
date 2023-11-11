@@ -74,12 +74,13 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       due_date: due_date
     } = billing_period
 
-    base_amount = 
+    base_amount =
       case member_type do
         :personal ->
           rate.personal_prices
           |> Map.get("#{reading}")
           |> D.new()
+
         :business ->
           D.mult(rate.business_rate, reading)
       end

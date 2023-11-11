@@ -8,7 +8,7 @@ defmodule GuimbalWaterworks.Repo.Migrations.AddRateToPeriod do
       remove :franchise_tax_rate
       add :rate_id, references(:rates, type: :binary_id), null: false
     end
-    
+
     create index(:billing_periods, [:rate_id], name: :periods_rates_idx)
   end
 end
