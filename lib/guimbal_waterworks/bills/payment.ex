@@ -11,7 +11,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
   @foreign_key_type :binary_id
 
   schema "payments" do
-    field :or, :integer
+    field :or, :string
     field :paid_at, :utc_datetime
     field :bill_ids, :string, virtual: true
     field :amount, :decimal
@@ -30,6 +30,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
     |> unique_constraint(:or, name: :payments_ors_uniq_idx)
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:user_id)
+    |> validate_format(:or, ~r/\d+/)
     |> validate_bill_ids_length()
     |> put_change(:paid_at, Helpers.db_now())
   end
