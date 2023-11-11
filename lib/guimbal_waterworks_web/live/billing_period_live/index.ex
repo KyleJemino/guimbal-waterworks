@@ -36,7 +36,7 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Index do
   end
 
   defp list_billing_periods do
-    rate_query = 
+    rate_query =
       Bills.query_rate(%{
         "select" => [:title, :id]
       })

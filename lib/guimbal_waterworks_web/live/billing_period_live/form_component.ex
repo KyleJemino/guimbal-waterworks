@@ -14,8 +14,7 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.FormComponent do
         "select" => [:id, :title]
       })
 
-    rate_options =
-      Enum.map(rates, &({&1.title, &1.id}))
+    rate_options = Enum.map(rates, &{&1.title, &1.id})
 
     {:ok, assign(socket, :rate_options, rate_options)}
   end

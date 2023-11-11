@@ -15,7 +15,6 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     field :due_date, :date
     belongs_to :rate, Rate
 
-
     embeds_many :death_aid_recipients, DeathAidRecipient, on_replace: :delete do
       field :name, :string
     end
