@@ -22,7 +22,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     "unique_identifier" => "",
     "street" => "",
     "type" => "all",
-    "actions?" => true
   }
 
   @valid_filter_keys [
