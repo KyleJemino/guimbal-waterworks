@@ -85,7 +85,15 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       filter_params
       |> Map.put(
         "preload",
-        [:member, :user, bills: [:billing_period, :member, :payment]]
+        [
+          :member, 
+          :user, 
+          bills: [
+            :member, 
+            :payment,
+            billing_period: [:rate]
+          ]
+        ]
       )
       |> Map.put("order_by", "default")
       |> Map.merge(base_params)

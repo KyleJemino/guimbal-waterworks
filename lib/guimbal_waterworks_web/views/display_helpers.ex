@@ -38,6 +38,16 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
   def format_date(date), do: Timex.format!(date, "%b %d %Y", :strftime)
   def format_date(date, format), do: Timex.format!(date, format, :strftime)
 
+  def money(float) when is_float(float) do
+    amount =
+      float
+      |> Decimal.from_float()
+      |> D.round(2)
+      |> Number.Delimit.number_to_delimited()
+
+    "₱#{amount}"
+  end
+
   def money(decimal) do
     amount =
       decimal

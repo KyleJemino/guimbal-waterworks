@@ -26,6 +26,10 @@
   }
 }
 
+.link {
+  @apply underline;
+}
+
 body {
   @apply h-screen w-full bg-blue-100;
 }

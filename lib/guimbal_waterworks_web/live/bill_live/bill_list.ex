@@ -9,7 +9,6 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
   @init_calculation_map %{
     base_amount: 0,
     franchise_tax_amount: 0,
-    adv_amount: 0,
     membership_amount: 0,
     reconnection_amount: 0,
     surcharge: 0,
@@ -99,7 +98,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
 
     list_params =
       filter_params
-      |> Map.put("preload", [:billing_period, :member, :payment])
+      |> Map.put("preload", [:payment, :member, billing_period: [:rate]])
       |> Map.put("order_by", "default")
       |> Map.merge(base_params)
       |> Page.pagination_to_query_params()

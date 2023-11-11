@@ -20,8 +20,8 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
     bills =
       Bills.list_bills(%{
         "member_id" => member_id,
-        "status" => :unpaid,
-        "preload" => [:billing_period, :payment, :member],
+        "status" => "unpaid",
+        "preload" => [:payment, :member, billing_period: [:rate]],
         "order_by" => [asc: :inserted_at]
       })
 

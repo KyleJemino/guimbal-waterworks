@@ -16,9 +16,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver do
       |> Integer.to_string()
 
     %BillingPeriod{
-      personal_rate: 18.06,
-      business_rate: 17.06,
-      franchise_tax_rate: 0.02,
       year: year_string
     }
   end

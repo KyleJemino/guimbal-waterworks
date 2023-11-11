@@ -6,12 +6,13 @@ alias GuimbalWaterworks.Members.Member
 alias GuimbalWaterworks.Bills
 alias GuimbalWaterworks.Bills.{
   Bill,
-  BillingPeriod
+  BillingPeriod,
+  Rate
 }
 alias GuimbalWaterworks.Accounts.Queries.UserQuery
 
 superuser =
-  %{"role" => :manager}
+  %{"role" => :manager, "limit" => 1}
   |> UserQuery.query_user()
   |> Repo.one()
 
@@ -50,41 +51,34 @@ cashier =
 
 # Create members
 members =
-  Enum.map(1..3000, fn x ->
-    type = if (Enum.random(0..100) > 5), do: :personal, else: :business 
-
-    user_attrs = %{
-      first_name: Faker.Name.first_name(),
-      middle_name: Faker.Name.last_name(),
-      last_name: Faker.Name.last_name(),
-      unique_identifier: nil,
-      street: Enum.random(GuimbalWaterworks.Constants.streets()),
-      meter_no: x,
-      type: type,
-      connected?: true,
-      mda?: Enum.random(0..100) > 10
-    }
-
-    %Member{} 
-    |> Member.changeset(user_attrs)
-    |> Repo.insert!()
-  end)
-
-feb_index = 1
+  Repo.all(Member)
 
 # Create billing periods from march
-billing_periods =
-  Enum.map(1..6, fn x ->
-    month = Enum.at(Constants.months, 1 + x)
+current_month = Timex.now().month
+months =
+  if current_month > 6 do
+    (current_month - 6)..current_month
+  else
+    1..current_month
+  end
 
-    current_month_number = 1 + x + 1
+rate = Bills.get_rate(%{"limit" => 1})
+
+billing_periods =
+  Enum.map(months, fn x ->
+    month = 
+      x
+      |> Timex.month_name()
+      |> String.upcase()
+
+    next_month = x + 1
 
     due_date =
-      Date.new!(2023, current_month_number, 1)
+      Date.new!(2023, next_month, 1)
       |> Date.end_of_month()
 
     from =
-      Date.new!(2023, current_month_number - 1, 1)
+      Date.new!(2023, x, 1)
 
     to = Date.end_of_month(from)
 
@@ -105,10 +99,8 @@ billing_periods =
       due_date: due_date,
       from: from,
       to: to,
-      personal_rate: 18,
-      business_rate: 15,
-      franchise_tax_rate: 0.02,
-      death_aid_recipients: recipients
+      death_aid_recipients: recipients,
+      rate_id: rate.id
     }
 
     %BillingPeriod{}

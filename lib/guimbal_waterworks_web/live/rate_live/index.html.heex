@@ -1,0 +1,14 @@
+<div class="page-container">
+  <h1>Rates</h1>
+  <div class="page-button-container mt-3">
+    <%= live_patch "Upload Rate", to: Routes.rate_upload_path(@socket, :new), class: "button -dark" %>
+  </div>
+  <div class="mt-3">
+    <h3>Rates Uploaded</h3>
+    <div class="form-links inline-flex flex-col gap-1 mt-2">
+    <%= for rate <- @rates do %>
+      <%= live_redirect rate.title, to: Routes.rate_show_path(@socket, :show, rate) %>
+    <% end %>
+    </div>
+  </div>
+</div>

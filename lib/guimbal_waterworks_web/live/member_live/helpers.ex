@@ -52,7 +52,11 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
     Bills.query_bill(%{
       "order_by" => "default",
       "status" => "unpaid",
-      "preload" => [:billing_period, :member, :payment]
+      "preload" => [
+        :payment,
+        :member, 
+        billing_period: [:rate]
+      ]
     })
   end
 
