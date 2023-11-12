@@ -19,7 +19,6 @@ defmodule GuimbalWaterworks.Bills.Bill do
     field :after, :integer
     field :reading, :integer
     field :membership_fee?, :boolean
-    field :adv_fee?, :boolean
     field :reconnection_fee?, :boolean
 
     belongs_to :member, Member
@@ -36,7 +35,6 @@ defmodule GuimbalWaterworks.Bills.Bill do
     |> cast(attrs, [
       :reading,
       :membership_fee?,
-      :adv_fee?,
       :reconnection_fee?,
       :member_id,
       :billing_period_id,
@@ -49,7 +47,6 @@ defmodule GuimbalWaterworks.Bills.Bill do
       :after,
       :reading,
       :membership_fee?,
-      :adv_fee?,
       :reconnection_fee?,
       :member_id,
       :billing_period_id,

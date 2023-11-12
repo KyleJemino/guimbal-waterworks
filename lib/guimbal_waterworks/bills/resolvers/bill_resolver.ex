@@ -42,7 +42,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       |> Map.merge(
         %{
           membership_fee?: false,
-          adv_fee?: false,
           reconnection_fee?: false
         },
         fn _k, v1, _v2 -> v1 end
@@ -65,7 +64,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       when member_type in [:personal, :business] do
     %{
       reading: reading,
-      adv_fee?: adv_fee?,
       membership_fee?: membership_fee?,
       reconnection_fee?: reconnection_fee?
     } = bill

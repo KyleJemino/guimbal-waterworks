@@ -119,7 +119,6 @@ Enum.each(members, fn member ->
         after: reading,
         reading: reading,
         membership_fee?: false,
-        adv_fee?: false,
         reconnection_fee?: false,
         member_id: member.id,
         billing_period_id: period.id,
