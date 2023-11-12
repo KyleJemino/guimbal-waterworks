@@ -43,10 +43,10 @@
       <td class="data text-right"><%= Enum.count(billing_period.death_aid_recipients) %></td>
 
       <td class="actions">
-        <div class="inline-flex gap-2 flex-row">
-          <%= live_redirect "Show", to: Routes.billing_period_show_path(@socket, :show, billing_period), class: "button -table" %>
-          <%= live_patch "Edit", to: Routes.billing_period_index_path(@socket, :edit, billing_period), class: "button -table" %>
-        </div>
+        <SC.pop_up_menu target_id={billing_period.id}>
+          <%= live_redirect "Show", to: Routes.billing_period_show_path(@socket, :show, billing_period) %>
+          <%= live_patch "Edit", to: Routes.billing_period_index_path(@socket, :edit, billing_period) %>
+        </SC.pop_up_menu>
       </td>
     </tr>
   <% end %>
