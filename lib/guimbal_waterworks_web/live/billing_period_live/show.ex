@@ -30,16 +30,14 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
 
     create_bill_path =
       Routes.billing_period_show_path(
-        socket, 
-        :new_bill, 
-        billing_period, 
+        socket,
+        :new_bill,
+        billing_period,
         member_id,
         clean_params
       )
 
-    {:noreply,
-      push_patch(socket, to: create_bill_path)
-    }
+    {:noreply, push_patch(socket, to: create_bill_path)}
   end
 
   defp page_title(:edit), do: "Edit Billing period"
@@ -69,14 +67,17 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
     end
   end
 
-  defp assign_bill(socket)do
+  defp assign_bill(socket) do
     case Map.fetch(socket.assigns, :member) do
       {:ok, member} when not is_nil(member) ->
-        bill = Bills.new_bill(%{
-          member_id: member.id,
-          user_id: socket.assigns.current_users.id
-        })
+        bill =
+          Bills.new_bill(%{
+            member_id: member.id,
+            user_id: socket.assigns.current_users.id
+          })
+
         assign(socket, :bill, bill)
+
       _else ->
         assign(socket, :bill, nil)
     end
