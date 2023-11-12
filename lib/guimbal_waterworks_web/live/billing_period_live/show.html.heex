@@ -11,11 +11,47 @@
   </.modal>
 <% end %>
 
+<%= if @live_action in [:new_bill] do %>
+  <.modal return_to={@return_to}>
+    <%= if is_nil(@member) do %>
+      <.live_component
+        module={GuimbalWaterworksWeb.MemberLive.SelectForm}
+        id="member-search"
+        title="Search Member to Add Bill"
+        event_name={:create_member_bill}
+      />
+    <% else %>
+      <.live_component
+        module={GuimbalWaterworksWeb.BillLive.FormComponent}
+        id={:new}
+        title={"New Bill for #{Display.full_name(@member)}"}
+        action={:new}
+        bill={@bill}
+        return_to={@return_to}
+      />
+    <% end %>
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:edit_bill] do %>
+  <.modal return_to={@return_to}>
+      <.live_component
+        module={GuimbalWaterworksWeb.BillLive.FormComponent}
+        id={@bill.id}
+        title={"Edit Bill"}
+        action={:edit}
+        bill={@bill}
+        return_to={@return_to}
+      />
+  </.modal>
+<% end %>
+
 <div class="page-container">
   <h1><%= Display.display_period(@billing_period) %></h1>
 
   <div class="page-button-container mt-3">
     <%= live_patch "Edit", to: Routes.billing_period_show_path(@socket, :edit, @billing_period, @clean_params), class: "button -dark" %>
+    <%= live_patch "New Bill", to: Routes.billing_period_show_path(@socket, :new_bill, @billing_period, @clean_params), class: "button -dark" %>
   </div>
 
 
@@ -59,7 +95,7 @@
          filter_params={@filter_params}
          />
        <% end %>
-       <%= if @live_action in [:new_bill, :show, :edit] do %>
+       <%= if @live_action in [:new_bill, :show, :edit, :edit_bill] do %>
          <.live_component
          module={GuimbalWaterworksWeb.BillLive.BillList}
          id={:bill_list}
@@ -68,6 +104,8 @@
          "billing_period_id" => @billing_period.id
          }}
          filter_params={@filter_params}
+         edit_event_name={:edit_bill}
+         current_users={@current_users}
          />
        <% end %>
     </div>

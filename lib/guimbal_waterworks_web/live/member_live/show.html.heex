@@ -24,7 +24,20 @@
       />
     </.modal>
   <% end %>
+  <%= if @live_action in [:edit_bill] do %>
+    <.modal return_to={Routes.member_show_path(@socket, :show, @member, @clean_params)}>
+      <.live_component
+        module={GuimbalWaterworksWeb.BillLive.FormComponent}
+        id={@bill.id}
+        title={"New Bill for #{Display.full_name(@member)}"}
+        action={:edit}
+        bill={@bill}
+        return_to={Routes.member_show_path(@socket, :show, @member, @clean_params)}
+      />
+    </.modal>
+  <% end %>
 </SC.render_for_roles>
+
 
 <div class="page-container">
   <h1><%= Display.full_name(@member) %></h1>
@@ -83,6 +96,8 @@
          "member_id" => @member.id
          }}
          filter_params={@filter_params}
+         edit_event_name={:edit_bill}
+         current_users={@current_users}
          />
        <% end %>
     </div>
