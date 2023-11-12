@@ -51,14 +51,16 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   end
 
   defp save_bill(socket, :edit, bill_params) do
-    case Bills.update(bill_params) do
-      {:ok, _bill} ->
+    case Bills.update_bill(socket.assigns.bill, bill_params) do
+      {:ok, bill} ->
+        IO.inspect bill
         {:noreply,
           socket
           |> put_flash(:info, "Bill updated successfully")
           |> push_redirect(to: socket.assigns.return_to)
         }
       {:error, changeset} ->
+        IO.inspect changeset
         {:noreply, assign(socket, changeset: changeset)}
     end
   end

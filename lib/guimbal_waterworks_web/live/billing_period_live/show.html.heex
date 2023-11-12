@@ -95,7 +95,7 @@
          filter_params={@filter_params}
          />
        <% end %>
-       <%= if @live_action in [:new_bill, :show, :edit] do %>
+       <%= if @live_action in [:new_bill, :show, :edit, :edit_bill] do %>
          <.live_component
          module={GuimbalWaterworksWeb.BillLive.BillList}
          id={:bill_list}
