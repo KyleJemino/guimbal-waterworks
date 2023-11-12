@@ -93,7 +93,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
   @impl true
   def handle_event("edit_bill", %{"bill-id" => bill_id} = _params, socket) do
     send(
-      self(), 
+      self(),
       {
         socket.assigns.edit_event_name,
         bill_id

@@ -17,13 +17,13 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
       case Map.fetch(params, "bill_id") do
         {:ok, bill_id} ->
           Bills.get_bill_by_id(bill_id)
+
         _else ->
           Bills.new_bill(%{
             member_id: member.id,
             user_id: socket.assigns.current_users.id
           })
       end
-
 
     {:noreply,
      socket

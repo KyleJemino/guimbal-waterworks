@@ -54,10 +54,10 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
     case Bills.update_bill(socket.assigns.bill, bill_params) do
       {:ok, bill} ->
         {:noreply,
-          socket
-          |> put_flash(:info, "Bill updated successfully")
-          |> push_redirect(to: socket.assigns.return_to)
-        }
+         socket
+         |> put_flash(:info, "Bill updated successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
+
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
