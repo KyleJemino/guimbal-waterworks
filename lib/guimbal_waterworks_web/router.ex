@@ -120,6 +120,7 @@ defmodule GuimbalWaterworksWeb.Router do
       live "/members/:id/show/new-bill", MemberLive.Show, :new_bill
       live "/billing_periods/:id/new-bill", BillingPeriodLive.Show, :new_bill
       live "/billing_periods/:id/new-bill/:member_id", BillingPeriodLive.Show, :new_bill
+      live "/billing_periods/:id/edit-bill/:bill_id", BillingPeriodLive.Show, :edit_bill
     end
 
     scope "/", GuimbalWaterworksWeb do

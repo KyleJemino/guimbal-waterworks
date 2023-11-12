@@ -18,7 +18,7 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
      |> assign(:filter_params, params)
      |> assign(:clean_params, Map.drop(params, ["id", "member_id"]))
      |> assign_member(params)
-     |> assign_bill()
+     |> assign_bill(socket.assigns.live_action, params)
      |> assign_return_to()}
   end
 
@@ -38,6 +38,24 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
       )
 
     {:noreply, push_patch(socket, to: create_bill_path)}
+  end
+
+  def handle_info({:edit_bill, bill_id}, socket) do
+    %{
+      clean_params: clean_params,
+      billing_period: billing_period
+    } = socket.assigns
+
+    edit_bill_path =
+      Routes.billing_period_show_path(
+        socket,
+        :edit_bill,
+        billing_period,
+        bill_id,
+        clean_params
+      )
+
+    {:noreply, push_patch(socket, to: edit_bill_path)}
   end
 
   defp page_title(:edit), do: "Edit Billing period"
@@ -67,7 +85,16 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
     end
   end
 
-  defp assign_bill(socket) do
+  defp assign_bill(socket, live_action, params) when live_action == :edit_bill do
+    bill =
+      params
+      |> Map.fetch!("bill_id")
+      |> Bills.get_bill_by_id()
+
+    assign(socket, :bill, bill)
+  end
+
+  defp assign_bill(socket, live_action, _params) do
     case Map.fetch(socket.assigns, :member) do
       {:ok, member} when not is_nil(member) ->
         bill =

@@ -90,6 +90,19 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
      |> patch_params_path()}
   end
 
+  @impl true
+  def handle_event("edit_bill", %{"bill-id" => bill_id} = _params, socket) do
+    send(
+      self(), 
+      {
+        socket.assigns.edit_event_name,
+        bill_id
+      }
+    )
+
+    {:noreply, socket}
+  end
+
   defp assign_bills_with_calculation(socket) do
     %{
       base_params: base_params,

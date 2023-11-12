@@ -36,6 +36,12 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     Bill.changeset(bill, params)
   end
 
+  def update_bill(bill, params) do
+    bill
+    |> Bill.changeset(params)
+    |> Repo.update()
+  end
+
   def new_bill(params) do
     params_with_defaults =
       params

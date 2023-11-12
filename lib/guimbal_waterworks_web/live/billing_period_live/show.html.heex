@@ -23,13 +23,26 @@
     <% else %>
       <.live_component
         module={GuimbalWaterworksWeb.BillLive.FormComponent}
-        id={@bill.id || :new}
+        id={:new}
         title={"New Bill for #{Display.full_name(@member)}"}
         action={:new}
         bill={@bill}
         return_to={@return_to}
       />
     <% end %>
+  </.modal>
+<% end %>
+
+<%= if @live_action in [:edit_bill] do %>
+  <.modal return_to={@return_to}>
+      <.live_component
+        module={GuimbalWaterworksWeb.BillLive.FormComponent}
+        id={@bill.id}
+        title={"Edit Bill"}
+        action={:edit}
+        bill={@bill}
+        return_to={@return_to}
+      />
   </.modal>
 <% end %>
 
@@ -91,6 +104,8 @@
          "billing_period_id" => @billing_period.id
          }}
          filter_params={@filter_params}
+         edit_event_name={:edit_bill}
+         current_users={@current_users}
          />
        <% end %>
     </div>
