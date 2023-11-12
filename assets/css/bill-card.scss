@@ -34,6 +34,11 @@
 
 .bill-content {
   @apply pt-4 h-max;
+
+  background-image: url("/images/bill-background.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .death-aid-section {
