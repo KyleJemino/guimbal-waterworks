@@ -42,7 +42,8 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Index do
       })
 
     Bills.list_billing_periods(%{
-      "preload" => [rate: rate_query]
+      "preload" => [rate: rate_query],
+      "order_by" => [desc: :due_date]
     })
   end
 end
