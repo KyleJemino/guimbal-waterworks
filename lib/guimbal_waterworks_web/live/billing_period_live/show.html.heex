@@ -1,12 +1,12 @@
 <%= if @live_action in [:edit] do %>
-  <.modal return_to={Routes.billing_period_show_path(@socket, :show, @billing_period)}>
+  <.modal return_to={@return_to}>
     <.live_component
       module={GuimbalWaterworksWeb.BillingPeriodLive.FormComponent}
       id={@billing_period.id}
       title={@page_title}
       action={@live_action}
       billing_period={@billing_period}
-      return_to={Routes.billing_period_show_path(@socket, :show, @billing_period)}
+      return_to={@return_to}
     />
   </.modal>
 <% end %>
@@ -15,7 +15,7 @@
   <h1><%= Display.display_period(@billing_period) %></h1>
 
   <div class="page-button-container mt-3">
-    <%= live_patch "Edit", to: Routes.billing_period_show_path(@socket, :edit, @billing_period), class: "button -dark" %>
+    <%= live_patch "Edit", to: Routes.billing_period_show_path(@socket, :edit, @billing_period, @clean_params), class: "button -dark" %>
   </div>
 
 

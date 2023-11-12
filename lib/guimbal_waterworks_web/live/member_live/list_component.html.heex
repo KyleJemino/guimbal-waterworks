@@ -117,11 +117,11 @@
             <SC.pop_up_menu target_id={member.id}>
                 <%= live_redirect "Profile", to: Routes.member_show_path(@socket, :show, member), class: "" %>
                 <SC.render_for_roles roles={[:admin]} user={@current_users}>
-                <%= live_patch "Edit Member", to: Routes.member_index_path(@socket, :edit, member), class: ""%>
-                <%= live_patch "Create Bill", to: Routes.member_index_path(@socket, :new_bill, member), class: "" %>
+                <%= live_patch "Edit Member", to: Routes.member_index_path(@socket, :edit, member, @filter_params), class: ""%>
+                <%= live_patch "Create Bill", to: Routes.member_index_path(@socket, :new_bill, member, @filter_params), class: "" %>
                 </SC.render_for_roles>
                 <SC.render_for_roles roles={[:cashier]} user={@current_users}>
-                <%= live_patch "Pay Bills", to: Routes.member_index_path(@socket, :payment, member), class: "" %>
+                <%= live_patch "Pay Bills", to: Routes.member_index_path(@socket, :payment, member, @filter_params), class: "" %>
                 </SC.render_for_roles>
                 <SC.render_for_roles roles={[:manager]} user={@current_users}>
                 <button

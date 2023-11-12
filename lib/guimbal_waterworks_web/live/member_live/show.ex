@@ -24,7 +24,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:member, member)
      |> assign(:bill, bill)
-     |> assign(:filter_params, params)}
+     |> assign(:filter_params, params)
+     |> assign(:clean_params, Map.drop(params, ["id"]))}
   end
 
   @impl true
