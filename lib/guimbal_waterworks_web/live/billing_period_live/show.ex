@@ -24,9 +24,10 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
 
   defp assign_return_to(socket) do
     params = socket.assigns.filter_params
-    return_to = 
+
+    return_to =
       Routes.billing_period_show_path(
-        socket, 
+        socket,
         :show,
         Map.get(params, "id"),
         socket.assigns.clean_params
