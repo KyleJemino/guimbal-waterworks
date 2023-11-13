@@ -56,7 +56,7 @@ members =
 # Create billing periods from march
 current_month = Timex.now().month
 months =
-  if current_month > 6 do
+  if current_month > 7 do
     (current_month - 6)..current_month
   else
     1..current_month
@@ -71,14 +71,14 @@ billing_periods =
       |> Timex.month_name()
       |> String.upcase()
 
-    next_month = x + 1
+    prev_month = x - 1
 
     due_date =
-      Date.new!(2023, next_month, 1)
+      Date.new!(2023, x, 1)
       |> Date.end_of_month()
 
     from =
-      Date.new!(2023, x, 1)
+      Date.new!(2023, prev_month, 1)
 
     to = Date.end_of_month(from)
 
@@ -144,7 +144,7 @@ Enum.each(members, fn member ->
         |> Enum.join(",")
 
       payment_attrs = %{
-        "or" => Enum.random(0..1_000_000_000),
+        "or" => "#{Enum.random(0..1_000_000_000)}",
         "bill_ids" => bill_ids,
         "member_id" => member.id,
         "user_id" => cashier.id
