@@ -22,7 +22,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
         "member_id" => member_id,
         "status" => "unpaid",
         "preload" => [:payment, :member, billing_period: [:rate]],
-        "order_by" => [asc: :inserted_at]
+        "order_by" => "oldest_first"
       })
 
     {bills_display, payment_options} =
