@@ -3,6 +3,7 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
   import Ecto.Changeset
 
   alias GuimbalWaterworks.Bills.Bill
+  alias GuimbalWaterworks.Bills.Rate
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -12,9 +13,7 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
     field :month, :string
     field :year, :string
     field :due_date, :date
-    field :personal_rate, :decimal
-    field :business_rate, :decimal
-    field :franchise_tax_rate, :decimal
+    belongs_to :rate, Rate
 
     embeds_many :death_aid_recipients, DeathAidRecipient, on_replace: :delete do
       field :name, :string
@@ -34,9 +33,7 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
       :month,
       :year,
       :due_date,
-      :personal_rate,
-      :business_rate,
-      :franchise_tax_rate
+      :rate_id
     ])
     |> validate_required([
       :from,
@@ -44,18 +41,11 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
       :month,
       :year,
       :due_date,
-      :personal_rate,
-      :business_rate,
-      :franchise_tax_rate
+      :rate_id
     ])
     |> validate_inclusion(:month, GuimbalWaterworks.Constants.months())
+    |> foreign_key_constraint(:rate_id)
     |> validate_format(:year, ~r/^\d{4}$/)
-    |> validate_number(
-      :franchise_tax_rate,
-      greater_than_or_equal_to: 0,
-      less_than_or_equal_to: 1,
-      message: "Must be between 0 and 1"
-    )
     |> validate_from_and_to()
     |> unique_constraint(
       :month,

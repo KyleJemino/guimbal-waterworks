@@ -2,11 +2,12 @@
   @apply font-medium flex flex-col gap-4;
 
   width: 10cm;
-  height: 14cm;
+  height: 13cm;
   padding: 1.0cm 0.5cm 0.5cm 0.5cm;
 
   font-size: 12px;
   border: 1px dotted black;
+  break-inside: avoid;
 }
 
 .bill-header {
@@ -34,6 +35,11 @@
 
 .bill-content {
   @apply pt-4 h-max;
+
+  background-image: url("/images/bill-background.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .death-aid-section {

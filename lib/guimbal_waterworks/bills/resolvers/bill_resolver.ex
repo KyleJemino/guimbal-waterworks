@@ -3,6 +3,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   alias Decimal, as: D
 
   alias GuimbalWaterworks.Bills.Bill
+  alias GuimbalWaterworks.Bills.Rate
   alias GuimbalWaterworks.Bills.Queries.BillQuery, as: BQ
   alias GuimbalWaterworks.Bills.BillingPeriod
   alias GuimbalWaterworks.Members.Member
@@ -35,13 +36,18 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     Bill.changeset(bill, params)
   end
 
+  def update_bill(bill, params) do
+    bill
+    |> Bill.changeset(params)
+    |> Repo.update()
+  end
+
   def new_bill(params) do
     params_with_defaults =
       params
       |> Map.merge(
         %{
           membership_fee?: false,
-          adv_fee?: false,
           reconnection_fee?: false
         },
         fn _k, v1, _v2 -> v1 end
@@ -52,7 +58,9 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def calculate_bill(
         %Bill{} = bill,
-        %BillingPeriod{} = billing_period,
+        %BillingPeriod{
+          rate: %Rate{} = rate
+        } = billing_period,
         %Member{
           type: member_type,
           mda?: mda?
@@ -62,36 +70,37 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       when member_type in [:personal, :business] do
     %{
       reading: reading,
-      adv_fee?: adv_fee?,
       membership_fee?: membership_fee?,
       reconnection_fee?: reconnection_fee?
     } = bill
 
     %{
-      personal_rate: personal_rate,
-      business_rate: business_rate,
-      franchise_tax_rate: tax_rate,
       due_date: due_date
     } = billing_period
 
-    base_rate =
+    base_amount =
       case member_type do
-        :personal -> personal_rate
-        :business -> business_rate
+        :personal ->
+          rate.personal_prices
+          |> Map.get("#{reading}")
+          |> D.new()
+
+        :business ->
+          D.mult(rate.business_rate, reading)
       end
 
-    base_amount = D.mult(base_rate, reading)
+    tax_rate = D.new(rate.tax_rate)
+
     franchise_tax_amount = D.mult(base_amount, tax_rate)
-    adv_amount = D.new(if adv_fee?, do: 150, else: 0)
 
-    membership_amount = D.new(if membership_fee?, do: 100, else: 0)
+    membership_amount = D.new(if membership_fee?, do: rate.tax_rate, else: 0)
 
-    reconnection_amount = D.new(if reconnection_fee?, do: 100, else: 0)
+    reconnection_amount = D.new(if reconnection_fee?, do: rate.reconnection_fee, else: 0)
 
     date_to_compare = if not is_nil(payment), do: payment.paid_at, else: Date.utc_today()
 
     is_overdue = Date.diff(date_to_compare, due_date) > 0
-    surcharge_amount = D.new(if is_overdue, do: 20, else: 0)
+    surcharge_amount = D.new(if is_overdue, do: rate.surcharge_fee, else: 0)
 
     death_aid_amount =
       if mda? do
@@ -105,7 +114,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     total =
       base_amount
       |> D.add(franchise_tax_amount)
-      |> D.add(adv_amount)
       |> D.add(membership_amount)
       |> D.add(reconnection_amount)
       |> D.add(surcharge_amount)
@@ -115,7 +123,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
      %{
        base_amount: base_amount,
        franchise_tax_amount: franchise_tax_amount,
-       adv_amount: adv_amount,
        membership_amount: membership_amount,
        reconnection_amount: reconnection_amount,
        surcharge: surcharge_amount,

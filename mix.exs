@@ -20,7 +20,7 @@ defmodule GuimbalWaterworks.MixProject do
   def application do
     [
       mod: {GuimbalWaterworks.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :xlsxir]
     ]
   end
 
@@ -55,7 +55,8 @@ defmodule GuimbalWaterworks.MixProject do
       {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
       {:timex, "~> 3.0"},
       {:faker, "~> 0.17"},
-      {:number, "~> 1.0.1"}
+      {:number, "~> 1.0.1"},
+      {:xlsxir, "~> 1.6.4"}
     ]
   end
 

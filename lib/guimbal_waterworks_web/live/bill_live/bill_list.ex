@@ -9,7 +9,6 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
   @init_calculation_map %{
     base_amount: 0,
     franchise_tax_amount: 0,
-    adv_amount: 0,
     membership_amount: 0,
     reconnection_amount: 0,
     surcharge: 0,
@@ -91,6 +90,19 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
      |> patch_params_path()}
   end
 
+  @impl true
+  def handle_event("edit_bill", %{"bill-id" => bill_id} = _params, socket) do
+    send(
+      self(),
+      {
+        socket.assigns.edit_event_name,
+        bill_id
+      }
+    )
+
+    {:noreply, socket}
+  end
+
   defp assign_bills_with_calculation(socket) do
     %{
       base_params: base_params,
@@ -99,7 +111,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
 
     list_params =
       filter_params
-      |> Map.put("preload", [:billing_period, :member, :payment])
+      |> Map.put("preload", [:payment, :member, billing_period: [:rate]])
       |> Map.put("order_by", "default")
       |> Map.merge(base_params)
       |> Page.pagination_to_query_params()

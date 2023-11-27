@@ -18,7 +18,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
      socket
      |> apply_action(socket.assigns.live_action, params)
      |> assign_payment(socket.assigns.live_action, params)
-     |> assign(:filter_params, params)}
+     |> assign(:filter_params, Map.drop(params, ["id"]))}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do

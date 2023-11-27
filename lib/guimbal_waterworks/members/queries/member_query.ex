@@ -32,6 +32,14 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
     |> query_by(Map.delete(params, "middle_name"))
   end
 
+  defp query_by(query, %{"unique_identifier" => unique_identifier} = params) do
+    unique_identifier_query = "%#{unique_identifier}%"
+
+    query
+    |> where([q], ilike(q.unique_identifier, ^unique_identifier_query))
+    |> query_by(Map.delete(params, "unique_identifier"))
+  end
+
   defp query_by(query, %{"street" => "All"} = params) do
     query_by(query, Map.delete(params, "street"))
   end

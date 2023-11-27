@@ -109,6 +109,10 @@ defmodule GuimbalWaterworksWeb.Router do
       live "/billing_periods/:id/show/edit", BillingPeriodLive.Show, :edit
 
       live "/requests", RequestLive.Index, :index
+
+      live "/rates", RateLive.Index, :index
+      live "/rates/new", RateLive.Upload, :new
+      live "/rates/:id", RateLive.Show, :show
     end
 
     scope "/", GuimbalWaterworksWeb do
@@ -119,6 +123,10 @@ defmodule GuimbalWaterworksWeb.Router do
 
       live "/members/:id/show/edit", MemberLive.Show, :edit
       live "/members/:id/show/new-bill", MemberLive.Show, :new_bill
+      live "/members/:id/show/edit-bill/:bill_id", MemberLive.Show, :edit_bill
+      live "/billing_periods/:id/new-bill", BillingPeriodLive.Show, :new_bill
+      live "/billing_periods/:id/new-bill/:member_id", BillingPeriodLive.Show, :new_bill
+      live "/billing_periods/:id/edit-bill/:bill_id", BillingPeriodLive.Show, :edit_bill
     end
 
     scope "/", GuimbalWaterworksWeb do

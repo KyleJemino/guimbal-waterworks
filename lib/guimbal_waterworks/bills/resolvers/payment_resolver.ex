@@ -34,7 +34,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
             bill_params = %{
               "id" => bill_id,
               "member_id" => member_id,
-              "preload" => [:billing_period, :member, :payment]
+              "preload" => [:member, :payment, billing_period: [:rate]]
             }
 
             case BillResolver.get_bill(bill_params) do

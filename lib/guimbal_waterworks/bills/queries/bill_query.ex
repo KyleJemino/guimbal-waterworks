@@ -33,6 +33,18 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     |> query_by(Map.delete(params, "order_by"))
   end
 
+  defp query_by(query, %{"order_by" => "oldest_first"} = params) do
+    query
+    |> order_by([q, billing_period: bp, member: m],
+      asc: bp.due_date,
+      asc: m.last_name,
+      asc: m.first_name,
+      asc: m.last_name,
+      asc: m.unique_identifier
+    )
+    |> query_by(Map.delete(params, "order_by"))
+  end
+
   defp query_by(query, %{"due_from" => due_date} = params) do
     query
     |> where([q, billing_period: bp], bp.due_date > ^due_date)

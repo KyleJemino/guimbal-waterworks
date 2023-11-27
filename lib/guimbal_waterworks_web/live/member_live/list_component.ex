@@ -21,8 +21,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     "last_name" => "",
     "unique_identifier" => "",
     "street" => "",
-    "type" => "all",
-    "actions?" => true
+    "type" => "all"
   }
 
   @valid_filter_keys [
@@ -50,16 +49,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
 
   @impl true
   def handle_event("filter_change", %{"search_params" => search_params}, socket) do
-    actions? =
-      search_params
-      |> Map.get("actions?")
-      |> String.to_existing_atom()
-
-    format_params =
-      search_params
-      |> Map.replace!("actions?", actions?)
-
-    {:noreply, assign_search_params(socket, format_params)}
+    {:noreply, assign_search_params(socket, search_params)}
   end
 
   def handle_event("filter_submit", %{"search_params" => search_params}, socket) do

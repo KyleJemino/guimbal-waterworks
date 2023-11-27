@@ -7,7 +7,8 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   def update(%{bill: bill} = assigns, socket) do
     billing_period_options =
       %{
-        "with_no_bill_for_member_id" => bill.member_id
+        "with_no_bill_for_member_id" => bill.member_id,
+        "order_by" => [desc: :due_date]
       }
       |> Bills.list_billing_periods()
       |> Enum.map(fn period ->
@@ -45,6 +46,19 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  defp save_bill(socket, :edit, bill_params) do
+    case Bills.update_bill(socket.assigns.bill, bill_params) do
+      {:ok, bill} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Bill updated successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
+
+      {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
   end

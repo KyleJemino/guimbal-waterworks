@@ -1,0 +1,47 @@
+<div class="form-modal-container">
+  <h1 class="text-center"><%= @title %></h1>
+
+  <.form
+    let={f}
+    for={:search}
+    id="member-form"
+    phx-target={@myself}
+    phx-change="search"
+    phx-submit="search"
+    class="form-component grid grid-cols-3 mt-4"
+    >
+  
+    <div class="field-group">
+      <%= label f, :first_name %>
+      <%= text_input f, :first_name, value: @search_params["first_name"] %>
+    </div>
+    
+    <div class="field-group">
+      <%= label f, :middle_name %>
+      <%= text_input f, :middle_name, value: @search_params["middle_name"] %>
+    </div>
+    
+    <div class="field-group">
+      <%= label f, :last_name %>
+      <%= text_input f, :last_name, value: @search_params["last_name"] %>
+    </div>
+    
+    <div class="field-group">
+      <%= label f, :unique_identifier %>
+      <%= text_input f, :unique_identifier, value: @search_params["unique_identifier"] %>
+    </div>
+  </.form>
+
+  <div class="mt-4 bg-blue-50 rounded border border-b-0 border-black flex flex-col">
+    <%= for member <- @members do %>
+      <button 
+        phx-click="select" 
+        phx-value-member-id={member.id} 
+        phx-target={@myself}
+        class="py-4 border-b border-black"
+        >
+        <%= Display.full_name(member) %>
+      </button>
+    <% end %>
+  </div>
+</div>

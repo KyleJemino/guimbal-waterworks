@@ -32,6 +32,7 @@
     <%= error_tag f, :reading %>
   </div>
   
+  <%= if is_nil(@bill.billing_period_id) do %>
   <div class="field-group">
     <%= label f, :billing_period_id, "Billing Period" %>
     <%= select( 
@@ -47,18 +48,12 @@
       </span>
     <% end %>
   </div>
+<% end %>
 
   <div class="field-group">
     <div class="flex flex-row gap-2 items-center">
       <%= checkbox f, :membership_fee? %>
       <%= label f, :membership_fee?, "Should pay membership fee?", class: "font-medium" %>
-    </div>
-  </div>
-
-  <div class="field-group">
-    <div class="flex flex-row gap-2 items-center">
-      <%= checkbox f, :adv_fee? %>
-      <%= label f, :adv_fee?, "Should pay advance fee?", class: "font-medium" %>
     </div>
   </div>
 

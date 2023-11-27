@@ -6,6 +6,20 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.FormComponent do
   alias Bills.BillingPeriod
 
   @impl true
+  def mount(socket) do
+    rates =
+      Bills.list_rates(%{
+        "limit" => 5,
+        "order_by" => "default",
+        "select" => [:id, :title]
+      })
+
+    rate_options = Enum.map(rates, &{&1.title, &1.id})
+
+    {:ok, assign(socket, :rate_options, rate_options)}
+  end
+
+  @impl true
   def update(%{billing_period: billing_period} = assigns, socket) do
     changeset = Bills.change_billing_period(billing_period)
 

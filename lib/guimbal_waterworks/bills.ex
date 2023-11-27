@@ -10,8 +10,10 @@ defmodule GuimbalWaterworks.Bills do
   alias GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver, as: BPR
   alias GuimbalWaterworks.Bills.Resolvers.BillResolver, as: BR
   alias GuimbalWaterworks.Bills.Resolvers.PaymentResolver, as: PR
+  alias GuimbalWaterworks.Bills.Resolvers.RateResolver, as: RR
 
   alias GuimbalWaterworks.Bills.Queries.BillQuery, as: BQ
+  alias GuimbalWaterworks.Bills.Queries.RateQuery, as: RQ
 
   defdelegate list_billing_periods(params \\ %{}), to: BPR
 
@@ -103,6 +105,7 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate get_bill_by_id(id), to: BR
   defdelegate create_bill(params \\ %{}), to: BR
   defdelegate change_bill(bill, params \\ %{}), to: BR
+  defdelegate update_bill(bill, params), to: BR
   defdelegate new_bill(params \\ %{}), to: BR
   defdelegate calculate_bill(bill, billing_period, member, payment), to: BR
   defdelegate calculate_bill!(bill), to: BR
@@ -113,4 +116,10 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate create_payment(params), to: PR
   defdelegate change_payment(payment, params \\ %{}), to: PR
   defdelegate count_payments(params \\ %{}), to: PR
+
+  defdelegate create_rate(attrs \\ %{}), to: RR
+  defdelegate rate_changeset(rate, attrs \\ %{}), to: RR
+  defdelegate list_rates(params \\ %{}), to: RR
+  defdelegate get_rate(params \\ %{}), to: RR
+  defdelegate query_rate(params \\ %{}), to: RQ
 end
