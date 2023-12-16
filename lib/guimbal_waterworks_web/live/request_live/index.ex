@@ -16,6 +16,10 @@ defmodule GuimbalWaterworksWeb.RequestLive.Index do
   end
 
   defp assign_requests(socket) do
-    assign(socket, :requests, Requests.list_requests())
+    assign(socket, :requests, Requests.list_requests(%{
+      "active?" => true,
+      "order_by" => "latest",
+      "preload" => [:user]
+    }))
   end
 end

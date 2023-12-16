@@ -16,7 +16,7 @@
         </tr>
         <%= for request <- @requests do %>
           <tr class="data-row">
-            <td class="data"><%= request.user_id %></td>
+            <td class="data"><%= Display.full_name(request.user) %></td>
             <td class="data text-center"><%= request.type %></td>
             <td class="action"></td>
           </tr>
