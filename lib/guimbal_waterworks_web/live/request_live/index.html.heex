@@ -18,7 +18,16 @@
           <tr class="data-row">
             <td class="data"><%= Display.full_name(request.user) %></td>
             <td class="data text-center"><%= request.type %></td>
-            <td class="action"></td>
+            <td class="actions text-center">
+              <div class="inline-flex gap-2 flex-row">
+                <button phx-click="approve" phx-value-request_id={request.id} class="button -dark">
+                  Approve
+                </button>
+                <button phx-click="reject" phx-value-request_id={request.id} class="button -table -caution">
+                  Reject
+                </button>
+              </div>
+            </td>
           </tr>
         <% end %>
       </table>
