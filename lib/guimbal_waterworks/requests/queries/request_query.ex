@@ -1,6 +1,7 @@
 defmodule GuimbalWaterworks.Requests.Queries.RequestQuery do
   import Ecto.Query
   alias GuimbalWaterworks.Requests.Request
+  alias GuimbalWaterworks.Accounts.Users
 
   def query_request(params) do
     from(r in Request, as: :request)
@@ -16,6 +17,12 @@ defmodule GuimbalWaterworks.Requests.Queries.RequestQuery do
       end
 
     query_by(final_query, Map.delete(params, "active?"))
+  end
+
+  defp query_by(query, %{"order_by" => "latest"} = params) do
+    query
+    |> order_by([q], desc: q.inserted_at)
+    |> query_by(Map.delete(params, "order_by"))
   end
 
   use GuimbalWaterworks, :basic_queries
