@@ -1,7 +1,6 @@
 defmodule GuimbalWaterworks.Requests.Queries.RequestQuery do
   import Ecto.Query
   alias GuimbalWaterworks.Requests.Request
-  alias GuimbalWaterworks.Accounts.Users
 
   def query_request(params) do
     from(r in Request, as: :request)
