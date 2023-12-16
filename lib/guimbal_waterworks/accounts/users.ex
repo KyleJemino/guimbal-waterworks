@@ -128,7 +128,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
   """
   def password_changeset(users, attrs, opts \\ []) do
     users
-    |> cast(attrs, [:password])
+    |> cast(attrs, [:password, :password_confirmation])
     |> validate_confirmation(:password, message: "does not match password")
     |> validate_password(opts)
   end

@@ -6,6 +6,7 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
   alias GuimbalWaterworks.Requests.Request
   alias GuimbalWaterworks.Token
   alias GuimbalWaterworks.Accounts
+  alias GuimbalWaterworks.Helpers
   alias Accounts.Users
   alias GuimbalWaterworks.Requests.Queries.RequestQuery, as: RQ
 
@@ -21,6 +22,12 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
     params
     |> RQ.query_request()
     |> Repo.one()
+  end
+
+  def get_request!(params \\ %{}) do
+    params
+    |> RQ.query_request()
+    |> Repo.one!()
   end
 
   def create_request(params) do
@@ -60,6 +67,55 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
     |> foreign_key_constraint(:user_id)
     |> validate_password()
     |> maybe_add_token()
+  end
+
+  def approve_request(%Request{type: "password_change"} = request) do
+    password_multi_result =
+      request
+      |> password_change_multi()
+      |> Repo.transaction()
+
+    case password_multi_result do
+      {:ok, %{approved_request: request}} -> {:ok, request}
+      {:error, _op, _val, _changes} = result -> 
+        IO.inspect result
+        {:error, :failed_multi}
+    end
+  end
+
+  def used_changeset(request) do
+    change(request, used_at: Helpers.db_now())
+  end
+
+  defp password_change_multi(
+    %{
+      user_id: user_id,
+      token: token
+    } = request
+  ) do
+    Multi.new()
+    |> Multi.run(:user, fn _repo, _multi ->
+      {:ok, Accounts.get_users!(user_id)}
+    end)
+    |> Multi.run(:password_attrs, fn _repo, _multi ->
+      {:ok, %{"password" => new_password}} = Joken.peek_claims(token)
+
+      {:ok, %{
+        "password" => new_password,
+        "password_confirmation" => new_password
+      }}
+    end)
+    |> Multi.update(:updated_user,
+      fn %{
+        user: user,
+        password_attrs: password_attrs
+      } ->
+        Users.password_changeset(user, password_attrs)
+      end
+    )
+    |> Multi.update(:approved_request, fn _multi ->
+      used_changeset(request)
+    end)
   end
 
   defp maybe_add_token(changeset) when changeset.valid? do

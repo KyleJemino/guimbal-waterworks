@@ -16,8 +16,12 @@ defmodule GuimbalWaterworksWeb.RequestLive.Index do
   end
 
   def handle_event("approve", %{"request_id" => request_id}, socket) do
-    IO.inspect request_id
-    {:noreply, socket}
+    with request <- Requests.get_request!(%{"id" => request_id}),
+         {:ok, _request} <- Requests.approve_request(request)
+    do
+      request
+    end
+    {:noreply, assign_requests(socket)}
   end
 
   def handle_event("reject", params, socket) do
