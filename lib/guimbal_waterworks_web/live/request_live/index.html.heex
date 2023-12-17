@@ -1,0 +1,36 @@
+<div class="page-container">
+  <h1>Requests</h1>
+  <div class="mt-3 flex flex-col gap-3">
+    <div class="overflow-auto">
+      <table class="data-table">
+        <tr class="header-row">
+          <th class="header">
+            Name
+          </th>
+          <th class="header">
+            Type
+          </th>
+          <th class="header">
+            Actions
+          </th>
+        </tr>
+        <%= for request <- @requests do %>
+          <tr class="data-row">
+            <td class="data"><%= Display.full_name(request.user) %></td>
+            <td class="data text-center"><%= request.type %></td>
+            <td class="actions text-center">
+              <div class="inline-flex gap-2 flex-row">
+                <button phx-click="approve" phx-value-request_id={request.id} class="button -dark">
+                  Approve
+                </button>
+                <button phx-click="reject" phx-value-request_id={request.id} class="button -table -caution">
+                  Reject
+                </button>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>

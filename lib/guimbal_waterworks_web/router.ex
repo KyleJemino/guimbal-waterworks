@@ -34,6 +34,8 @@ defmodule GuimbalWaterworksWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/forgot_password", RequestController, :forgot_password
+    post "/forgot_password", RequestController, :forgot_password_token
   end
 
   # Other scopes may use custom stacks.
@@ -105,6 +107,9 @@ defmodule GuimbalWaterworksWeb.Router do
       live "/billing_periods/new", BillingPeriodLive.Index, :new
       live "/billing_periods/:id/edit", BillingPeriodLive.Index, :edit
       live "/billing_periods/:id/show/edit", BillingPeriodLive.Show, :edit
+
+      live "/requests", RequestLive.Index, :index
+
       live "/rates", RateLive.Index, :index
       live "/rates/new", RateLive.Upload, :new
       live "/rates/:id", RateLive.Show, :show

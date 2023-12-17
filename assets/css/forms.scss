@@ -2,6 +2,10 @@
   @apply flex flex-col gap-4;
 }
 
+.form-component.-request {
+  @apply bg-blue-200 p-6 rounded-lg
+}
+
 .field-group {
   @apply flex flex-col gap-2;
 

@@ -1,8 +1,10 @@
 <div class="sub-nav">
   <%= if @current_users do %>
     <div class="nav-item"><%= @current_users.username %></div>
+    <%= link "Change Password", to: Routes.request_path(@conn, :forgot_password), class: "nav-item" %>
     <%= link "Log out", to: Routes.users_session_path(@conn, :delete), method: :delete, class: "nav-item" %>
   <% else %>
+    <%= link "Forgot Password", to: Routes.request_path(@conn, :forgot_password), class: "nav-item" %>
     <%= link "Register", to: Routes.users_registration_path(@conn, :new), class: "nav-item" %>
     <%= link "Log in", to: Routes.users_session_path(@conn, :new), class: "nav-item" %>
   <% end %>
