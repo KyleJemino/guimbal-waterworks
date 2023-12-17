@@ -16,17 +16,15 @@ defmodule GuimbalWaterworksWeb.RequestLive.Index do
   end
 
   def handle_event("approve", %{"request_id" => request_id}, socket) do
-    with request <- Requests.get_request!(%{"id" => request_id}),
-         {:ok, _request} <- Requests.approve_request(request)
-    do
-      request
-    end
+    with request <- Requests.get_request(%{"id" => request_id}),
+         {:ok, _request} <- Requests.approve_request(request), do: :ok
     {:noreply, assign_requests(socket)}
   end
 
-  def handle_event("reject", params, socket) do
-    IO.inspect params
-    {:noreply, socket}
+  def handle_event("reject", %{"request_id" => request_id}, socket) do
+    with request <- Requests.get_request(%{"id" => request_id}),
+         {:ok, _request} <- Requests.archive_request(request), do: :ok
+    {:noreply, assign_requests(socket)}
   end
 
   defp assign_requests(socket) do

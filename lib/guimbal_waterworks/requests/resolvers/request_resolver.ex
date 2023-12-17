@@ -70,21 +70,33 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
   end
 
   def approve_request(%Request{type: "password_change"} = request) do
-    password_multi_result =
       request
       |> password_change_multi()
       |> Repo.transaction()
+      |> case do
+        {:ok, %{approved_request: request}} -> {:ok, request}
+        {:error, _op, _val, _changes} = result -> 
+          IO.inspect result
+          {:error, :failed_multi}
+      end
+  end
 
-    case password_multi_result do
-      {:ok, %{approved_request: request}} -> {:ok, request}
-      {:error, _op, _val, _changes} = result -> 
-        IO.inspect result
-        {:error, :failed_multi}
+  def archive_request(request) do
+    request 
+    |> archive_changeset()
+    |> Repo.update()
+    |> case do
+      {:ok, %Request{} = request} -> {:ok, request}
+      {:error, changeset} -> {:error, changeset}
     end
   end
 
   def used_changeset(request) do
     change(request, used_at: Helpers.db_now())
+  end
+
+  def archive_changeset(request) do
+    change(request, archived_at: Helpers.db_now())
   end
 
   defp password_change_multi(

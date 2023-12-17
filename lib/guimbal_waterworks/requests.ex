@@ -6,4 +6,5 @@ defmodule GuimbalWaterworks.Requests do
   defdelegate list_requests(params \\ %{}), to: RR
   defdelegate get_request(params \\ %{}), to: RR
   defdelegate approve_request(request), to: RR
+  defdelegate archive_request(request), to: RR
 end
