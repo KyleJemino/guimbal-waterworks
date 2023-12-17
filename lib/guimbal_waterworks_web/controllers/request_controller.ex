@@ -18,9 +18,7 @@ defmodule GuimbalWaterworksWeb.RequestController do
         |> halt()
 
       {:error, _operation, changeset, _changes} ->
-        render(conn, "forgot_password.html",
-          changeset: changeset
-        )
+        render(conn, "forgot_password.html", changeset: changeset)
     end
   end
 end
