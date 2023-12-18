@@ -17,6 +17,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     "paid_to"
   ]
 
+  @impl true
   def update(assigns, socket) do
     {:ok,
      socket

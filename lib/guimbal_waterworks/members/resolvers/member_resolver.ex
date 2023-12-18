@@ -18,9 +18,9 @@ defmodule GuimbalWaterworks.Members.Resolvers.MemberResolver do
     |> Repo.update()
   end
 
-  def calculate_member_bills(%Member{bills: bills, type: type} = member) when is_list(bills) do
+  def calculate_member_bills(%Member{bills: bills} = member) when is_list(bills) do
     Enum.reduce(bills, 0, fn bill, acc ->
-      {:ok, %{total: total} = bill} =
+      {:ok, %{total: total}} =
         Bills.calculate_bill(bill, bill.billing_period, member, bill.payment)
 
       Decimal.add(total, acc)

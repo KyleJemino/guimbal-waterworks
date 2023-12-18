@@ -26,7 +26,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Print do
     )
   end
 
-  defp assign_members(%{assigns: %{filter_params: filter_params}} = socket) do
+  defp assign_members(socket) do
     list_params =
       socket.assigns.filter_params
       |> Map.merge(%{
