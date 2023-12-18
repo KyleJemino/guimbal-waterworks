@@ -78,7 +78,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   @impl true
   def handle_event("generate_csv", _params, socket) do
     {:noreply, 
-      push_event(socket, "generate", %{message: "generate-csv"})
+      push_event(socket, "generate", %{data: socket.assigns.table_data})
     }
   end
 
