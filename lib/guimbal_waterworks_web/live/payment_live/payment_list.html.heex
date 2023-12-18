@@ -27,47 +27,29 @@
         <th class="header">Date</th>
         <th class="header">Cashier</th>
       </tr>
-      <%= for payment <- @payments do %>
-        <tr class="data-row">
+      <%= for payment <- @table_data do %>
+        <tr class="data-row last:font-bold">
           <%= if @for == :billing_period do %>
-            <td class="data">
-              <%= Display.full_name(payment.member) %>
+            <td class="data name">
+              <%= payment.member %>
             </td>
           <% end %>
           <td class="data"><%= payment.or %></td>
           <td class="data">
-            <%= for bill <- @payment_bill_map[payment.id] do %>
-              <div class="flex flex-row justify-between">
-                <p><%= "#{Display.display_period(bill.billing_period)}:" %></p>
+            <%= for bill <- payment.bills do %>
+              <div class="flex flex-row justify-between last:border-t last:border-black">
+                <p><%= bill.name %></p>
                 <p><%= Display.money(bill.amount) %></p>
               </div>
             <% end %>
-            <div class="flex flex-row justify-between border-t border-black">
-              <p>TOTAL</p>
-              <p><%= Display.money(@payment_total_map[payment.id]) %></p>
-            </div>
           </td>
           <td class="data text-right">
-            <%= Display.money(payment.amount) %>
+            <%= Display.money(payment.total_paid) %>
           </td>
-          <td class="data"><%= Display.format_date(payment.paid_at) %></td>
-          <td class="data"><%= Display.full_name(payment.user) %></td>
+          <td class="data"><%= payment.paid_at %></td>
+          <td class="data"><%= payment.cashier %></td>
         </tr>
       <% end %>
-        <tr class="data-row">
-          <td class="data font-bold">Total</td>
-          <%= if @for == :billing_period do %>
-            <td class="data"></td>
-          <% end %>
-          <td class="data font-bold text-right">
-            <%= Display.money(@calculated_total) %>
-          </td>
-          <td class="data font-bold text-right">
-            <%= Display.money(@paid_total) %>
-          </td>
-          <td class="data"></td>
-          <td class="data"></td>
-        </tr>
     </table>
   </div>
   <Page.pagination_buttons 
