@@ -77,9 +77,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
 
   @impl true
   def handle_event("generate_csv", _params, socket) do
-    {:noreply, 
-      push_event(socket, "generate", %{data: socket.assigns.table_data})
-    }
+    {:noreply, push_event(socket, "generate", %{data: socket.assigns.table_data})}
   end
 
   defp assign_payments(socket) do
@@ -118,19 +116,17 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
         fn payment, acc ->
           {rows_acc, running_total} = acc
 
-          {reversed_bills_data, payment_total} = 
-            Enum.reduce(payment.bills, {[], 0}, 
-              fn bill, {bill_list, running_payment_total} ->
-                bill_total = Bills.get_bill_total(bill)
+          {reversed_bills_data, payment_total} =
+            Enum.reduce(payment.bills, {[], 0}, fn bill, {bill_list, running_payment_total} ->
+              bill_total = Bills.get_bill_total(bill)
 
-                bill_item = %{
-                  name: Display.display_period(bill.billing_period),
-                  amount: bill_total
-                }
+              bill_item = %{
+                name: Display.display_period(bill.billing_period),
+                amount: bill_total
+              }
 
-                {[bill_item | bill_list], D.add(running_payment_total, bill_total)}
-              end
-            )
+              {[bill_item | bill_list], D.add(running_payment_total, bill_total)}
+            end)
 
           bills_data =
             Enum.reverse([%{name: "TOTAL", amount: payment_total} | reversed_bills_data])
@@ -162,7 +158,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     table_data =
       reversed_payment_rows
       |> List.insert_at(0, total_row)
-      |> Enum.reverse
+      |> Enum.reverse()
 
     assign(socket, :table_data, table_data)
   end
