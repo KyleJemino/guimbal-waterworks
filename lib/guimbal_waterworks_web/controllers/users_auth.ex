@@ -25,10 +25,12 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
   disconnected on log out. The line can be safely removed
   if you are not using LiveView.
   """
+
+  def log_in_users(conn, users, params \\ %{})
   def log_in_users(
         conn,
         %Users{approved_at: approved_at, archived_at: archived_at} = users,
-        params \\ %{}
+        params
       )
       when not is_nil(approved_at) and is_nil(archived_at) do
     token = Accounts.generate_users_session_token(users)

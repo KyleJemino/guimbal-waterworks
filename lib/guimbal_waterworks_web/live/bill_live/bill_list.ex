@@ -50,7 +50,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
   end
 
   @impl true
-  def handle_event("filter_submit", %{"search_params" => search_params}, socket) do
+  def handle_event("filter_submit", _params, socket) do
     {:noreply,
      socket
      |> assign_pagination_params(%{
@@ -202,13 +202,6 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
         pagination_params: pagination_params
       }
     } = socket
-
-    id =
-      if for == :member do
-        base_params["member_id"]
-      else
-        base_params["billing_period_id"]
-      end
 
     updated_filter_params =
       search_params

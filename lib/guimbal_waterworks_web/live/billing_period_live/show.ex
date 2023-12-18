@@ -22,6 +22,7 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
      |> assign_return_to()}
   end
 
+  @impl true
   def handle_info({:create_member_bill, member_id}, socket) do
     %{
       clean_params: clean_params,
@@ -94,7 +95,7 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
     assign(socket, :bill, bill)
   end
 
-  defp assign_bill(socket, live_action, _params) do
+  defp assign_bill(socket, _live_action, _params) do
     case Map.fetch(socket.assigns, :member) do
       {:ok, member} when not is_nil(member) ->
         bill =

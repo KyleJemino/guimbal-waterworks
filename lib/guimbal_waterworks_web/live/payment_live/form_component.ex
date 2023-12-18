@@ -10,8 +10,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
           payment:
             %Payment{
               member_id: member_id
-            } = payment,
-          member: member
+            } = payment
         } = assigns,
         socket
       ) do

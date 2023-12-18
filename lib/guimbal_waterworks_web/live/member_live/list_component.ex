@@ -15,15 +15,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     "For Reconnection": :for_reconnection
   ]
 
-  @default_search_params %{
-    "first_name" => "",
-    "middle_name" => "",
-    "last_name" => "",
-    "unique_identifier" => "",
-    "street" => "",
-    "type" => "all"
-  }
-
   @valid_filter_keys [
     "last_name",
     "first_name",
@@ -52,7 +43,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     {:noreply, assign_search_params(socket, search_params)}
   end
 
-  def handle_event("filter_submit", %{"search_params" => search_params}, socket) do
+  def handle_event("filter_submit", _params, socket) do
     {:noreply,
      socket
      |> assign_pagination_params(%{

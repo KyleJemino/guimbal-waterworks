@@ -1,6 +1,5 @@
 defmodule GuimbalWaterworksWeb.MemberLive.Index do
   use GuimbalWaterworksWeb, :live_view
-  alias Phoenix.LiveView.JS
 
   alias GuimbalWaterworks.Members
   alias GuimbalWaterworks.Members.Member

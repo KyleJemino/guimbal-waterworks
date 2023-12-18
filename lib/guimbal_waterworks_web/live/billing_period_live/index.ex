@@ -2,7 +2,6 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Index do
   use GuimbalWaterworksWeb, :live_view
 
   alias GuimbalWaterworks.Bills
-  alias GuimbalWaterworks.Bills.BillingPeriod
 
   @impl true
   def mount(_params, _session, socket) do

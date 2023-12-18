@@ -19,7 +19,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
     field :approved_at, :utc_datetime
     field :archived_at, :utc_datetime
 
-    has_many :bills, Bill
+    has_many :bills, Bill, foreign_key: :user_id
 
     timestamps()
   end

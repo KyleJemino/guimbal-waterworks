@@ -3,7 +3,6 @@ defmodule GuimbalWaterworksWeb.UsersRegistrationController do
 
   alias GuimbalWaterworks.Accounts
   alias GuimbalWaterworks.Accounts.Users
-  alias GuimbalWaterworksWeb.UsersAuth
 
   plug :put_layout, "landing_page.html"
 
@@ -14,7 +13,7 @@ defmodule GuimbalWaterworksWeb.UsersRegistrationController do
 
   def create(conn, %{"users" => users_params}) do
     case Accounts.register_users(users_params) do
-      {:ok, users} ->
+      {:ok, _users} ->
         conn
         |> put_flash(:info, "Users created successfully. Pls wait for manager's approval.")
         |> redirect(to: Routes.users_session_path(conn, :new))

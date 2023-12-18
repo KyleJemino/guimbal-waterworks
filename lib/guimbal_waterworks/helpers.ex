@@ -6,8 +6,6 @@ defmodule GuimbalWaterworks.Helpers do
     final_index = count - 1
 
     Enum.reduce(list, {[[]], Enum.random(0..final_index), 0}, fn el, acc ->
-      {chunk_list, index_to_chunk, index} = acc
-
       case acc do
         {
           [current_chunk | prev_chunks],
