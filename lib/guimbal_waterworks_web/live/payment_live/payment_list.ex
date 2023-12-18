@@ -75,6 +75,11 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
      |> patch_params_path()}
   end
 
+  @impl true
+  def handle_event("generate_csv", _params, socket) do
+    {:noreply, push_event(socket, "generate", %{data: socket.assigns.table_data})}
+  end
+
   defp assign_payments(socket) do
     %{
       base_params: base_params,
@@ -103,45 +108,59 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     assign(socket, :payments, payments)
   end
 
-  defp assign_payment_calculations(socket) do
-    {payment_bill_map, payment_total_map, calculated_total, paid_total} =
+  defp assign_table_data(socket) do
+    {reversed_payment_rows, all_payments_total} =
       Enum.reduce(
         socket.assigns.payments,
-        {%{}, %{}, 0, 0},
-        fn
-          payment,
-          {payment_bill_map_acc, payment_total_map_acc, calculated_total_acc, paid_total_acc} ->
-            {bill_list, bills_total} =
-              Enum.reduce(
-                payment.bills,
-                {[], 0},
-                fn bill, {bill_list, payment_amount} ->
-                  bill_total = Bills.get_bill_total(bill)
+        {[], 0},
+        fn payment, acc ->
+          {rows_acc, running_total} = acc
 
-                  bill_with_total =
-                    bill
-                    |> Map.from_struct()
-                    |> Map.put(:amount, bill_total)
+          {reversed_bills_data, payment_total} =
+            Enum.reduce(payment.bills, {[], 0}, fn bill, {bill_list, running_payment_total} ->
+              bill_total = Bills.get_bill_total(bill)
 
-                  {[bill_with_total | bill_list], D.add(payment_amount, bill_total)}
-                end
-              )
+              bill_item = %{
+                name: Display.display_period(bill.billing_period),
+                amount: bill_total
+              }
 
-            {
-              Map.put(payment_bill_map_acc, payment.id, Enum.reverse(bill_list)),
-              Map.put(payment_total_map_acc, payment.id, bills_total),
-              D.add(calculated_total_acc, bills_total),
-              D.add(paid_total_acc, payment.amount)
-            }
+              {[bill_item | bill_list], D.add(running_payment_total, bill_total)}
+            end)
+
+          bills_data =
+            Enum.reverse([%{name: "TOTAL", amount: payment_total} | reversed_bills_data])
+
+          payment_data = %{
+            member: Display.full_name(payment.member),
+            or: payment.or,
+            bills: bills_data,
+            total_paid: payment.amount,
+            paid_at: Display.format_date(payment.paid_at),
+            cashier: Display.full_name(payment.user)
+          }
+
+          updated_total = D.add(running_total, payment_total)
+
+          {[payment_data | rows_acc], updated_total}
         end
       )
 
-    assign(socket, %{
-      payment_bill_map: payment_bill_map,
-      payment_total_map: payment_total_map,
-      calculated_total: calculated_total,
-      paid_total: paid_total
-    })
+    total_row = %{
+      member: "TOTAL",
+      or: "",
+      bills: [],
+      total_paid: all_payments_total,
+      paid_at: "",
+      cashier: ""
+    }
+
+    table_data =
+      reversed_payment_rows
+      |> List.insert_at(0, total_row)
+      |> Enum.reverse()
+
+    assign(socket, :table_data, table_data)
   end
 
   defp assign_pagination_information(%{assigns: assigns} = socket) do
@@ -197,7 +216,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   defp update_results(socket) do
     socket
     |> assign_payments()
-    |> assign_payment_calculations()
+    |> assign_table_data()
     |> assign_pagination_information()
   end
 
