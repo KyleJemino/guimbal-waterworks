@@ -4,6 +4,18 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver do
   alias GuimbalWaterworks.Bills.BillingPeriod
   alias GuimbalWaterworks.Bills.Queries.BillingPeriodQuery, as: BPQ
 
+  def get_billing_period(params \\ %{}) do
+    params
+    |> BPQ.query_billing_period()
+    |> Repo.one()
+  end
+
+  def get_billing_period!(params \\ %{}) do
+    params
+    |> BPQ.query_billing_period()
+    |> Repo.one!()
+  end
+
   def list_billing_periods(params \\ %{}) do
     params
     |> BPQ.query_billing_period()
