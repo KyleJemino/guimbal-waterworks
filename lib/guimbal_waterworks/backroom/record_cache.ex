@@ -1,4 +1,4 @@
-defmodule GuimbalWaterworks.RecordCache do
+defmodule GuimbalWaterworks.Backroom.RecordCache do
   use Agent
 
   alias GuimbalWaterworks.Bills
