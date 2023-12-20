@@ -3,31 +3,37 @@ defmodule GuimbalWaterworks.Backroom.RecordCache do
 
   alias GuimbalWaterworks.Bills
   alias GuimbalWaterworks.Bills.BillingPeriod
+  alias GuimbalWaterworks.Bills.Rate
 
-  def start_link(_opts) do
+  def start_link(_opts \\ %{}) do
     Agent.start_link(fn -> %{} end)
   end
 
   def get_record(cache, schema, record_id) do
     case fetch_from_server(cache, schema, record_id) do
-      record when not is_nil(record) -> record
-      _ ->
+      {:ok, record} -> record
+      {:error, _nil} ->
         add_record(cache, schema, record_id)
     end
+  end
+
+  def get_state(cache) do
+    Agent.get(cache, &(&1))
   end
 
   def stop(cache), do: Agent.stop(cache)
 
   defp fetch_from_server(cache, schema, record_id) do
-    Agent.get(agent,
+    Agent.get(cache,
       fn state ->
-        with 
-          record_key <- schema_to_key(schema),
-          schema_store when not is_nil(schema_store) <- Map.get(state, record_key),
-          record when not is_nil(record) <- Map.get(schema_store, record_id) do
-            record
+        with record_key <- schema_to_key(schema),
+             schema_store when not is_nil(schema_store) <- Map.get(state, record_key),
+             record when not is_nil(record) <- Map.get(schema_store, record_id) 
+        do
+          {:ok, record}
         else
-          nil
+          _ ->
+            {:error,  nil}
         end
       end
     )
@@ -55,20 +61,18 @@ defmodule GuimbalWaterworks.Backroom.RecordCache do
     case schema do
       Rate -> :rate
       BillingPeriod -> :billing_period
-      _ -> raise :invalid_schema
+      _ -> raise "invalid schema"
     end
   end
 
   defp fetch_record_from_db(schema, record_id) do
-    id_param = %{"id" => record_id}
-
     case schema do
       BillingPeriod ->
-        Bills.get_billing_period!(id_param)
+        Bills.get_billing_period!(record_id)
       Rate ->
-        Bills.get_rate!(id_param)
+        Bills.get_rate!(record_id)
       _ ->
-        raise :invalid_schema
+        raise "invalid schema"
     end
   end
 end

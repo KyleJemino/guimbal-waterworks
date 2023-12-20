@@ -15,8 +15,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.RateResolver do
     |> Repo.one()
   end
 
-  def get_rate!(params \\ %{}) do
-    params
+  def get_rate!(id) do
+    %{"id" => id}
     |> RQ.query_rate()
     |> Repo.one!()
   end

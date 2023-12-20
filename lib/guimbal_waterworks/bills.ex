@@ -99,7 +99,6 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate new_billing_period(), to: BPR
   defdelegate list_billing_periods(params \\ %{}), to: BPR
   defdelegate get_billing_period(params \\ %{}), to: BPR
-  defdelegate get_billing_period!(params \\ %{}), to: BPR
 
   defdelegate query_bill(params \\ %{}), to: BQ
   defdelegate list_bills(params \\ %{}), to: BR
@@ -122,6 +121,6 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate rate_changeset(rate, attrs \\ %{}), to: RR
   defdelegate list_rates(params \\ %{}), to: RR
   defdelegate get_rate(params \\ %{}), to: RR
-  defdelegate get_rate!(params \\ %{}), to: RR
+  defdelegate get_rate!(id), to: RR
   defdelegate query_rate(params \\ %{}), to: RQ
 end
