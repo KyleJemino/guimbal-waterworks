@@ -95,8 +95,6 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
           :member,
           :user,
           bills: [
-            :member,
-            :payment,
             billing_period: [:rate]
           ]
         ]
@@ -119,7 +117,8 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
 
           {reversed_bills_data, payment_total} =
             Enum.reduce(payment.bills, {[], 0}, fn bill, {bill_list, running_payment_total} ->
-              bill_total = Bills.get_bill_total(bill)
+              {:ok,  %{total: bill_total}} = 
+                Bills.calculate_bill(bill, bill.billing_period, payment.member, payment, bill.billing_period.rate)
 
               bill_item = %{
                 name: Display.display_period(bill.billing_period),
