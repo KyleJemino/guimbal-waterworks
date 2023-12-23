@@ -67,7 +67,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       due_date: due_date
     } = billing_period
 
-
     base_amount =
       case member.type do
         :personal ->
