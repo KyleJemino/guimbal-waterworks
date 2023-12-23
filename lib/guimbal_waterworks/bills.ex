@@ -15,8 +15,6 @@ defmodule GuimbalWaterworks.Bills do
   alias GuimbalWaterworks.Bills.Queries.BillQuery, as: BQ
   alias GuimbalWaterworks.Bills.Queries.RateQuery, as: RQ
 
-  defdelegate list_billing_periods(params \\ %{}), to: BPR
-
   @doc """
   Gets a single billing_period.
 
@@ -99,6 +97,8 @@ defmodule GuimbalWaterworks.Bills do
   end
 
   defdelegate new_billing_period(), to: BPR
+  defdelegate list_billing_periods(params \\ %{}), to: BPR
+  defdelegate get_billing_period(params \\ %{}), to: BPR
 
   defdelegate query_bill(params \\ %{}), to: BQ
   defdelegate list_bills(params \\ %{}), to: BR
@@ -107,6 +107,7 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate change_bill(bill, params \\ %{}), to: BR
   defdelegate update_bill(bill, params), to: BR
   defdelegate new_bill(params \\ %{}), to: BR
+  defdelegate calculate_bill(bill, billing_period, member, payment, rate), to: BR
   defdelegate calculate_bill(bill, billing_period, member, payment), to: BR
   defdelegate calculate_bill!(bill), to: BR
   defdelegate get_bill_total(bill), to: BR
@@ -121,5 +122,6 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate rate_changeset(rate, attrs \\ %{}), to: RR
   defdelegate list_rates(params \\ %{}), to: RR
   defdelegate get_rate(params \\ %{}), to: RR
+  defdelegate get_rate!(id), to: RR
   defdelegate query_rate(params \\ %{}), to: RQ
 end

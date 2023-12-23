@@ -56,7 +56,8 @@ defmodule GuimbalWaterworks.MixProject do
       {:timex, "~> 3.0"},
       {:faker, "~> 0.17"},
       {:number, "~> 1.0.1"},
-      {:xlsxir, "~> 1.6.4"}
+      {:xlsxir, "~> 1.6.4"},
+      {:benchee, "~> 1.0", only: :dev}
     ]
   end
 

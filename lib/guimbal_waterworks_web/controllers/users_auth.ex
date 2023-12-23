@@ -27,6 +27,7 @@ defmodule GuimbalWaterworksWeb.UsersAuth do
   """
 
   def log_in_users(conn, users, params \\ %{})
+
   def log_in_users(
         conn,
         %Users{approved_at: approved_at, archived_at: archived_at} = users,
