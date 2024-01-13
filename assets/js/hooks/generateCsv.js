@@ -1,9 +1,8 @@
-// import { mkConfig, generateCsv, download } from "export-to-csv"
+import { mkConfig, generateCsv, download } from "export-to-csv"
 
 export default {
   mounted() {
     this.handleEvent("generate", ({ data }) => {
-      {/*
       today = new Date()
 
       const csvConfig = mkConfig({ 
@@ -25,8 +24,6 @@ export default {
       const csv = generateCsv(csvConfig)(formattedData)
 
       download(csvConfig)(csv)
-      */}
-      console.log('generating')
     })
   }
 }
