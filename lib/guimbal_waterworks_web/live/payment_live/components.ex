@@ -61,7 +61,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.Components do
       </div>
       <div class="submit-container gap-4">
         <%= submit "Search", phx_disable_with: "Saving...", class: "button -filter" %>
-        <%= # <button phx-click="generate_csv" phx-target={@target} class="button -filter" id="generate-csv-button" phx-hook="GenerateCSV" > Generate Spreadsheet </button> %>
+        <button phx-click="generate_csv" phx-target={@target} class="button -filter" id="generate-csv-button" phx-hook="GenerateCSV" > Generate Spreadsheet </button>
        </div>
     </.form>
     """
