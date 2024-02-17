@@ -49,7 +49,7 @@
         </td>
         <td class="data text-right"><%= Decimal.round(bill.before, 2) %></td>
         <td class="data text-right"><%= Decimal.round(bill.after, 2) %></td>
-        <td class="data text-right"><%= Decimal.round(bill.reading, 2) %></td>
+        <td class="data text-right"><%= Decimal.round(Bills.get_bill_reading(bill)) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.membership_amount) %></td>
