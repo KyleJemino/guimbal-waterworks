@@ -5,6 +5,8 @@ defmodule GuimbalWaterworks.Accounts.Users do
   alias GuimbalWaterworks.Helpers
   alias GuimbalWaterworks.Bills.Bill
 
+  @roles [:manager, :admin, :cashier, :accountant]
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
@@ -12,7 +14,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
     field :first_name, :string
     field :middle_name, :string
     field :last_name, :string
-    field :role, Ecto.Enum, values: [:manager, :admin, :cashier]
+    field :role, Ecto.Enum, values: @roles
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
@@ -41,6 +43,8 @@ defmodule GuimbalWaterworks.Accounts.Users do
       validations on a LiveView form), this option can be set to `false`.
       Defaults to `true`.
   """
+  def roles(), do: @roles
+
   def registration_changeset(users, attrs, opts \\ []) do
     users
     |> cast(attrs, [
@@ -73,7 +77,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
     ])
     |> validate_username()
     |> validate_required([:first_name, :last_name, :role])
-    |> validate_inclusion(:role, [:manager, :admin, :cashier])
+    |> validate_inclusion(:role, @roles)
     |> validate_password(opts)
   end
 
@@ -148,7 +152,7 @@ defmodule GuimbalWaterworks.Accounts.Users do
     users
     |> cast(attrs, [:role])
     |> validate_required([:role])
-    |> validate_inclusion(:role, [:manager, :admin, :cashier])
+    |> validate_inclusion(:role, @roles)
   end
 
   @doc """
