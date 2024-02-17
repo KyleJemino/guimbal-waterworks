@@ -2,6 +2,9 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.RoleFormComponent do
   use GuimbalWaterworksWeb, :live_component
 
   alias GuimbalWaterworks.Accounts
+  alias GuimbalWaterworks.Helpers
+
+  @role_options Accounts.Users.roles() |> Helpers.generate_options_from_atoms()
 
   def update(%{employee: employee} = assigns, socket) do
     changeset = Accounts.change_user_role(employee)
@@ -10,7 +13,8 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.RoleFormComponent do
      socket
      |> assign(assigns)
      |> assign(:employee, employee)
-     |> assign(:changeset, changeset)}
+     |> assign(:changeset, changeset)
+     |> assign(:role_options, @role_options)}
   end
 
   def handle_event("validate", %{"users" => user_params}, socket) do
