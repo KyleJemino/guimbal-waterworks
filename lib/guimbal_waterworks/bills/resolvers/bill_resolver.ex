@@ -58,10 +58,13 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def calculate_bill(bill, billing_period, member, payment, rate) do
     %Bill{
-      reading: reading,
+      before: before,
+      after: after_reading,
       membership_fee?: membership_fee?,
       reconnection_fee?: reconnection_fee?
     } = bill
+
+    reading = after_reading - before
 
     %BillingPeriod{
       due_date: due_date
@@ -133,10 +136,13 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       )
       when member_type in [:personal, :business] do
     %{
-      reading: reading,
+      before: before,
+      after: after_reading,
       membership_fee?: membership_fee?,
       reconnection_fee?: reconnection_fee?
     } = bill
+
+    reading = after_reading - before
 
     %{
       due_date: due_date
@@ -228,4 +234,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     |> BQ.query_bill()
     |> Repo.aggregate(:count)
   end
+
+  def get_bill_reading(%Bill{ before: before, after: after_reading }), do: Decimal.sub(after_reading, before)
 end
