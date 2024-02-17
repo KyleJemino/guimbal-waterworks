@@ -17,7 +17,6 @@ defmodule GuimbalWaterworks.Bills.Bill do
   schema "bills" do
     field :before, :integer
     field :after, :integer
-    field :reading, :integer
     field :membership_fee?, :boolean
     field :reconnection_fee?, :boolean
 
