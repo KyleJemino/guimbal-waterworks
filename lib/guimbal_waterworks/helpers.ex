@@ -60,9 +60,11 @@ defmodule GuimbalWaterworks.Helpers do
 
   def generate_options_from_atoms(atom_list) do
     Enum.map(atom_list, fn atom ->
-      atom
-      |> Atom.to_string()
-      |> String.capitalize()
+      label =
+        atom
+        |> Atom.to_string()
+        |> String.capitalize()
+      {label, atom}
     end)
   end
 end
