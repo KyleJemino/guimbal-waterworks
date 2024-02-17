@@ -74,7 +74,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       case member.type do
         :personal ->
           rate.personal_prices
-          |> Map.get("#{reading}", 0)
+          |> Map.get("#{reading}")
           |> D.new()
 
         :business ->
@@ -152,7 +152,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       case member_type do
         :personal ->
           rate.personal_prices
-          |> Map.get("#{reading}")
+          |> Map.get("#{reading}", 0)
           |> D.new()
 
         :business ->
