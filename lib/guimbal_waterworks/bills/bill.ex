@@ -52,6 +52,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:billing_period_id)
     |> foreign_key_constraint(:user_id)
+    |> validate_from_before()
     |> unique_constraint(
       :billing_period_id,
       name: :bills_members_periods_uniq_idx,
@@ -63,5 +64,18 @@ defmodule GuimbalWaterworks.Bills.Bill do
     bill
     |> change(payment_id: payment_id)
     |> foreign_key_constraint(:payment_id)
+  end
+
+  defp validate_from_before(changeset) do
+    before_reading = fetch_field!(changeset, :before) || 0
+    after_reading = fetch_field!(changeset, :after) || 0
+
+    if (before_reading > after_reading) do
+      changeset
+      |> add_error(:before, "Before value must be greater than after")
+      |> add_error(:after, "After value must be less than or equal to before")
+    else
+      changeset
+    end
   end
 end
