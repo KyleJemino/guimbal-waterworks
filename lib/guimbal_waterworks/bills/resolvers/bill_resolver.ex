@@ -148,6 +148,10 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       due_date: due_date
     } = billing_period
 
+    IO.inspect before
+    IO.inspect after_reading
+    IO.inspect reading
+
     base_amount =
       case member_type do
         :personal ->
