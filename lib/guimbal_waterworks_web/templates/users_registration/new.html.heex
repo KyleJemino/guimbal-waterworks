@@ -41,7 +41,7 @@
     <%= select( 
       f, 
       :role, 
-      ["Admin": :admin, "Cashier": :cashier], 
+      roles(), 
       required: true  
     )%>
     <%= error_tag f, :role %>

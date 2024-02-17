@@ -85,6 +85,7 @@
          "member_id" => @member.id
          }}
          filter_params={@filter_params}
+         current_users={@current_users}
          />
        <% end %>
        <%= if @live_action in [:new_bill, :show, :edit] do %>
