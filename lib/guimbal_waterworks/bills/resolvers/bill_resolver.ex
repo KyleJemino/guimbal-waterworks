@@ -163,7 +163,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
     franchise_tax_amount = D.mult(base_amount, tax_rate)
 
-    membership_amount = D.new(if membership_fee?, do: rate.tax_rate, else: 0)
+    membership_amount = D.new(if membership_fee?, do: rate.membership_fee, else: 0)
 
     reconnection_amount = D.new(if reconnection_fee?, do: rate.reconnection_fee, else: 0)
 
