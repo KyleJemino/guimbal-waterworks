@@ -13,26 +13,28 @@
 
 <SC.render_for_roles roles={[:admin]} user={@current_users}>
   <%= if @live_action in [:new_bill] do %>
-    <.modal return_to={Routes.member_show_path(@socket, :show, @member, @clean_params)}>
+    <.modal return_to={Routes.member_show_path(@socket, :show, @member)}>
       <.live_component
         module={GuimbalWaterworksWeb.BillLive.FormComponent}
         id={@bill.id || :new}
         title={"New Bill for #{Display.full_name(@member)}"}
         action={:new}
         bill={@bill}
-        return_to={Routes.member_show_path(@socket, :show, @member, @clean_params)}
+        return_to={Routes.member_show_path(@socket, :show, @member)}
+        success_path={Routes.member_show_path(@socket, :show, @member, @clean_params)}
       />
     </.modal>
   <% end %>
   <%= if @live_action in [:edit_bill] do %>
-    <.modal return_to={Routes.member_show_path(@socket, :show, @member, @clean_params)}>
+    <.modal return_to={Routes.member_show_path(@socket, :show, @member)}>
       <.live_component
         module={GuimbalWaterworksWeb.BillLive.FormComponent}
         id={@bill.id}
         title={"New Bill for #{Display.full_name(@member)}"}
         action={:edit}
         bill={@bill}
-        return_to={Routes.member_show_path(@socket, :show, @member, @clean_params)}
+        return_to={Routes.member_show_path(@socket, :show, @member)}
+        success_path={Routes.member_show_path(@socket, :show, @member, @clean_params)}
       />
     </.modal>
   <% end %>
