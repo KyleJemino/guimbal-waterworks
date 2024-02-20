@@ -56,7 +56,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Bill created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_redirect(to: socket.assigns.success_path)}
 
       {:error, %Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -69,7 +69,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Bill updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_redirect(to: socket.assigns.success_path)}
 
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -93,6 +93,8 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
          %Bill{after: previous_reading} = previous_bill <- Bills.get_previous_bill(member_id, billing_period_change) do
       Changeset.put_change(changeset, :before, previous_reading) 
     else
+      nil ->
+        Changeset.force_change(changeset, :before, nil)
       _ ->
         changeset
     end
