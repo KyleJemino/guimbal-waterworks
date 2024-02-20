@@ -13,6 +13,24 @@
 
     <%= hidden_input f, :member_id, required: true %>
     <%= hidden_input f, :user_id, required: true %>
+
+    <%= if is_nil(@bill.billing_period_id) do %>
+      <div class="field-group">
+        <%= label f, :billing_period_id, "Billing Period" %>
+        <%= select( 
+          f, 
+          :billing_period_id, 
+          @billing_period_options,
+          required: true  
+        )%>
+        <%= error_tag f, :billing_period_id %>
+        <%= if Enum.count(@billing_period_options) == 0 do %>
+          <span class="invalid-feedback">
+            Member has no missing bills. Must create a new billing period before making a bill for this member.
+          </span>
+        <% end %>
+      </div>
+    <% end %>
   
   <div class="field-group">
     <%= label f, :before %>
@@ -26,23 +44,6 @@
     <%= error_tag f, :after %>
   </div>
   
-  <%= if is_nil(@bill.billing_period_id) do %>
-  <div class="field-group">
-    <%= label f, :billing_period_id, "Billing Period" %>
-    <%= select( 
-      f, 
-      :billing_period_id, 
-      @billing_period_options,
-      required: true  
-    )%>
-    <%= error_tag f, :billing_period_id %>
-    <%= if Enum.count(@billing_period_options) == 0 do %>
-      <span class="invalid-feedback">
-        Member has no missing bills. Must create a new billing period before making a bill for this member.
-      </span>
-    <% end %>
-  </div>
-<% end %>
 
   <div class="field-group">
     <div class="flex flex-row gap-2 items-center">
