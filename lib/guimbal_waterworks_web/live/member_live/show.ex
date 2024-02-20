@@ -47,6 +47,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
   @impl true
   def handle_info({:edit_bill, bill_id}, socket) do
     %{
+      clean_params: clean_params,
       member: member
     } = socket.assigns
 
@@ -55,7 +56,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
         socket,
         :edit_bill,
         member,
-        bill_id
+        bill_id,
+        clean_params
       )
 
     {:noreply, push_patch(socket, to: edit_bill_path)}
