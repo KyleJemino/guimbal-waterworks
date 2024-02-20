@@ -6,7 +6,6 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   alias GuimbalWaterworks.Bills.Bill
 
   def update(%{bill: bill} = assigns, socket) do
-    IO.inspect bill
     [oldest_option | _] = billing_period_options =
       %{
         "with_no_bill_for_member_id" => bill.member_id,
