@@ -31,7 +31,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
      |> assign(:member, member)
      |> assign(:bill, bill)
      |> assign(:filter_params, params)
-     |> assign(:clean_params, Map.drop(params, ["id"]))}
+     |> assign(:clean_params, Map.drop(params, ["id", "bill_id"]))}
   end
 
   @impl true

@@ -16,9 +16,10 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:billing_period, Bills.get_billing_period!(id))
      |> assign(:filter_params, params)
-     |> assign(:clean_params, Map.drop(params, ["id", "member_id"]))
+     |> assign(:clean_params, Map.drop(params, ["id", "member_id", "bill_id"]))
      |> assign_member(params)
      |> assign_bill(socket.assigns.live_action, params)
+     |> assign_bill_success_path()
      |> assign_return_to()}
   end
 
@@ -74,6 +75,20 @@ defmodule GuimbalWaterworksWeb.BillingPeriodLive.Show do
       )
 
     assign(socket, :return_to, return_to)
+  end
+
+  defp assign_bill_success_path(socket) do
+    params = socket.assigns.filter_params
+
+    bill_success_path =
+      Routes.billing_period_show_path(
+        socket,
+        :show,
+        Map.get(params, "id"),
+        socket.assigns.clean_params
+      )
+
+    assign(socket, :bill_success_path, bill_success_path)
   end
 
   defp assign_member(socket, params) do
