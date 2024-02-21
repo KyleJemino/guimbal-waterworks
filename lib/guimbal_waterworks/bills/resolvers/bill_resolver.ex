@@ -2,10 +2,13 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   alias GuimbalWaterworks.Repo
   alias Decimal, as: D
 
-  alias GuimbalWaterworks.Bills.Bill
-  alias GuimbalWaterworks.Bills.Rate
+  alias GuimbalWaterworks.Bills.{
+    Bill,
+    Rate,
+    BillingPeriod
+  }
   alias GuimbalWaterworks.Bills.Queries.BillQuery, as: BQ
-  alias GuimbalWaterworks.Bills.BillingPeriod
+  alias GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver, as: BPR
   alias GuimbalWaterworks.Members.Member
 
   def list_bills(params \\ %{}) do
@@ -236,4 +239,17 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   end
 
   def get_bill_reading(%Bill{ before: before, after: after_reading }), do: Decimal.sub(after_reading, before)
+
+  def get_previous_bill(member_id, billing_period_id) do
+    with %BillingPeriod{} = current_billing_period <- BPR.get_billing_period(%{"id" => billing_period_id}),
+         %BillingPeriod{} = previous_billing_period <- BPR.get_previous_billing_period(current_billing_period),
+         %Bill{} = previous_bill <- 
+           get_bill(%{"billing_period_id" => previous_billing_period.id, "member_id" => member_id}) do
+      previous_bill
+    else
+      _ ->
+        nil
+    end
+    
+  end
 end

@@ -80,7 +80,6 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
         {:ok, request}
 
       {:error, _op, _val, _changes} = result ->
-        IO.inspect(result)
         {:error, :failed_multi}
     end
   end

@@ -21,6 +21,7 @@
         action={:new}
         bill={@bill}
         return_to={Routes.member_show_path(@socket, :show, @member, @clean_params)}
+        success_path={Routes.member_show_path(@socket, :show, @member, @clean_params)}
       />
     </.modal>
   <% end %>
@@ -33,6 +34,7 @@
         action={:edit}
         bill={@bill}
         return_to={Routes.member_show_path(@socket, :show, @member, @clean_params)}
+        success_path={Routes.member_show_path(@socket, :show, @member, @clean_params)}
       />
     </.modal>
   <% end %>
@@ -88,7 +90,7 @@
          current_users={@current_users}
          />
        <% end %>
-       <%= if @live_action in [:new_bill, :show, :edit] do %>
+       <%= if @live_action in [:new_bill, :show, :edit, :edit_bill] do %>
          <.live_component
          module={GuimbalWaterworksWeb.BillLive.BillList}
          for={:member}

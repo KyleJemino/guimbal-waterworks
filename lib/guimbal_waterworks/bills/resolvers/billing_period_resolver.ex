@@ -3,10 +3,19 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver do
 
   alias GuimbalWaterworks.Bills.BillingPeriod
   alias GuimbalWaterworks.Bills.Queries.BillingPeriodQuery, as: BPQ
+  import Ecto.Query
 
   def get_billing_period(params \\ %{}) do
     params
     |> BPQ.query_billing_period()
+    |> Repo.one()
+  end
+
+  def get_previous_billing_period(%BillingPeriod{due_date: due_date}) do
+    BillingPeriod
+    |> where([bp], bp.due_date < ^due_date)
+    |> order_by(desc: :due_date)
+    |> first()
     |> Repo.one()
   end
 
