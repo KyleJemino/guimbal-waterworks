@@ -70,7 +70,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
     before_reading = fetch_field!(changeset, :before) || 0
     after_reading = fetch_field!(changeset, :after) || 0
 
-    if (before_reading > after_reading) do
+    if before_reading > after_reading do
       changeset
       |> add_error(:before, "Before value must be greater than after")
       |> add_error(:after, "After value must be less than or equal to before")

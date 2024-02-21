@@ -64,6 +64,7 @@ defmodule GuimbalWaterworks.Helpers do
         atom
         |> Atom.to_string()
         |> String.capitalize()
+
       {label, atom}
     end)
   end

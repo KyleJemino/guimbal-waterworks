@@ -7,6 +7,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     Rate,
     BillingPeriod
   }
+
   alias GuimbalWaterworks.Bills.Queries.BillQuery, as: BQ
   alias GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver, as: BPR
   alias GuimbalWaterworks.Members.Member
@@ -238,18 +239,20 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     |> Repo.aggregate(:count)
   end
 
-  def get_bill_reading(%Bill{ before: before, after: after_reading }), do: Decimal.sub(after_reading, before)
+  def get_bill_reading(%Bill{before: before, after: after_reading}),
+    do: Decimal.sub(after_reading, before)
 
   def get_previous_bill(member_id, billing_period_id) do
-    with %BillingPeriod{} = current_billing_period <- BPR.get_billing_period(%{"id" => billing_period_id}),
-         %BillingPeriod{} = previous_billing_period <- BPR.get_previous_billing_period(current_billing_period),
-         %Bill{} = previous_bill <- 
+    with %BillingPeriod{} = current_billing_period <-
+           BPR.get_billing_period(%{"id" => billing_period_id}),
+         %BillingPeriod{} = previous_billing_period <-
+           BPR.get_previous_billing_period(current_billing_period),
+         %Bill{} = previous_bill <-
            get_bill(%{"billing_period_id" => previous_billing_period.id, "member_id" => member_id}) do
       previous_bill
     else
       _ ->
         nil
     end
-    
   end
 end

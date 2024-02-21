@@ -6,7 +6,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   alias GuimbalWaterworks.Bills.Bill
 
   def update(%{bill: bill} = assigns, socket) do
-     billing_period_options =
+    billing_period_options =
       %{
         "with_no_bill_for_member_id" => bill.member_id,
         "order_by" => [asc: :due_date]
@@ -16,7 +16,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
         {"#{period.month} #{period.year}", period.id}
       end)
 
-    initial_params = 
+    initial_params =
       with false <- not is_nil(bill.id),
            [oldest_option | _] <- billing_period_options do
         {_, oldest_billing_period_id} = oldest_option
@@ -79,23 +79,28 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
 
   defp change_bill_maybe_with_defaults(bill, params \\ %{})
 
-  defp change_bill_maybe_with_defaults(%Bill{ id: bill_id } = bill, params) when not is_nil(bill_id) do
+  defp change_bill_maybe_with_defaults(%Bill{id: bill_id} = bill, params)
+       when not is_nil(bill_id) do
     Bills.change_bill(bill, params)
   end
 
   defp change_bill_maybe_with_defaults(bill, params) do
     changeset = Bills.change_bill(bill, params)
-    billing_period_change = 
+
+    billing_period_change =
       Changeset.get_change(changeset, :billing_period_id)
-    member_id = 
+
+    member_id =
       Changeset.get_field(changeset, :member_id)
 
     with true <- not is_nil(billing_period_change),
-         %Bill{after: previous_reading} <- Bills.get_previous_bill(member_id, billing_period_change) do
-      Changeset.put_change(changeset, :before, previous_reading) 
+         %Bill{after: previous_reading} <-
+           Bills.get_previous_bill(member_id, billing_period_change) do
+      Changeset.put_change(changeset, :before, previous_reading)
     else
       nil ->
         Changeset.force_change(changeset, :before, nil)
+
       _ ->
         changeset
     end
