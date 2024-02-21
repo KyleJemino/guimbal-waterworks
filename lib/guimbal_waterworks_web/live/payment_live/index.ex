@@ -21,10 +21,13 @@ defmodule GuimbalWaterworksWeb.PaymentLive.Index do
       end
 
     {:noreply, 
-      assign(socket, :filter_params, params_to_use)} 
+      socket
+      |> assign(:filter_params, params_to_use)
+      |> assign(:default_params, nil)
+    } 
   end
 
   defp add_defaults_to_params(params) do
-    Map.put_new(params, "paid_from", Helpers.today_datetime())
+    Map.put_new(params, "paid_from", Date.utc_today())
   end
 end

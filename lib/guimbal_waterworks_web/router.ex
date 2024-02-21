@@ -133,6 +133,7 @@ defmodule GuimbalWaterworksWeb.Router do
       pipe_through [:browser, :require_authenticated_users, :require_cashier]
 
       live "/members/:id/pay_bills", MemberLive.Index, :payment
+      live "/payments", PaymentLive.Index, :index
     end
 
     scope "/", GuimbalWaterworksWeb do

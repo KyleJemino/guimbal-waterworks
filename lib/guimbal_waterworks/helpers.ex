@@ -72,5 +72,6 @@ defmodule GuimbalWaterworks.Helpers do
   def today_datetime() do
     Timex.now()
     |> Timex.beginning_of_day()
+    |> Timex.to_naive_datetime()
   end
 end
