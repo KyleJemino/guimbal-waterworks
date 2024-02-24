@@ -54,7 +54,7 @@ defmodule GuimbalWaterworks.Bills.Queries.PaymentQuery do
       asc: m.last_name,
       asc: m.first_name,
       asc: m.last_name,
-      asc: m.unique_identifier,
+      asc: m.unique_identifier
     )
     |> query_by(Map.delete(params, "order_by"))
   end

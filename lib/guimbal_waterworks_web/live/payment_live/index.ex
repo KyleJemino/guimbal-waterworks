@@ -9,8 +9,6 @@ defmodule GuimbalWaterworksWeb.PaymentLive.Index do
   end
 
   def handle_params(params, _uri, socket) do
-    {:noreply, 
-      assign(socket, :filter_params, params)
-    } 
+    {:noreply, assign(socket, :filter_params, params)}
   end
 end
