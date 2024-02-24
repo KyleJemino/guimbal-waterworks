@@ -17,7 +17,7 @@
   <div class="overflow-auto">
     <table class="data-table">
       <tr class="header-row">
-        <%= if @for == :billing_period do %>
+        <%= if @for in [:billing_period, :payment_page] do %>
           <th class="header">
             Name
           </th>
@@ -30,7 +30,7 @@
       </tr>
       <%= for payment <- @table_data do %>
         <tr class="data-row last:font-bold">
-          <%= if @for == :billing_period do %>
+          <%= if @for in [:billing_period, :payment_page] do %>
             <td class="data name">
               <%= payment.member %>
             </td>

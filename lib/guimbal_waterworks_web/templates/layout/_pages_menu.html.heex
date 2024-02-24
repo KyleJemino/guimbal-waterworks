@@ -5,6 +5,8 @@
   <%= if not is_nil(@current_users) do %>
     <%= link "Members", to: Routes.member_index_path(@conn, :index), class: "nav-item" %>
     <%= link "Billing Periods", to: Routes.billing_period_index_path(@conn, :index), class: "nav-item" %>
+    <%= link "Payments", to: Routes.payment_index_path(@conn, :index), class: "nav-item" %>
+    <%= # link "Billing Periods", to: Routes.billing_period_index_path(@conn, :index), class: "nav-item" %>
   <% end %>
   <%= if not is_nil(@current_users) and @current_users.role === :manager do %>
     <%= link "Rates", to: Routes.rate_index_path(@conn, :index), class: "nav-item" %>

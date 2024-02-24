@@ -13,7 +13,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.Components do
       class="filter-form container max-w-[unset]"
     >
       <div class="fields">
-        <%= if @for == :billing_period do %>
+        <%= if @for in [:billing_period, :payment_page] do %>
           <div class="search-input-group">
             <%= label f, :last_name %>
             <%= text_input f, :last_name, value: @search_params["last_name"] %>
