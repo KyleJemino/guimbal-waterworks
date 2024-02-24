@@ -5,29 +5,12 @@ defmodule GuimbalWaterworksWeb.PaymentLive.Index do
 
   @impl true
   def mount(params, _session, socket) do
-    default_params = add_defaults_to_params(params)
-    {:ok, 
-      assign(socket, :default_params, default_params)
-    }
+    {:ok, socket}
   end
 
   def handle_params(params, _uri, socket) do
-    default_params = socket.assigns.default_params
-    params_to_use =
-      if not is_nil(default_params) do
-        default_params
-      else
-        params
-      end
-
     {:noreply, 
-      socket
-      |> assign(:filter_params, params_to_use)
-      |> assign(:default_params, nil)
+      assign(socket, :filter_params, params)
     } 
-  end
-
-  defp add_defaults_to_params(params) do
-    Map.put_new(params, "paid_from", Date.utc_today())
   end
 end

@@ -260,11 +260,16 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       |> Map.merge(pagination_params)
       |> sanitize_query_params()
 
+    IO.inspect updated_filter_params
+
     route =
-      if for == :member do
-        Routes.member_show_path(socket, :payments, id, updated_filter_params)
-      else
-        Routes.billing_period_show_path(socket, :payments, id, updated_filter_params)
+      case for do
+        :member ->
+          Routes.member_show_path(socket, :payments, id, updated_filter_params)
+        :billing_period ->
+          Routes.billing_period_show_path(socket, :payments, id, updated_filter_params)
+        _ ->
+          Routes.payment_index_path(socket, :index, updated_filter_params)
       end
 
     push_patch(socket, to: route)
