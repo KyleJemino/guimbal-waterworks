@@ -32,12 +32,12 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             <div>Reading</div>
             <div class="font-bold"><%= Display.format_date(@latest_bill.billing_period.from, "%m/%d/%y") %></div>
             <div class="font-bold"><%= Display.format_date(@latest_bill.billing_period.to, "%m/%d/%y") %></div>
-            <div class="font-bold"><%= @latest_bill.reading %></div>
+            <div class="font-bold"><%= @latest_bill.after - @latest_bill.before %></div>
           </div>
           <p class="text-center mt-2 font-bold uppercase">Price Breakdown</p>
           <div class="flex flex-col">
             <div class="grid grid-cols-2">
-              <p><%= @latest_bill.reading %> Cu.M.</p>
+            <p><%= @latest_bill.after - @latest_bill.before %> Cu.M.</p>
               <p class="text-right"><%= Display.money(@latest_bill_calc.base_amount) %></p>
             </div>
             <div class="grid grid-cols-2">
