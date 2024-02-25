@@ -6,22 +6,27 @@ export default {
       today = new Date()
 
       const csvConfig = mkConfig({ 
-        useKeysAsHeaders: true,
-        filename: `payments_${today.toISOString()}`
+        filename: `payments_${today.toISOString()}`,
+        columnHeaders: [
+          'member',
+          'address', 
+          'or',
+          'current',
+          'overdue',
+          'billing_periods',
+          'surcharges',
+          'death_aid',
+          'franchise_tax',
+          'membership_and_advance_fee',
+          'reconnection_fee',
+          'total',
+          'total_paid',
+          'paid_at',
+          'cashier'
+        ]
       })
 
-      const formattedData = data.map((paymentData) => {
-        const formattedBills = paymentData.bills.reduce(
-          (formatted, bill) => `${formatted}\n${bill.name}:${bill.amount}`, ''
-        )
-
-        return {
-          ...paymentData,
-          bills: formattedBills
-        }
-      })
-
-      const csv = generateCsv(csvConfig)(formattedData)
+      const csv = generateCsv(csvConfig)(data)
 
       download(csvConfig)(csv)
     })
