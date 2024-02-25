@@ -17,6 +17,20 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     "paid_to"
   ]
 
+  @initial_payment_breakdown %{
+    current: 0,
+    overdue: 0,
+    billing_periods: [],
+    surcharges: 0,
+    death_aid: 0,
+    franchise_tax: 0,
+    membership_and_advance_fee: 0,
+    reconnection_fee: 0,
+    total: 0
+  }
+
+  @initial_all_payments_breakdown Map.put(@initial_payment_breakdown, :total_paid, 0)
+
   @impl true
   def update(assigns, socket) do
     {:ok,
@@ -108,58 +122,64 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   end
 
   defp assign_table_data(socket) do
-    {reversed_payment_rows, all_payments_total} =
+    {reversed_payment_rows, all_payments_breakdown} =
       Enum.reduce(
         socket.assigns.payments,
-        {[], 0},
+        {[], @initial_all_payments_breakdown},
         fn payment, acc ->
-          {rows_acc, running_total} = acc
+          {rows_acc, running_all_payments_breakdown} = acc
 
-          {reversed_bills_data, payment_total} =
-            Enum.reduce(payment.bills, {[], 0}, fn bill, {bill_list, running_payment_total} ->
-              {:ok, %{total: bill_total}} =
-                Bills.calculate_bill(
-                  bill,
-                  bill.billing_period,
-                  payment.member,
-                  payment,
-                  bill.billing_period.rate
-                )
+          payment_breakdown =
+            Enum.reduce(
+              payment.bills, 
+              @initial_payment_breakdown,
+              fn bill, running_data ->
+                update_payment_breakdown(running_data, bill, payment)
+              end
+            )
 
-              bill_item = %{
-                name: Display.display_period(bill.billing_period),
-                amount: bill_total
-              }
-
-              {[bill_item | bill_list], D.add(running_payment_total, bill_total)}
-            end)
-
-          bills_data =
-            Enum.reverse([%{name: "TOTAL", amount: payment_total} | reversed_bills_data])
-
-          payment_data = %{
+          payment_information = %{
             member: Display.full_name(payment.member),
+            address: payment.member.street,
             or: payment.or,
-            bills: bills_data,
-            total_paid: payment.amount,
             paid_at: Display.format_date(payment.paid_at),
-            cashier: Display.full_name(payment.user)
+            cashier: Display.full_name(payment.user),
+            total_paid: payment.amount
           }
 
-          updated_total = D.add(running_total, payment_total)
+          payment_row = Map.merge(payment_information, payment_breakdown)
 
-          {[payment_data | rows_acc], updated_total}
+          %{}
+
+          updated_all_payments_breakdown =
+            running_all_payments_breakdown
+            |> Map.update!(:current, fn val -> 
+                D.add(val, payment_breakdown.current)
+            end)
+            |> Map.update!(:overdue, fn val -> 
+                D.add(val, payment_breakdown.overdue)
+            end)
+            |> Map.update!(:surcharges, &(D.add(&1, payment_breakdown.surcharges)))
+            |> Map.update!(:franchise_tax, &(D.add(&1, payment_breakdown.franchise_tax)))
+            |> Map.update!(:death_aid, &(D.add(&1, payment_breakdown.death_aid)))
+            |> Map.update!(:reconnection_fee, &(D.add(&1, payment_breakdown.reconnection_fee)))
+            |> Map.update!(:membership_and_advance_fee, &(D.add(&1, payment_breakdown.membership_and_advance_fee)))
+            |> Map.update!(:total, &(D.add(&1, payment_breakdown.total)))
+            |> Map.update!(:total_paid, &(D.add(&1, payment.amount)))
+
+          {[payment_row | rows_acc], updated_all_payments_breakdown}
         end
       )
 
-    total_row = %{
-      member: "TOTAL",
+    total_row_info = %{
+      member: "ALL",
+      address: "",
       or: "",
-      bills: [],
-      total_paid: all_payments_total,
       paid_at: "",
-      cashier: ""
+      cashier: "",
     }
+
+    total_row = Map.merge(total_row_info, all_payments_breakdown)
 
     table_data =
       reversed_payment_rows
@@ -167,6 +187,53 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       |> Enum.reverse()
 
     assign(socket, :table_data, table_data)
+  end
+
+  defp update_payment_breakdown(breakdown, bill, payment) do
+    %{
+      billing_period: billing_period
+    } = bill
+
+    {:ok, calculation_data} = Bills.calculate_bill(
+        bill,
+        billing_period,
+        payment.member,
+        payment,
+        billing_period.rate
+    )
+
+    %{
+      base_amount: base,
+      franchise_tax_amount: tax,
+      membership_amount: membership,
+      reconnection_amount: reconnection,
+      surcharge: surcharge,
+      death_aid_amount: death_aid,
+      total: total
+    } = calculation_data
+
+    breakdown
+    |> Map.update!(:current, fn val -> 
+      if (Bills.late_payment?(payment, billing_period)) do
+        val
+      else
+        D.add(val, base)
+      end
+    end)
+    |> Map.update!(:overdue, fn val ->
+      if (Bills.late_payment?(payment, billing_period)) do
+        D.add(val, base)
+      else
+        val
+      end
+    end)
+    |> Map.update!(:surcharges, &(D.add(&1, surcharge)))
+    |> Map.update!(:franchise_tax, &(D.add(&1, tax)))
+    |> Map.update!(:death_aid, &(D.add(&1, death_aid)))
+    |> Map.update!(:reconnection_fee, &(D.add(&1, reconnection)))
+    |> Map.update!(:membership_and_advance_fee, &(D.add(&1, membership)))
+    |> Map.update!(:billing_periods, fn val -> val ++ [billing_period.month] end)
+    |> Map.update!(:total, &(D.add(&1, total)))
   end
 
   defp assign_pagination_information(%{assigns: assigns} = socket) do
@@ -259,8 +326,6 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       search_params
       |> Map.merge(pagination_params)
       |> sanitize_query_params()
-
-    IO.inspect(updated_filter_params)
 
     route =
       case for do

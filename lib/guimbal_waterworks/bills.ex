@@ -121,6 +121,7 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate create_payment(params), to: PR
   defdelegate change_payment(payment, params \\ %{}), to: PR
   defdelegate count_payments(params \\ %{}), to: PR
+  defdelegate late_payment?(payment, billing_period), to: PR
 
   defdelegate create_rate(attrs \\ %{}), to: RR
   defdelegate rate_changeset(rate, attrs \\ %{}), to: RR
