@@ -34,4 +34,15 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillingPeriodResolver do
       year: year_string
     }
   end
+
+  def get_current_paying_billing_period() do
+    today = Date.utc_today()
+
+    BillingPeriod
+    |> where([bp], bp.to < ^today)
+    |> where([bp], bp.due_date >= ^today)
+    |> order_by(desc: :due_date)
+    |> first()
+    |> Repo.one()
+  end
 end

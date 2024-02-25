@@ -87,4 +87,9 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
     |> PQ.query_payment()
     |> Repo.aggregate(:count)
   end
+
+  def late_payment?(payment, billing_period) do
+    paid_at_date = DateTime.to_date(payment.paid_at)
+    Date.diff(paid_at_date, billing_period.due_date) > 0
+  end
 end

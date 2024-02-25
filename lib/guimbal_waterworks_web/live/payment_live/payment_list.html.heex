@@ -17,32 +17,61 @@
   <div class="overflow-auto">
     <table class="data-table">
       <tr class="header-row">
-        <%= if @for in [:billing_period, :payment_page] do %>
-          <th class="header">
-            Name
-          </th>
-        <% end %>
+        <th class="header">
+          Name
+        </th>
+        <th class="header">
+          Address
+        </th>
         <th class="header">OR</th>
-        <th class="header">Bills</th>
+        <th class="header">Current Consumption</th>
+        <th class="header">Overdue Consumption</th>
+        <th class="header">Period of Billing</th>
+        <th class="header">Surcharges</th>
+        <th class="header">Death Aid</th>
+        <th class="header">Franchise Tax</th>
+        <th class="header">Membership and Advance Fee</th>
+        <th class="header">Reconnection Fee</th>
+        <th class="header">Total (Calculated)</th>
         <th class="header">Total (Paid)</th>
         <th class="header">Date</th>
         <th class="header">Cashier</th>
       </tr>
       <%= for payment <- @table_data do %>
         <tr class="data-row last:font-bold">
-          <%= if @for in [:billing_period, :payment_page] do %>
-            <td class="data name">
-              <%= payment.member %>
-            </td>
-          <% end %>
-          <td class="data"><%= payment.or %></td>
+          <td class="data name">
+            <%= payment.member %>
+          </td>
           <td class="data">
-            <%= for bill <- payment.bills do %>
-              <div class="flex flex-row justify-between last:border-t last:border-black">
-                <p><%= bill.name %></p>
-                <p><%= Display.money(bill.amount) %></p>
-              </div>
-            <% end %>
+            <%= payment.address %>
+          </td>
+          <td class="data"><%= payment.or %></td>
+          <td class="data text-right">
+            <%= Display.money(payment.current) %>
+          </td>
+          <td class="data text-right">
+            <%= Display.money(payment.overdue) %>
+          </td>
+          <td class="data text-right">
+            <%= payment.billing_periods %>
+          </td>
+          <td class="data text-right">
+            <%= Display.money(payment.surcharges) %>
+          </td>
+          <td class="data text-right">
+            <%= Display.money(payment.death_aid) %>
+          </td>
+          <td class="data text-right">
+            <%= Display.money(payment.franchise_tax) %>
+          </td>
+          <td class="data text-right">
+            <%= Display.money(payment.membership_and_advance_fee) %>
+          </td>
+          <td class="data text-right">
+            <%= Display.money(payment.reconnection_fee) %>
+          </td>
+          <td class="data text-right">
+            <%= Display.money(payment.total) %>
           </td>
           <td class="data text-right">
             <%= Display.money(payment.total_paid) %>

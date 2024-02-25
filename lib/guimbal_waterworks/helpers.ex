@@ -74,4 +74,8 @@ defmodule GuimbalWaterworks.Helpers do
     |> Timex.beginning_of_day()
     |> Timex.to_naive_datetime()
   end
+
+  def abbreviate_month(month) do
+    binary_part(month, 0, 3)
+  end
 end

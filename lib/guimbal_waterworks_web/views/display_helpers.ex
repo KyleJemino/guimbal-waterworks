@@ -93,4 +93,15 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
       ""
     end
   end
+
+  def month_list(months) do
+    Enum.reduce(months, "", fn month, acc ->
+      shortened = binary_part(month, 0, 3)
+       
+      case acc do
+        "" -> shortened
+        _ -> "#{acc}/#{shortened}"
+      end
+    end)
+  end
 end
