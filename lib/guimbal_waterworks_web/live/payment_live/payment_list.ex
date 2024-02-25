@@ -20,7 +20,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   @initial_payment_breakdown %{
     current: 0,
     overdue: 0,
-    billing_periods: [],
+    billing_periods: "",
     surcharges: 0,
     death_aid: 0,
     franchise_tax: 0,
@@ -232,7 +232,13 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     |> Map.update!(:death_aid, &(D.add(&1, death_aid)))
     |> Map.update!(:reconnection_fee, &(D.add(&1, reconnection)))
     |> Map.update!(:membership_and_advance_fee, &(D.add(&1, membership)))
-    |> Map.update!(:billing_periods, fn val -> val ++ [billing_period.month] end)
+    |> Map.update!(:billing_periods, fn val -> 
+      abbreviated = Helpers.abbreviate_month(billing_period.month)
+      case val do
+        "" -> abbreviated
+        val -> "#{val}/#{abbreviated}"
+      end
+    end)
     |> Map.update!(:total, &(D.add(&1, total)))
   end
 

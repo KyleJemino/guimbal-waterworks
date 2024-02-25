@@ -53,7 +53,7 @@
             <%= Display.money(payment.overdue) %>
           </td>
           <td class="data text-right">
-            <%= Display.month_list(payment.billing_periods) %>
+            <%= payment.billing_periods %>
           </td>
           <td class="data text-right">
             <%= Display.money(payment.surcharges) %>
