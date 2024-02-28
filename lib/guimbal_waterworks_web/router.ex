@@ -96,6 +96,11 @@ defmodule GuimbalWaterworksWeb.Router do
       pipe_through [:browser, :require_authenticated_users, :require_admin]
       live "/members/print", MemberLive.Print, :print
     end
+
+    scope "/", GuimbalWaterworksWeb do
+      pipe_through [:browser, :require_authenticated_users]
+      live "/members/:id/history/print/:year", MemberLive.History, :print
+    end
   end
 
   live_session :authenticated, on_mount: GuimbalWaterworksWeb.AssignUsers do
