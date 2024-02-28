@@ -1,0 +1,19 @@
+<div class="print-container">
+  <div class="member-history-info-container">
+    <h1 class="header"><%= @member.street %></h1>
+    <div class="member-history-details">
+      <div class="field-group">
+        <p class="label">Name:</p>
+        <p class="value"><%= Display.full_name(@member) %></p>
+      </div>
+      <div class="field-group">
+        <p class="label">Address:</p>
+        <p class="value"><%= @member.street %></p>
+      </div>
+      <div class="field-group">
+        <p class="label">Meter #:</p>
+        <p class="value"><%= @member.meter_no || "" %></p>
+      </div>
+    </div>
+  </div>
+</div>
