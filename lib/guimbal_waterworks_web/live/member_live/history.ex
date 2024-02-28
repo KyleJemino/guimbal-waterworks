@@ -2,6 +2,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.History do
   use GuimbalWaterworksWeb, :live_view
 
   alias GuimbalWaterworks.Bills
+  alias GuimbalWaterworks.Bills.Payment
   alias GuimbalWaterworks.Members
   alias GuimbalWaterworksWeb.DisplayHelpers, as: Display
   alias Decimal, as: D
@@ -61,6 +62,13 @@ defmodule GuimbalWaterworksWeb.MemberLive.History do
         |> D.add(membership_amount)
         |> Display.money()
 
+      remarks =
+        case payment do
+          %Payment{or: payment_or, paid_at: paid_at} ->
+            "#{payment_or}\n#{Display.format_date paid_at}"
+          _ -> ""
+        end
+
       %{
         period_name: period_name,
         reading: reading,
@@ -69,7 +77,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.History do
         surcharge: Display.money(surcharge),
         death_aid: Display.money(death_aid_amount),
         other_fees: other_fees,
-        total: total
+        total: Display.money(total),
+        remarks: remarks
       }
     end)
   end

@@ -1,7 +1,7 @@
 .member-history-info-container {
   @apply flex flex-col gap-6;
 
-  .header {
+  > .header {
     @apply text-2xl font-bold text-blue-800 italic;
   }
 }
@@ -15,11 +15,22 @@
 }
 
 .member-history-table {
-  .header-row {
+  > tbody > .header-row {
     @apply text-lg font-bold uppercase bg-transparent text-black;
   }
 
-  .data-row:nth-child(odd) {
+  > tbody > .data-row {
+    > td {
+      @apply px-2 whitespace-pre-line;
+    }
+  }
+
+  > tbody > .data-row:nth-child(odd) {
     @apply bg-transparent;
   }
 }
+
+.money-col {
+  @apply text-right;
+}
+

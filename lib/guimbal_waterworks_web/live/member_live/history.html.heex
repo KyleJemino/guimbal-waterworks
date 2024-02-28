@@ -21,24 +21,24 @@
       <th>Billing Period</th>
       <th>Cu. M.</th>
       <th>Amount</th>
-      <th>Franchise Tax</th>
+      <th>Tax</th>
       <th>Surcharge</th>
-      <th>Mutual Death Aid</th>
+      <th>Death Aid</th>
       <th>Other Fees</th>
       <th>Total</th>
       <th>Remarks</th>
     </tr>
     <%= for row <- @table_data do %>
       <tr class="data-row">
-        <th><%= row.period_name %></th>
-        <th><%= row.reading %></th>
-        <th><%= row.base_amount %></th>
-        <th><%= row.franchise_tax %></th>
-        <th><%= row.surcharge%></th>
-        <th><%= row.death_aid %></th>
-        <th><%= row.other_fees %></th>
-        <th><%= row.total %></th>
-        <th></th>
+        <td><%= row.period_name %></td>
+        <td class="money-col"><%= row.reading %></td>
+        <td class="money-col"><%= row.base_amount %></td>
+        <td class="money-col"><%= row.franchise_tax %></td>
+        <td class="money-col"><%= row.surcharge%></td>
+        <td class="money-col"><%= row.death_aid %></td>
+        <td class="money-col"><%= row.other_fees %></td>
+        <td class="money-col"><%= row.total %></td>
+        <td><%= row.remarks %></td>
       </tr>
     <% end %>
   </table>
