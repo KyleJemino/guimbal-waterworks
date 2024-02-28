@@ -15,13 +15,14 @@
 }
 
 .member-history-table {
+  @apply text-sm;
   > tbody > .header-row {
-    @apply text-lg font-bold uppercase bg-transparent text-black;
+    @apply font-bold uppercase bg-transparent text-black;
   }
 
   > tbody > .data-row {
     > td {
-      @apply px-2 whitespace-pre-line;
+      @apply px-1 whitespace-pre-line;
     }
   }
 
