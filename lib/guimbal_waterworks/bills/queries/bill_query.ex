@@ -115,5 +115,11 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     |> query_by(Map.delete(params, "type"))
   end
 
+  defp query_by(query, %{"year" => year} = params) do
+    query
+    |> where([_q, billing_period: bp], bp.year == ^year)
+    |> query_by(Map.delete(params, "year"))
+  end
+
   use GuimbalWaterworks, :basic_queries
 end
