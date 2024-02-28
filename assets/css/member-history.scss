@@ -1,5 +1,5 @@
 .member-history-info-container {
-  @apply flex flex-col;
+  @apply flex flex-col gap-6;
 
   .header {
     @apply text-2xl font-bold text-blue-800 italic;
@@ -7,11 +7,19 @@
 }
 
 .member-history-details {
-  @apply text-base font-bold grid grid-cols-3 gap-x-4 gap-y-2;
+  @apply text-base font-bold grid grid-cols-3 gap-x-4 gap-y-1;
+}
+
+.field-group {
+  @apply flex flex-col gap-0;
 }
 
 .member-history-table {
   .header-row {
-    @apply font-bold uppercase bg-transparent text-black;
+    @apply text-lg font-bold uppercase bg-transparent text-black;
+  }
+
+  .data-row:nth-child(odd) {
+    @apply bg-transparent;
   }
 }
