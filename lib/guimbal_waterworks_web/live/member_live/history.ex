@@ -3,6 +3,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.History do
 
   alias GuimbalWaterworks.Bills
   alias GuimbalWaterworks.Members
+  alias GuimbalWaterworksWeb.DisplayHelpers, as: Display
+  alias Decimal, as: D
 
   @impl true
   def mount(
@@ -15,18 +17,60 @@ defmodule GuimbalWaterworksWeb.MemberLive.History do
   ) do
     member = Members.get_member!(member_id)
 
+    bill_params = %{
+      "member_id" => member_id, 
+      "year" => year,
+      "preload" => [:payment, billing_period: :rate]
+    }
 
-    bills =
-      Bills.list_bills(%{
-        "member_id" => member_id, 
-        "year" => year,
-        "preload" => [:billing_period, :payment]
-      })
+
+    table_data =
+      bill_params
+      |> Bills.list_bills()
+      |> format_bills_to_table_data(member)
 
     {:ok, 
       socket
-      |> assign(:bills, bills)
+      |> assign(:table_data, table_data)
       |> assign(:member, member)
     }
+  end
+
+  defp format_bills_to_table_data(bills, member) do
+    Enum.map(bills, fn bill ->
+      %{
+        billing_period: billing_period,
+        payment: payment
+      } = bill
+
+      period_name = Display.display_period(billing_period)
+      reading = Bills.get_bill_reading(bill)
+
+      {:ok, %{
+        base_amount: base_amount, 
+        franchise_tax_amount: franchise_tax,
+        surcharge: surcharge,
+        death_aid_amount: death_aid_amount,
+        reconnection_amount: reconnection_amount,
+        membership_amount: membership_amount,
+        total: total
+      }} = Bills.calculate_bill(bill, billing_period, member, payment) 
+
+      other_fees =
+        reconnection_amount
+        |> D.add(membership_amount)
+        |> Display.money()
+
+      %{
+        period_name: period_name,
+        reading: reading,
+        base_amount: Display.money(base_amount),
+        franchise_tax: Display.money(franchise_tax),
+        surcharge: Display.money(surcharge),
+        death_aid: Display.money(death_aid_amount),
+        other_fees: other_fees,
+        total: total
+      }
+    end)
   end
 end

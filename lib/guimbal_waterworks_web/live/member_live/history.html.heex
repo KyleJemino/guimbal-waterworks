@@ -1,4 +1,4 @@
-<div class="print-container">
+<div class="print-container flex-col">
   <div class="member-history-info-container">
     <h1 class="header"><%= @member.street %></h1>
     <div class="member-history-details">
@@ -16,4 +16,30 @@
       </div>
     </div>
   </div>
+  <table class="member-history-table">
+    <tr class="header-row">
+      <th>Billing Period</th>
+      <th>Cu. M.</th>
+      <th>Amount</th>
+      <th>Franchise Tax</th>
+      <th>Surcharge</th>
+      <th>Mutual Death Aid</th>
+      <th>Other Fees</th>
+      <th>Total</th>
+      <th>Remarks</th>
+    </tr>
+    <%= for row <- @table_data do %>
+      <tr class="data-row">
+        <th><%= row.period_name %></th>
+        <th><%= row.reading %></th>
+        <th><%= row.base_amount %></th>
+        <th><%= row.franchise_tax %></th>
+        <th><%= row.surcharge%></th>
+        <th><%= row.death_aid %></th>
+        <th><%= row.other_fees %></th>
+        <th><%= row.total %></th>
+        <th></th>
+      </tr>
+    <% end %>
+  </table>
 </div>
