@@ -32,6 +32,10 @@
   @apply flex flex-row flex-wrap;
 
   max-width: 29.7cm;
+
+  &.-col {
+    @apply flex-col;
+  }
 }
 
 .page-container {

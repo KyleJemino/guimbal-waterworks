@@ -9,3 +9,9 @@
 .member-history-details {
   @apply text-base font-bold grid grid-cols-3 gap-x-4 gap-y-2;
 }
+
+.member-history-table {
+  .header-row {
+    @apply font-bold uppercase bg-transparent text-black;
+  }
+}
