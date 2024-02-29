@@ -58,6 +58,9 @@
       <%= live_patch "Edit", to: Routes.member_show_path(@socket, :edit, @member, @clean_params), class: "button -dark" %>
       <%= live_patch "Create Bill", to: Routes.member_show_path(@socket, :new_bill, @member, @clean_params), class: "button -dark" %>
     </SC.render_for_roles>
+    <SC.render_for_roles roles={[:cashier]} user={@current_users}>
+      <%= live_patch "Print Payment History", to: Routes.member_show_path(@socket, :history_form, @member, @clean_params), class: "button -dark" %>
+    </SC.render_for_roles>
     <%= if @show_info? do %>
       <button phx-click="hide_info" class="button -caution">Hide Info</button>
     <% else %>
