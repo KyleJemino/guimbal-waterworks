@@ -25,13 +25,17 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
           })
       end
 
+    clean_params = Map.drop(params, ["id", "bill_id"])
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:member, member)
      |> assign(:bill, bill)
      |> assign(:filter_params, params)
-     |> assign(:clean_params, Map.drop(params, ["id", "bill_id"]))}
+     |> assign(:clean_params, clean_params)
+     |> assign(:current_member_show_path, Routes.member_show_path(socket, :show, member, clean_params))
+    }
   end
 
   @impl true
