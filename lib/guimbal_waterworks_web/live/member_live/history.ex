@@ -11,7 +11,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.History do
   def mount(
     %{
       "id" => member_id,
-      "year" => year
+      "from_year" => from,
+      "to_year" => to
     }, 
     _session, 
     socket
@@ -20,8 +21,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.History do
 
     bill_params = %{
       "member_id" => member_id, 
-      "year" => year,
-      "preload" => [:payment, billing_period: :rate]
+      "from" => from,
+      "to" => to,
+      "preload" => [:payment, billing_period: :rate],
+      "order_by" => "oldest_first"
     }
 
 

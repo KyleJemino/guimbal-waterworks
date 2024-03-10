@@ -43,7 +43,12 @@
 <SC.render_for_roles roles={[:cashier]} user={@current_users}>
   <%= if @live_action == :history_form do %>
     <.modal return_to={@current_member_show_path}>
-      <h1>history form</h1>
+      <.live_component
+        module={GuimbalWaterworksWeb.MemberLive.HistoryFormComponent}
+        id={:history_form}
+        title="Choose years to show"
+        member_id={@member.id}
+      />
     </.modal>
   <% end %>
 </SC.render_for_roles>
