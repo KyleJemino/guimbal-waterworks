@@ -1,0 +1,35 @@
+<div class="form-modal-container">
+  <h1 class="text-center"><%= @title %></h1>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="member-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="redirect"
+    class="form-component"
+  >
+    <div class="flex flex-row gap-4">
+      <div class="field-group w-1/2">
+        <%= label f, :from_year %>
+        <div class="date-input">
+        <%= select f, :from_year, @year_options, class: "w-full" %>
+        </div>
+        <%= error_tag f, :from_year %>
+      </div>
+      
+      <div class="field-group w-1/2">
+        <%= label f, :to_year %>
+        <div class="date-input">
+          <%= select f, :to_year, @year_options, class: "w-full"%>
+        </div>
+        <%= error_tag f, :to_year %>
+      </div>
+    </div>
+
+    <div class="form-button-group">
+      <%= submit "Print", phx_disable_with: "Saving...", class: "submit" %>
+    </div>
+  </.form>
+</div>

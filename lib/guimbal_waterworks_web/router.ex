@@ -98,8 +98,8 @@ defmodule GuimbalWaterworksWeb.Router do
     end
 
     scope "/", GuimbalWaterworksWeb do
-      pipe_through [:browser, :require_authenticated_users]
-      live "/members/:id/history/print/:year", MemberLive.History, :print
+      pipe_through [:browser, :require_authenticated_users, :require_cashier]
+      live "/members/:id/history/print", MemberLive.History, :print
     end
   end
 
@@ -129,6 +129,7 @@ defmodule GuimbalWaterworksWeb.Router do
       live "/members/:id/show/edit", MemberLive.Show, :edit
       live "/members/:id/show/new-bill", MemberLive.Show, :new_bill
       live "/members/:id/show/edit-bill/:bill_id", MemberLive.Show, :edit_bill
+      live "/members/:id/show/history-form", MemberLive.Show, :history_form
       live "/billing_periods/:id/new-bill", BillingPeriodLive.Show, :new_bill
       live "/billing_periods/:id/new-bill/:member_id", BillingPeriodLive.Show, :new_bill
       live "/billing_periods/:id/edit-bill/:bill_id", BillingPeriodLive.Show, :edit_bill
