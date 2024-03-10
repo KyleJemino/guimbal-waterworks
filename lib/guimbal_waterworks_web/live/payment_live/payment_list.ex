@@ -131,7 +131,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
 
           payment_breakdown =
             Enum.reduce(
-              payment.bills, 
+              payment.bills,
               @initial_payment_breakdown,
               fn bill, running_data ->
                 update_payment_breakdown(running_data, bill, payment)
@@ -153,19 +153,22 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
 
           updated_all_payments_breakdown =
             running_all_payments_breakdown
-            |> Map.update!(:current, fn val -> 
-                D.add(val, payment_breakdown.current)
+            |> Map.update!(:current, fn val ->
+              D.add(val, payment_breakdown.current)
             end)
-            |> Map.update!(:overdue, fn val -> 
-                D.add(val, payment_breakdown.overdue)
+            |> Map.update!(:overdue, fn val ->
+              D.add(val, payment_breakdown.overdue)
             end)
-            |> Map.update!(:surcharges, &(D.add(&1, payment_breakdown.surcharges)))
-            |> Map.update!(:franchise_tax, &(D.add(&1, payment_breakdown.franchise_tax)))
-            |> Map.update!(:death_aid, &(D.add(&1, payment_breakdown.death_aid)))
-            |> Map.update!(:reconnection_fee, &(D.add(&1, payment_breakdown.reconnection_fee)))
-            |> Map.update!(:membership_and_advance_fee, &(D.add(&1, payment_breakdown.membership_and_advance_fee)))
-            |> Map.update!(:total, &(D.add(&1, payment_breakdown.total)))
-            |> Map.update!(:total_paid, &(D.add(&1, payment.amount)))
+            |> Map.update!(:surcharges, &D.add(&1, payment_breakdown.surcharges))
+            |> Map.update!(:franchise_tax, &D.add(&1, payment_breakdown.franchise_tax))
+            |> Map.update!(:death_aid, &D.add(&1, payment_breakdown.death_aid))
+            |> Map.update!(:reconnection_fee, &D.add(&1, payment_breakdown.reconnection_fee))
+            |> Map.update!(
+              :membership_and_advance_fee,
+              &D.add(&1, payment_breakdown.membership_and_advance_fee)
+            )
+            |> Map.update!(:total, &D.add(&1, payment_breakdown.total))
+            |> Map.update!(:total_paid, &D.add(&1, payment.amount))
 
           {[payment_row | rows_acc], updated_all_payments_breakdown}
         end
@@ -176,7 +179,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       address: "",
       or: "",
       paid_at: "",
-      cashier: "",
+      cashier: ""
     }
 
     total_row = Map.merge(total_row_info, all_payments_breakdown)
@@ -194,13 +197,14 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       billing_period: billing_period
     } = bill
 
-    {:ok, calculation_data} = Bills.calculate_bill(
+    {:ok, calculation_data} =
+      Bills.calculate_bill(
         bill,
         billing_period,
         payment.member,
         payment,
         billing_period.rate
-    )
+      )
 
     %{
       base_amount: base,
@@ -213,33 +217,34 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     } = calculation_data
 
     breakdown
-    |> Map.update!(:current, fn val -> 
-      if (Bills.late_payment?(payment, billing_period)) do
+    |> Map.update!(:current, fn val ->
+      if Bills.late_payment?(payment, billing_period) do
         val
       else
         D.add(val, base)
       end
     end)
     |> Map.update!(:overdue, fn val ->
-      if (Bills.late_payment?(payment, billing_period)) do
+      if Bills.late_payment?(payment, billing_period) do
         D.add(val, base)
       else
         val
       end
     end)
-    |> Map.update!(:surcharges, &(D.add(&1, surcharge)))
-    |> Map.update!(:franchise_tax, &(D.add(&1, tax)))
-    |> Map.update!(:death_aid, &(D.add(&1, death_aid)))
-    |> Map.update!(:reconnection_fee, &(D.add(&1, reconnection)))
-    |> Map.update!(:membership_and_advance_fee, &(D.add(&1, membership)))
-    |> Map.update!(:billing_periods, fn val -> 
+    |> Map.update!(:surcharges, &D.add(&1, surcharge))
+    |> Map.update!(:franchise_tax, &D.add(&1, tax))
+    |> Map.update!(:death_aid, &D.add(&1, death_aid))
+    |> Map.update!(:reconnection_fee, &D.add(&1, reconnection))
+    |> Map.update!(:membership_and_advance_fee, &D.add(&1, membership))
+    |> Map.update!(:billing_periods, fn val ->
       abbreviated = Helpers.abbreviate_month(billing_period.month)
+
       case val do
         "" -> abbreviated
         val -> "#{val}/#{abbreviated}"
       end
     end)
-    |> Map.update!(:total, &(D.add(&1, total)))
+    |> Map.update!(:total, &D.add(&1, total))
   end
 
   defp assign_pagination_information(%{assigns: assigns} = socket) do

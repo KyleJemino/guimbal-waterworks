@@ -3,7 +3,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.HistoryFormComponent do
   alias GuimbalWaterworks.Bills
   import Ecto.Changeset
 
-  @types %{ 
+  @types %{
     from_year: :string,
     to_year: :string
   }
@@ -28,53 +28,50 @@ defmodule GuimbalWaterworksWeb.MemberLive.HistoryFormComponent do
       |> Map.get(:due_date)
       |> Map.get(:year)
 
-    year_options = 
+    year_options =
       Enum.map(min_year..max_year, &Integer.to_string/1)
 
     changeset = form_changeset(%__MODULE__{}, %{})
-      
+
     {:ok,
-      socket
-      |> assign(assigns)
-      |> assign(:year_options, year_options)
-      |> assign(:changeset, changeset)
-    }
+     socket
+     |> assign(assigns)
+     |> assign(:year_options, year_options)
+     |> assign(:changeset, changeset)}
   end
 
   @impl true
   def handle_event(
-    "validate", 
-    %{"history_form_component" => params}, 
-    socket
-  ) do
-    changeset = 
+        "validate",
+        %{"history_form_component" => params},
+        socket
+      ) do
+    changeset =
       params
       |> form_changeset()
       |> Map.put(:action, :validate)
       |> IO.inspect()
 
-    {:noreply, 
-      assign(socket, :changeset, changeset)
-    }
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
   @impl true
   def handle_event(
-    "redirect", 
-    %{"history_form_component" => params}, 
-    socket
-  ) do
-    {:noreply, 
-      push_redirect(
-        socket, 
-        to: Routes.member_history_path(
-          socket, 
-          :print, 
-          socket.assigns.member_id, 
-          params
-        )
-      )
-    }
+        "redirect",
+        %{"history_form_component" => params},
+        socket
+      ) do
+    {:noreply,
+     push_redirect(
+       socket,
+       to:
+         Routes.member_history_path(
+           socket,
+           :print,
+           socket.assigns.member_id,
+           params
+         )
+     )}
   end
 
   defp form_changeset(form \\ %__MODULE__{}, params) do
@@ -92,8 +89,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.HistoryFormComponent do
     cond do
       is_nil(from_year) || is_nil(to_year) ->
         changeset
+
       from_year > to_year ->
         add_error(changeset, :from_year, "From must be before To")
+
       true ->
         changeset
     end

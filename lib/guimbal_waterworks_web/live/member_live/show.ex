@@ -34,8 +34,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.Show do
      |> assign(:bill, bill)
      |> assign(:filter_params, params)
      |> assign(:clean_params, clean_params)
-     |> assign(:current_member_show_path, Routes.member_show_path(socket, :show, member, clean_params))
-    }
+     |> assign(
+       :current_member_show_path,
+       Routes.member_show_path(socket, :show, member, clean_params)
+     )}
   end
 
   @impl true
