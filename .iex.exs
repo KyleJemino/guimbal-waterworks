@@ -3,7 +3,8 @@ alias GuimbalWaterworks.{
   Accounts,
   Bills,
   Members,
-  Requests
+  Requests,
+  Repo
 }
 
 alias Accounts.Users
