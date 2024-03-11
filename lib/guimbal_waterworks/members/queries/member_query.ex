@@ -60,6 +60,8 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
   end
 
   defp query_by(query, %{"status" => status} = params) do
+    today = Date.utc_today()
+
     status_query =
       case status do
         "connected" ->
@@ -95,17 +97,16 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
           |> where(
             [m],
             subquery(
-              from(b in Bill,
-                select: count(),
-                where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)
-              )
+              Bill
+              |> select([c], count())
+              |> join(:inner, [b], bp in BillingPeriod, on: b.billing_period_id == bp.id)
+              |> where([_b, bp], bp.due_date < ^today)
+              |> where([b, _bp], parent_as(:member).id == b.member_id and is_nil(b.payment_id))
             ) == 2
           )
           |> where([m], m.connected?)
 
         "for_disconnection" ->
-          today = Date.utc_today()
-
           query
           |> where(
             [m],
