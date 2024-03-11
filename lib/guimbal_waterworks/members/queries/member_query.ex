@@ -1,7 +1,10 @@
 defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
   import Ecto.Query
   alias GuimbalWaterworks.Members.Member
-  alias GuimbalWaterworks.Bills.Bill
+  alias GuimbalWaterworks.Bills.{
+    Bill,
+    BillingPeriod
+  }
 
   def query_member(params) do
     from(m in Member, as: :member)
@@ -101,14 +104,17 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
           |> where([m], m.connected?)
 
         "for_disconnection" ->
+          today = Date.utc_today()
+
           query
           |> where(
             [m],
             subquery(
-              from(b in Bill,
-                select: count(),
-                where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)
-              )
+              Bill
+              |> select([c], count())
+              |> join(:inner, [b], bp in BillingPeriod, on: b.billing_period_id == bp.id)
+              |> where([_b, bp], bp.due_date < ^today)
+              |> where([b, _bp], parent_as(:member).id == b.member_id and is_nil(b.payment_id))
             ) == 3
           )
           |> where([m], m.connected?)
