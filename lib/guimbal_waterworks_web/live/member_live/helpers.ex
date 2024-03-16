@@ -1,5 +1,10 @@
 defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
   alias GuimbalWaterworks.Bills
+  alias GuimbalWaterworks.Bills.{
+    Bill,
+    BillingPeriod
+  }
+  alias GuimbalWaterworks.Members.Member
   alias GuimbalWaterworks.Helpers, as: GeneralHelpers
   alias GuimbalWaterworksWeb.DisplayHelpers, as: Display
   alias GuimbalWaterworksWeb.PaginationHelpers, as: Page
@@ -45,6 +50,49 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
         end)
 
       Map.put(member_map_acc, member.id, bills_with_amount)
+    end)
+  end
+
+  def get_member_status(%Member{
+    connected?: true
+  } = member) do
+    case get_overdue_bills_count(member) do
+      0 -> "Updated Payments"
+      1 -> "With 1 Unpaid"
+      _ -> "For Disconnection"
+    end
+  end
+
+  def get_member_status(%Member{
+    connected?: false
+  } = member) do
+    if get_overdue_bills_count(member) < 2 do
+      "For Reconnection"
+    else
+      "Disconnected"
+    end
+  end
+
+  def get_overdue_bills_count(member) do
+    Enum.count(member.bills, fn bill ->
+      %{ 
+        payment: payment,
+        member: %Member{} = member,
+        billing_period: %BillingPeriod{
+          rate: rate,
+          due_date: due_date
+        } = billing_period,
+      } = bill
+
+
+      date_to_compare = 
+        if not is_nil(payment) do
+          payment.paid_at
+        else
+          Date.utc_today()
+        end
+
+      Date.diff(date_to_compare, due_date) > 0
     end)
   end
 
