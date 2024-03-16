@@ -73,7 +73,7 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
           |> where([q], not q.connected?)
 
 
-        "unpaid" ->
+        "with_unpaid" ->
           query
           |> where(
             [m],
@@ -82,11 +82,11 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
               |> select([c], count())
               |> join(:inner, [b], bp in BillingPeriod, on: b.billing_period_id == bp.id)
               |> where([b, _bp], parent_as(:member).id == b.member_id and is_nil(b.payment_id))
-            ) = 1
+            ) == 1
           )
           |> where([m], m.connected?)
 
-        "with_no_unpaid" ->
+        "updated_payments" ->
           query
           |> where(
             [m],
