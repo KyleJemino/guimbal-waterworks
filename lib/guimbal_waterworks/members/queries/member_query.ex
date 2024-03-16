@@ -72,15 +72,19 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
           query
           |> where([q], not q.connected?)
 
-        "with_unpaid" ->
+
+        "unpaid" ->
           query
           |> where(
             [m],
-            fragment(
-              "EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)",
-              m.id
-            )
+            subquery(
+              Bill
+              |> select([c], count())
+              |> join(:inner, [b], bp in BillingPeriod, on: b.billing_period_id == bp.id)
+              |> where([b, _bp], parent_as(:member).id == b.member_id and is_nil(b.payment_id))
+            ) = 1
           )
+          |> where([m], m.connected?)
 
         "with_no_unpaid" ->
           query
@@ -92,20 +96,6 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
             )
           )
 
-        "disconnection_warning" ->
-          query
-          |> where(
-            [m],
-            subquery(
-              Bill
-              |> select([c], count())
-              |> join(:inner, [b], bp in BillingPeriod, on: b.billing_period_id == bp.id)
-              |> where([_b, bp], bp.due_date < ^today)
-              |> where([b, _bp], parent_as(:member).id == b.member_id and is_nil(b.payment_id))
-            ) == 2
-          )
-          |> where([m], m.connected?)
-
         "for_disconnection" ->
           query
           |> where(
@@ -114,9 +104,8 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
               Bill
               |> select([c], count())
               |> join(:inner, [b], bp in BillingPeriod, on: b.billing_period_id == bp.id)
-              |> where([_b, bp], bp.due_date < ^today)
               |> where([b, _bp], parent_as(:member).id == b.member_id and is_nil(b.payment_id))
-            ) == 3
+            ) > 1
           )
           |> where([m], m.connected?)
 
