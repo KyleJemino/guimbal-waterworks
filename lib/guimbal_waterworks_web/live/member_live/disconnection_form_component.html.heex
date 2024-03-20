@@ -1,0 +1,32 @@
+<div class="form-modal-container">
+  <h1 class="text-center"><%= @title %></h1>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="disconnection-form"
+    as="filter_params"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="create_sheet"
+    phx-hook="GenerateDisconnectionCSV"
+    class="form-component mt-4"
+  >
+    <div class="flex flex-row justify-center gap-4">
+      <div class="field-group">
+        <%= label f, :street %>
+        <%= select( 
+          f, 
+          :street, 
+          Constants.streets(), 
+          required: true  
+        )%>
+        <%= error_tag f, :street %>
+      </div>
+    </div>
+
+    <div class="form-button-group">
+      <%= submit "Create", phx_disable_with: "Saving...", class: "submit" %>
+    </div>
+  </.form>
+</div>

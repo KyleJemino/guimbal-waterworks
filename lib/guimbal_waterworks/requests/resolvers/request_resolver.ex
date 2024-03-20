@@ -79,7 +79,7 @@ defmodule GuimbalWaterworks.Requests.Resolvers.RequestResolver do
       {:ok, %{approved_request: request}} ->
         {:ok, request}
 
-      {:error, _op, _val, _changes} = result ->
+      {:error, _op, _val, _changes} ->
         {:error, :failed_multi}
     end
   end

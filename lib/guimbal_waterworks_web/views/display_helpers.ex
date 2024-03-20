@@ -59,26 +59,13 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
 
   def display_period(billing_period), do: "#{billing_period.month} #{billing_period.year}"
 
-  def member_status(unpaid_period_amount_map, true = _connected?) do
-    case Enum.count(unpaid_period_amount_map) do
-      0 -> "With No Unpaid"
-      1 -> "With 1 Unpaid"
-      2 -> "Disconnection Warning"
-      _ -> "For Disconnection"
-    end
-  end
-
-  def member_status(unpaid_period_amount_map, false = _connected?) do
-    if Enum.count(unpaid_period_amount_map) < 2 do
-      "For Reconnection"
-    else
-      "Disconnected"
-    end
+  def display_abbreviated_period(%{month: month, year: year}) do
+    "#{String.slice(month, 0..2)} #{year}"
   end
 
   def status_color(status) do
     case status do
-      "With No Unpaid" -> "green"
+      "Updated Payments" -> "green"
       "For Reconnection" -> "blue"
       "With 1 Unpaid" -> "yellow"
       "Disconnection Warning" -> "orange"
