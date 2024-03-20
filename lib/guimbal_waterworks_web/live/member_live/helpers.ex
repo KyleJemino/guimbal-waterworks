@@ -8,6 +8,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
   alias GuimbalWaterworks.Helpers, as: GeneralHelpers
   alias GuimbalWaterworksWeb.DisplayHelpers, as: Display
   alias GuimbalWaterworksWeb.PaginationHelpers, as: Page
+  alias Decimal, as: D
 
   @valid_filter_keys [
     "last_name",
@@ -39,7 +40,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
             Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
           %{
-            total: Decimal.add(running_total, current_bill_amount),
+            total: D.add(running_total, current_bill_amount),
             period_amount_map:
               Map.put(
                 period_amount_map,
@@ -114,5 +115,77 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
     |> Map.take(Page.param_keys() ++ @valid_filter_keys)
     |> Map.merge(Page.default_pagination_params(), fn _k, v1, _v2 -> v1 end)
     |> Page.sanitize_pagination_params()
+  end
+
+  def build_disconnection_map(members, street) do
+    {reversed_rows, billing_periods, total} =
+      members
+      |> Enum.with_index(1)
+      |> Enum.reduce({[], [], D.new(0)}, 
+        fn {member, index}, {rows, billing_periods_acc, total} ->
+          row = %{
+            street => Display.full_name(member),
+            "index" => index
+          }
+
+          {member_row, updated_billing_periods, updated_total} =
+            Enum.reduce(member.bills, {row, billing_periods_acc, total}, 
+              fn bill, {current_row, curr_billing_periods_acc, member_total_acc} ->
+                maybe_updated_billing_periods_acc =
+                  if (Enum.member?(curr_billing_periods_acc, bill.billing_period)) do
+                    curr_billing_periods_acc
+                  else
+                    [bill.billing_period | curr_billing_periods_acc]
+                  end
+
+                {:ok, 
+                  %{
+                    base_amount: base_amount, 
+                    franchise_tax_amount: franchise_tax_amount,
+                    membership_amount: membership_amount,
+                    reconnection_amount: reconnection_amount,
+                    surcharge: surcharge_amount,
+                    death_aid_amount: death_aid_amount,
+                    total: bill_total_amount
+                  }
+                } = Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
+
+                billing_period_header = Display.display_abbreviated_period(bill.billing_period)
+
+                updated_row =
+                  current_row
+                  |> Map.put_new(billing_period_header, base_amount)
+                  |> Map.update("FT", D.new(0), fn val -> D.add(val, franchise_tax_amount) end)
+                  |> Map.update("SC", D.new(0), fn val -> D.add(val, surcharge_amount) end)
+                  |> Map.update("DA", D.new(0), fn val -> D.add(val, death_aid_amount) end)
+                  |> Map.update("Others", D.new(0), 
+                    fn val -> 
+                      val
+                      |> D.add(membership_amount) 
+                      |> D.add(reconnection_amount) 
+                    end
+                  )
+                  |> Map.update("Total", D.new(0), fn val -> D.add(val, bill_total_amount) end)
+
+                updated_total = D.add(member_total_acc, bill_total_amount)
+
+                {updated_row, maybe_updated_billing_periods_acc, updated_total}
+              end
+            )
+
+
+          {[member_row | rows], updated_billing_periods, updated_total}
+        end
+      )
+
+    period_headers =
+      billing_periods
+      |> Enum.sort_by(&(&1.due_date), {:asc, Date})
+      |> Enum.map(&Display.display_abbreviated_period/1)
+
+    rows_with_total =
+      Enum.reverse([%{street => "Total", "Total" => total} | reversed_rows])
+
+    {rows_with_total, period_headers}
   end
 end

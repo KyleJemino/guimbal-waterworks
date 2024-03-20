@@ -59,6 +59,10 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
 
   def display_period(billing_period), do: "#{billing_period.month} #{billing_period.year}"
 
+  def display_abbreviated_period(%{month: month, year: year}) do
+    "#{String.slice(month, 0..2)} #{year}"
+  end
+
   def status_color(status) do
     case status do
       "Updated Payments" -> "green"
