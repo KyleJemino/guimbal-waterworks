@@ -65,6 +65,13 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
     |> assign(:bill, nil)
   end
 
+  defp apply_action(socket, :disconnection_form, _params) do
+    socket
+    |> assign(:page_title, "Generate Disconnection Sheet")
+    |> assign(:member, nil)
+    |> assign(:bill, nil)
+  end
+
   defp assign_payment(socket, :payment, %{"id" => member_id}) do
     assign(
       socket,

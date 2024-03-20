@@ -146,6 +146,7 @@ defmodule GuimbalWaterworksWeb.Router do
       pipe_through [:browser, :require_authenticated_users]
 
       live "/members", MemberLive.Index, :index
+      live "/members/disconnection-form", MemberLive.Index, :disconnection_form
 
       live "/members/:id", MemberLive.Show, :show
       live "/members/:id/payments", MemberLive.Show, :payments

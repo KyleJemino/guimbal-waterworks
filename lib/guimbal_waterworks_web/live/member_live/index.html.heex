@@ -42,11 +42,23 @@
 <% end %>
 </SC.render_for_roles>
 
+<%= if @live_action in [:disconnection_form] do %>
+  <.modal return_to={Routes.member_index_path(@socket, :index, @filter_params)}>
+    <.live_component
+      module={GuimbalWaterworksWeb.MemberLive.DisconnectionFormComponent}
+      id={:disconnection_form}
+      title="Select street"
+      return_to={Routes.member_index_path(@socket, :index, @filter_params)}
+    />
+  </.modal>
+<% end %>
+
 <div class="page-container">
   <h1>Listing Members</h1>
 
   <div class="page-button-container mt-3">
     <%= live_patch "New Member", to: Routes.member_index_path(@socket, :new, @filter_params), class: "button -dark" %>
+    <%= live_patch "Print Disconnection List", to: Routes.member_index_path(@socket, :disconnection_form, @filter_params), class: "button -dark" %>
   </div>
 
   <.live_component

@@ -9,8 +9,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     Connected: :connected,
     Disconnected: :disconnected,
     "With Unpaid Bills": :with_unpaid,
-    "Updated Payments": :with_no_unpaid,
-    "Disconnection Warning": :disconnection_warning,
+    "Updated Payments": :updated_payments,
     "For Disconnection": :for_disconnection,
     "For Reconnection": :for_reconnection
   ]

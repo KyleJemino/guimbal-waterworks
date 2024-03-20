@@ -108,7 +108,7 @@
           </td>
           <SC.status_cell
             status={
-            Display.member_status(@member_bill_map[member.id].period_amount_map, member.connected?)
+              MLHelpers.get_member_status(member)
             }
           />
           <td 

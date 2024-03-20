@@ -1,7 +1,11 @@
 defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
   import Ecto.Query
   alias GuimbalWaterworks.Members.Member
-  alias GuimbalWaterworks.Bills.Bill
+
+  alias GuimbalWaterworks.Bills.{
+    Bill,
+    BillingPeriod
+  }
 
   def query_member(params) do
     from(m in Member, as: :member)
@@ -71,13 +75,16 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
           query
           |> where(
             [m],
-            fragment(
-              "EXISTS (SELECT * FROM bills b WHERE b.member_id = ? AND b.payment_id IS NULL)",
-              m.id
-            )
+            subquery(
+              Bill
+              |> select([c], count())
+              |> join(:inner, [b], bp in BillingPeriod, on: b.billing_period_id == bp.id)
+              |> where([b, _bp], parent_as(:member).id == b.member_id and is_nil(b.payment_id))
+            ) == 1
           )
+          |> where([m], m.connected?)
 
-        "with_no_unpaid" ->
+        "updated_payments" ->
           query
           |> where(
             [m],
@@ -87,29 +94,16 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
             )
           )
 
-        "disconnection_warning" ->
-          query
-          |> where(
-            [m],
-            subquery(
-              from(b in Bill,
-                select: count(),
-                where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)
-              )
-            ) == 2
-          )
-          |> where([m], m.connected?)
-
         "for_disconnection" ->
           query
           |> where(
             [m],
             subquery(
-              from(b in Bill,
-                select: count(),
-                where: parent_as(:member).id == b.member_id and is_nil(b.payment_id)
-              )
-            ) == 3
+              Bill
+              |> select([c], count())
+              |> join(:inner, [b], bp in BillingPeriod, on: b.billing_period_id == bp.id)
+              |> where([b, _bp], parent_as(:member).id == b.member_id and is_nil(b.payment_id))
+            ) > 1
           )
           |> where([m], m.connected?)
 

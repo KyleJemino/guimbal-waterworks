@@ -50,7 +50,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.HistoryFormComponent do
       params
       |> form_changeset()
       |> Map.put(:action, :validate)
-      |> IO.inspect()
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
