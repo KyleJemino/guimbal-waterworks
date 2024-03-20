@@ -1,6 +1,7 @@
 defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
   import Ecto.Query
   alias GuimbalWaterworks.Members.Member
+
   alias GuimbalWaterworks.Bills.{
     Bill,
     BillingPeriod
@@ -71,7 +72,6 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
         "disconnected" ->
           query
           |> where([q], not q.connected?)
-
 
         "with_unpaid" ->
           query

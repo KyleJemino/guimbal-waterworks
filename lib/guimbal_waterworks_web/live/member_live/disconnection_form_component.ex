@@ -17,11 +17,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.DisconnectionFormComponent do
   def update(assigns, socket) do
     changeset = form_changeset(%__MODULE__{}, %{})
 
-    {:ok, 
-      socket
-      |> assign(assigns)
-      |> assign(:changeset, changeset)
-    }
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> assign(:changeset, changeset)}
   end
 
   @impl true
@@ -38,7 +37,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.DisconnectionFormComponent do
     if changeset.valid? do
       street = filter_params["street"]
 
-      {rows, period_headers} = 
+      {rows, period_headers} =
         filter_params
         |> Map.merge(%{
           "preload" => [bills: MLHelpers.unpaid_bill_preload_query()],
@@ -53,20 +52,18 @@ defmodule GuimbalWaterworksWeb.MemberLive.DisconnectionFormComponent do
         |> Members.list_members()
         |> MLHelpers.build_disconnection_map(street)
 
-      {:noreply, 
-        push_event(
-          socket, 
-          "generate-disconnection", 
-          %{
-            rows: rows,
-            period_headers: period_headers,
-            street: street
-          }
-        )
-      }
+      {:noreply,
+       push_event(
+         socket,
+         "generate-disconnection",
+         %{
+           rows: rows,
+           period_headers: period_headers,
+           street: street
+         }
+       )}
     else
       {:noreply, assign(socket, :changeset, changeset)}
-
     end
   end
 
