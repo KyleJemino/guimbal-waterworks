@@ -61,8 +61,6 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
   end
 
   defp query_by(query, %{"status" => status} = params) do
-    today = Date.utc_today()
-
     status_query =
       case status do
         "connected" ->

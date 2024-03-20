@@ -4,7 +4,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.Index do
   alias GuimbalWaterworks.Helpers
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     {:ok, socket}
   end
 

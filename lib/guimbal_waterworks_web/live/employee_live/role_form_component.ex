@@ -20,7 +20,7 @@ defmodule GuimbalWaterworksWeb.EmployeeLive.RoleFormComponent do
   def handle_event("validate", %{"users" => user_params}, socket) do
     changeset = Accounts.change_user_role(socket.assigns.employee, user_params)
 
-    {:noreply, socket}
+    {:noreply, assign(socket, changeset: changeset)}
   end
 
   def handle_event("save", %{"users" => user_params}, socket) do

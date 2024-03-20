@@ -2,7 +2,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
   alias GuimbalWaterworks.Bills
 
   alias GuimbalWaterworks.Bills.{
-    Bill,
     BillingPeriod
   }
 
@@ -84,12 +83,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
     Enum.count(member.bills, fn bill ->
       %{
         payment: payment,
-        member: %Member{} = member,
         billing_period:
           %BillingPeriod{
-            rate: rate,
             due_date: due_date
-          } = billing_period
+          }
       } = bill
 
       date_to_compare =
