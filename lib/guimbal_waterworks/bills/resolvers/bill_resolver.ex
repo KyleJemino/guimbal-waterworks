@@ -68,7 +68,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       reconnection_fee?: reconnection_fee?
     } = bill
 
-    reading = after_reading - before
+    reading = get_bill_reading(bill)
 
     %BillingPeriod{
       due_date: due_date
@@ -146,7 +146,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       reconnection_fee?: reconnection_fee?
     } = bill
 
-    reading = after_reading - before
+    reading = get_bill_reading(bill)
 
     %{
       due_date: due_date
