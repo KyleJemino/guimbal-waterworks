@@ -83,10 +83,9 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
     Enum.count(member.bills, fn bill ->
       %{
         payment: payment,
-        billing_period:
-          %BillingPeriod{
-            due_date: due_date
-          }
+        billing_period: %BillingPeriod{
+          due_date: due_date
+        }
       } = bill
 
       date_to_compare =
@@ -155,13 +154,14 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
                  total: bill_total_amount
                }} = Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
-
               billing_period_header = Display.display_abbreviated_period(bill.billing_period)
 
               updated_row =
                 current_row
                 |> Map.put_new(billing_period_header, base_amount)
-                |> Map.update("FT", franchise_tax_amount, fn val -> D.add(val, franchise_tax_amount) end)
+                |> Map.update("FT", franchise_tax_amount, fn val ->
+                  D.add(val, franchise_tax_amount)
+                end)
                 |> Map.update("SC", surcharge_amount, fn val -> D.add(val, surcharge_amount) end)
                 |> Map.update("DA", death_aid_amount, fn val -> D.add(val, death_aid_amount) end)
                 |> Map.update("Others", D.add(membership_amount, reconnection_amount), fn val ->
@@ -169,7 +169,9 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
                   |> D.add(membership_amount)
                   |> D.add(reconnection_amount)
                 end)
-                |> Map.update("Total", bill_total_amount, fn val -> D.add(val, bill_total_amount) end)
+                |> Map.update("Total", bill_total_amount, fn val ->
+                  D.add(val, bill_total_amount)
+                end)
 
               updated_total = D.add(member_total_acc, bill_total_amount)
 
