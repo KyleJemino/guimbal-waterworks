@@ -3,7 +3,7 @@ defmodule GuimbalWaterworks.Repo.Migrations.AddDiscountToBill do
 
   def change do
     alter table(:bills) do
-      add :discount_cu_m, :integer, default: 0
+      add :discount, :integer, default: 0
     end
   end
 end
