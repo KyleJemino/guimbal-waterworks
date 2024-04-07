@@ -40,7 +40,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
       :user_id,
       :before,
       :after,
-      :default
+      :discount
     ])
     |> validate_required([
       :before,
@@ -50,6 +50,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
       :member_id,
       :billing_period_id,
       :user_id,
+      :discount
     ])
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:billing_period_id)
