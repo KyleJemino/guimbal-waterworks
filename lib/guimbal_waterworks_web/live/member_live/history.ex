@@ -19,10 +19,13 @@ defmodule GuimbalWaterworksWeb.MemberLive.History do
       ) do
     member = Members.get_member!(member_id)
 
+    from_int = String.to_integer(from)
+    to_int = String.to_integer(to)
+    years = Enum.map(from_int..to_int, &Integer.to_string/1)
+
     bill_params = %{
       "member_id" => member_id,
-      "from" => from,
-      "to" => to,
+      "years" => years,
       "preload" => [:payment, billing_period: :rate],
       "order_by" => "oldest_first"
     }
