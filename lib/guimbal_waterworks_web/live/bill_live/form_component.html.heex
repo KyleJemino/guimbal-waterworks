@@ -43,8 +43,13 @@
     <%= number_input f, :after, required: true %>
     <%= error_tag f, :after %>
   </div>
-  
 
+  <div class="field-group">
+    <%= label f, :discount %>
+    <%= number_input f, :discount, required: true %>
+    <%= error_tag f, :discount %>
+  </div>
+  
   <div class="field-group">
     <div class="flex flex-row gap-2 items-center">
       <%= checkbox f, :membership_fee? %>

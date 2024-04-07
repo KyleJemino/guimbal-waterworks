@@ -26,6 +26,7 @@
       </th>
       <th class="header">Before</th>
       <th class="header">After</th>
+      <th class="header">Discount</th>
       <th class="header">Reading (Cu.M.)</th>
       <th class="header">Base Amount</th>
       <th class="header">Franchise Tax</th>
@@ -49,6 +50,7 @@
         </td>
         <td class="data text-right"><%= Decimal.round(bill.before, 2) %></td>
         <td class="data text-right"><%= Decimal.round(bill.after, 2) %></td>
+        <td class="data text-right"><%= Decimal.round(bill.discount, 2) %></td>
         <td class="data text-right"><%= Decimal.round(Bills.get_bill_reading(bill)) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
         <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
@@ -86,6 +88,7 @@
   <% end %>
     <tr class="total-row">
         <td class="data">Total</td>
+        <td class="data text-right"></td>
         <td class="data text-right"></td>
         <td class="data text-right"></td>
         <td class="data text-right"></td>

@@ -19,6 +19,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
     field :after, :integer
     field :membership_fee?, :boolean
     field :reconnection_fee?, :boolean
+    field :discount, :integer, default: 0
 
     belongs_to :member, Member
     belongs_to :billing_period, BillingPeriod
@@ -38,7 +39,8 @@ defmodule GuimbalWaterworks.Bills.Bill do
       :billing_period_id,
       :user_id,
       :before,
-      :after
+      :after,
+      :discount
     ])
     |> validate_required([
       :before,
@@ -47,7 +49,8 @@ defmodule GuimbalWaterworks.Bills.Bill do
       :reconnection_fee?,
       :member_id,
       :billing_period_id,
-      :user_id
+      :user_id,
+      :discount
     ])
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:billing_period_id)
