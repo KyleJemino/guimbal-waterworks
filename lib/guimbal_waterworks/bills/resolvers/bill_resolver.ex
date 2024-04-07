@@ -239,8 +239,11 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     |> Repo.aggregate(:count)
   end
 
-  def get_bill_reading(%Bill{before: before, after: after_reading}),
-    do: Decimal.sub(after_reading, before)
+  def get_bill_reading(%Bill{before: before, after: after_reading, discount: discount}) do
+    after_reading
+    |> Decimal.sub(before)
+    |> Decimal.sub(discount)
+  end
 
   def get_previous_bill(member_id, billing_period_id) do
     with %BillingPeriod{} = current_billing_period <-
