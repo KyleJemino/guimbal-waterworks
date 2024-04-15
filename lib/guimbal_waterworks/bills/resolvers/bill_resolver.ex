@@ -151,6 +151,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     %{
       due_date: due_date
     } = billing_period
+    raise reading
 
     base_amount =
       case member_type do
