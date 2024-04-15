@@ -240,19 +240,15 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   end
 
   def get_bill_reading(%Bill{before: before, after: after_reading, discount: discount}) do
-    IO.inspect before
-    IO.inspect after_reading
-    IO.inspect discount
-
     initial_reading = 
       after_reading
       |> Decimal.sub(before)
       |> Decimal.sub(discount || 0)
 
-    if initial_reading >= 0 do
-      initial_reading
-    else
+    if Decimal.lt?(inital_reading, "0") do
       0
+    else
+      initial_reading
     end
   end
 
