@@ -240,9 +240,16 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   end
 
   def get_bill_reading(%Bill{before: before, after: after_reading, discount: discount}) do
-    after_reading
-    |> Decimal.sub(before)
-    |> Decimal.sub(discount)
+    initial_reading = 
+      after_reading
+      |> Decimal.sub(before)
+      |> Decimal.sub(discount)
+
+    if initial_reading >= 0 do
+      initial_reading
+    else
+      0
+    end
   end
 
   def get_previous_bill(member_id, billing_period_id) do
