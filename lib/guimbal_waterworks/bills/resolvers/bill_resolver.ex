@@ -243,7 +243,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     initial_reading = 
       after_reading
       |> Decimal.sub(before)
-      |> Decimal.sub(discount)
+      |> Decimal.sub(discount || 0)
 
     if initial_reading >= 0 do
       initial_reading
