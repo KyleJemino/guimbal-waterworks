@@ -151,7 +151,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     %{
       due_date: due_date
     } = billing_period
-    raise reading
 
     base_amount =
       case member_type do
@@ -246,10 +245,10 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       |> Decimal.sub(before)
       |> Decimal.sub(discount || 0)
 
-    if initial_reading >= 0 do
-      initial_reading
-    else
+    if Decimal.lt?(initial_reading, "0") do
       0
+    else
+      initial_reading
     end
   end
 
