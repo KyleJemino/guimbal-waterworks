@@ -1,8 +1,8 @@
 .bill-card {
-  @apply font-medium flex flex-col gap-4;
+  @apply font-medium flex flex-col gap-2;
 
   width: 10cm;
-  height: 13cm;
+  height: 16.5cm;
   padding: 1.0cm 0.5cm 0.5cm 0.5cm;
 
   font-size: 12px;
@@ -34,7 +34,7 @@
 }
 
 .bill-content {
-  @apply pt-4 h-max;
+  @apply h-max;
 
   background-image: url("/images/bill-background.png");
   background-position: center;
@@ -44,4 +44,8 @@
 
 .death-aid-section {
   @apply flex flex-col justify-end h-max flex-grow;
+}
+
+.bill-highlight {
+  @apply text-red-500
 }

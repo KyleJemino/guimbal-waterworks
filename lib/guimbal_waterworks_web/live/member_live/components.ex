@@ -34,7 +34,17 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             <div class="font-bold"><%= Display.format_date(@latest_bill.billing_period.to, "%m/%d/%y") %></div>
             <div class="font-bold"><%= Bills.get_bill_reading(@latest_bill) %></div>
           </div>
-          <p class="text-center mt-2 font-bold uppercase">Price Breakdown</p>
+          <div class="grid grid-cols-4 grid-row-2">
+            <div>Before</div>
+            <div>After</div>
+            <div>Discount</div>
+            <div>Reading</div>
+            <div class="font-bold"><%= @latest_bill.before %> Cu.M.</div>
+            <div class="font-bold"><%= @latest_bill.after %> Cu.M.</div>
+            <div class="font-bold"><%= @latest_bill.discount %> Cu.M.</div>
+            <div class="font-bold"><%= Bills.get_bill_reading(@latest_bill) %> Cu.M.</div>
+          </div>
+          <p class="text-center mt-2 font-bold uppercase bill-highlight">Price Breakdown</p>
           <div class="flex flex-col">
             <div class="grid grid-cols-2">
             <p><%= Bills.get_bill_reading(@latest_bill) %> Cu.M.</p>
@@ -78,10 +88,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             <% end %>
             <div class="grid grid-cols-2 font-bold uppercase border-t-2 border-black">
               <p>Current Total</p>
-              <p class="text-right"><%= Display.money(@latest_bill_calc.total) %></p>
+              <p class="text-right bill-highlight"><%= Display.money(@latest_bill_calc.total) %></p>
             </div>
             <%= if Enum.count(@previous_bills) > 0 do %>
-              <p class="text-center font-bold uppercase">Previous Unpaid Bills</p>
+              <p class="text-center font-bold uppercase bill-highlight">Previous Unpaid Bills</p>
               <%= for bill <- @previous_bills do %>
                 <div class="grid grid-cols-2">
                   <p><%= Display.display_period bill.billing_period %></p>
@@ -91,14 +101,19 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             <% end %>
             <div class="grid grid-cols-2 font-bold uppercase border-t-2 border-black">
               <p>Total Unpaid</p>
-              <p class="text-right"><%= Display.money(@total)  %></p>
+              <p class="text-right bill-highlight"><%= Display.money(@total)  %></p>
             </div>
           </div>
         </div>
         <div class="death-aid-section">
           <p>Mutual Death Aid</p>
-          <p><%= Enum.join(@death_aid_recipients, ", ") %></p>
+          <%= for recipient <- @death_aid_recipients do %>
+            <p class="bill-highlight"><%= recipient %></p>
+          <% end %>
         </div>
+        <p>
+          (Kindly disregard the previouse bills if payment has been made.)
+        </p>
       </div>
     """
   end
