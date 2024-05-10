@@ -15,9 +15,14 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
           </div>
         </div>
         <div class="bill-content h-auto">
-          <h5 class="text-right">
-            Date Due: <span class="font-bold"><%= Display.format_date(@latest_bill.billing_period.due_date) %></span>
-          </h5>
+          <div class="flex justify-between">
+            <h5 class="font-bold bill-highlight">
+              <%= Display.display_period @latest_bill.billing_period %>
+            </h5>
+            <h5 class="text-right">
+              Date Due: <span class="font-bold"><%= Display.format_date(@latest_bill.billing_period.due_date) %></span>
+            </h5>
+          </div>
           <p class="uppercase">
             <span class="mr-2">Name:</span>
             <span class="font-bold"><%= Display.full_name(@member) %></span>
@@ -112,7 +117,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
           <% end %>
         </div>
         <p>
-          (Kindly disregard the previouse bills if payment has been made.)
+          (Kindly disregard the previous bills if payment has been made.)
         </p>
       </div>
     """
