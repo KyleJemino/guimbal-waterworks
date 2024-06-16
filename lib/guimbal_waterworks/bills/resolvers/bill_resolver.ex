@@ -143,7 +143,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       before: before,
       after: after_reading,
       membership_fee?: membership_fee?,
-      reconnection_fee?: reconnection_fee?
+      reconnection_fee?: reconnection_fee?,
+      discount: discount
     } = bill
 
     reading = get_bill_reading(bill)
@@ -153,13 +154,15 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     } = billing_period
 
     base_amount =
-      case member_type do
-        :personal ->
+      cond  do
+        Decimal.lt?(reading, "0") -> D.new("0")
+
+        member_type = :personal ->
           rate.personal_prices
           |> Map.get("#{reading}")
           |> D.new()
 
-        :business ->
+        member_type = :business ->
           D.mult(rate.business_rate, reading)
       end
 
@@ -240,16 +243,9 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   end
 
   def get_bill_reading(%Bill{before: before, after: after_reading, discount: discount}) do
-    initial_reading = 
-      after_reading
-      |> Decimal.sub(before)
-      |> Decimal.sub(discount || 0)
-
-    if Decimal.lt?(initial_reading, "0") do
-      0
-    else
-      initial_reading
-    end
+    after_reading
+    |> Decimal.sub(before)
+    |> Decimal.sub(discount || 0)
   end
 
   def get_previous_bill(member_id, billing_period_id) do
