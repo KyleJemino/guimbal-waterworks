@@ -67,7 +67,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     } = bill
 
     %{
-      mda?: mda?
+      mda?: mda?,
+      type: type
     } = member
 
     reading = get_bill_reading(bill)
@@ -77,15 +78,16 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     } = billing_period
 
     base_amount =
-      cond  do
-        Decimal.lt?(reading, "0") -> D.new("0")
+      cond do
+        Decimal.lt?(reading, "0") ->
+          D.new("0")
 
-        member_type = :personal ->
+        type == :personal ->
           rate.personal_prices
           |> Map.get("#{reading}")
           |> D.new()
 
-        member_type = :business ->
+        type == :business ->
           D.mult(rate.business_rate, reading)
       end
 
@@ -138,7 +140,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
         } = billing_period,
         %Member{} = member,
         payment
-      ), do: calculate_bill(bill, billing_period, member, payment, rate)
+      ),
+      do: calculate_bill(bill, billing_period, member, payment, rate)
 
   def calculate_bill(_bill, _period, _member, _payment), do: {:error, nil}
 
