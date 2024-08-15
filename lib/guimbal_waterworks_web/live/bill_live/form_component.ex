@@ -84,7 +84,10 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   end
 
   defp change_bill_maybe_with_defaults(bill, params) do
-    Bills.change_bill(bill, params)
+    bill
+    |> Bills.change_bill(params)
+    |> maybe_add_initial_before(params)
+
     #
     #   billing_period_change =
     #     Changeset.get_change(changeset, :billing_period_id)
@@ -111,10 +114,14 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
     billing_period_change =
       Changeset.get_change(changeset, :billing_period_id)
 
+    before_change =
+      Changeset.get_change(changeset, :before)
+
     member_id =
       Changeset.get_field(changeset, :member_id)
 
     with true <- not is_nil(billing_period_change),
+         true <- is_nil(before_change),
          %Bill{after: previous_reading} <-
            Bills.get_previous_bill(member_id, billing_period_change) do
       Changeset.put_change(changeset, :before, previous_reading)
