@@ -28,7 +28,10 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
         _ -> %{}
       end
 
-    changeset = maybe_add_initial_before(bill, initial_params)
+    changeset =
+      bill
+      |> Bills.change_bill(initial_params)
+      |> maybe_add_initial_before()
 
     {:ok,
      socket
@@ -76,7 +79,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
     end
   end
 
-  defp change_bill_maybe_with_defaults(bill, params \\ %{})
+  defp change_bill_maybe_with_defaults(bill, params)
 
   defp change_bill_maybe_with_defaults(%Bill{id: bill_id} = bill, params)
        when not is_nil(bill_id) do
@@ -86,7 +89,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   defp change_bill_maybe_with_defaults(bill, params) do
     bill
     |> Bills.change_bill(params)
-    |> maybe_add_initial_before(params)
+    |> maybe_add_initial_before()
 
     #
     #   billing_period_change =
@@ -108,9 +111,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
     #   end
   end
 
-  defp maybe_add_initial_before(bill, params) do
-    changeset = Bills.change_bill(bill, params)
-
+  defp maybe_add_initial_before(changeset) do
     billing_period_change =
       Changeset.get_change(changeset, :billing_period_id)
 
