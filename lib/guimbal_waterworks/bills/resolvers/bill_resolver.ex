@@ -26,10 +26,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def get_bill(params \\ %{}) do
     params
-    |> IO.inspect(label: "### get bill params")
     |> BQ.query_bill()
     |> Repo.one()
-    |> IO.inspect(label: "### get bill result")
   end
 
   def create_bill(params \\ %{}) do
@@ -187,18 +185,14 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def get_previous_bill(member_id, billing_period_id) do
     with %BillingPeriod{} = current_billing_period <-
-           BPR.get_billing_period(%{"id" => billing_period_id})
-           |> IO.inspect(label: "### current bp"),
+           BPR.get_billing_period(%{"id" => billing_period_id}),
          %BillingPeriod{} = previous_billing_period <-
-           BPR.get_previous_billing_period(current_billing_period)
-           |> IO.inspect(label: "### previous bp"),
+           BPR.get_previous_billing_period(current_billing_period),
          %Bill{} = previous_bill <-
-           get_bill(%{"billing_period_id" => previous_billing_period.id, "member_id" => member_id})
-           |> IO.inspect(label: "### previous bill") do
-      previous_bill |> IO.inspect(label: "### queried")
+           get_bill(%{"billing_period_id" => previous_billing_period.id, "member_id" => member_id}) do
+      previous_bill
     else
-      result ->
-        IO.inspect(result, label: "### with fail")
+      _result ->
         nil
     end
   end

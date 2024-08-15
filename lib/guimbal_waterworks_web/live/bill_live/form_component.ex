@@ -90,43 +90,19 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
     bill
     |> Bills.change_bill(params)
     |> maybe_add_initial_before()
-
-    #
-    #   billing_period_change =
-    #     Changeset.get_change(changeset, :billing_period_id)
-    #
-    #   member_id =
-    #     Changeset.get_field(changeset, :member_id)
-    #
-    #   with true <- not is_nil(billing_period_change),
-    #        %Bill{after: previous_reading} <-
-    #          Bills.get_previous_bill(member_id, billing_period_change) do
-    #     Changeset.put_change(changeset, :before, previous_reading)
-    #   else
-    #     nil ->
-    #       Changeset.force_change(changeset, :before, nil)
-    #
-    #     _ ->
-    #       changeset
-    #   end
   end
 
   defp maybe_add_initial_before(changeset) do
     billing_period_change =
       Changeset.get_change(changeset, :billing_period_id)
 
-    before_change =
-      Changeset.get_change(changeset, :before)
-
     member_id =
       Changeset.get_field(changeset, :member_id)
 
     with true <- not is_nil(billing_period_change),
-         true <- is_nil(before_change),
          %Bill{after: previous_reading} <-
            Bills.get_previous_bill(member_id, billing_period_change) do
       Changeset.put_change(changeset, :before, previous_reading)
-      |> IO.inspect(label: "### changeset")
     else
       nil ->
         Changeset.force_change(changeset, :before, nil)
