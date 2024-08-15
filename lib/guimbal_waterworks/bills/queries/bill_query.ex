@@ -109,6 +109,20 @@ defmodule GuimbalWaterworks.Bills.Queries.BillQuery do
     |> query_by(Map.delete(params, "street"))
   end
 
+  defp query_by(
+         query,
+         %{
+           "last_member_bill_before" => %{"member_id" => member_id, "before_date" => before_date}
+         } = params
+       ) do
+    query
+    |> where([q], q.member_id == ^member_id)
+    |> where([_q, billing_period: bp], bp.due_date < ^before_date)
+    |> order_by([_q, billing_period: bp], desc: bp.due_date)
+    |> first()
+    |> query_by(Map.delete(params, "last_member_bill_before"))
+  end
+
   defp query_by(query, %{"type" => type} = params) when type in ["personal", "business"] do
     query
     |> where([_q, member: m], m.type == ^type)
