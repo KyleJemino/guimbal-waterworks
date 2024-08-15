@@ -185,11 +185,16 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def get_previous_bill(member_id, billing_period_id) do
     with %BillingPeriod{} = current_billing_period <-
-           BPR.get_billing_period(%{"id" => billing_period_id}),
+           BPR.get_billing_period(%{"id" => billing_period_id})
+           |> IO.inspect(label: "### current bp"),
          %BillingPeriod{} = previous_billing_period <-
-           BPR.get_previous_billing_period(current_billing_period),
+           BPR.get_previous_billing_period(
+             current_billing_period
+             |> IO.inspect(label: "### previous bp")
+           ),
          %Bill{} = previous_bill <-
-           get_bill(%{"billing_period_id" => previous_billing_period.id, "member_id" => member_id}) do
+           get_bill(%{"billing_period_id" => previous_billing_period.id, "member_id" => member_id})
+           |> IO.inspect(label: "### previous bill") do
       previous_bill
     else
       _ ->
