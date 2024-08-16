@@ -41,9 +41,11 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
   end
 
   def handle_event("validate", %{"bill" => bill_params}, socket) do
+    previous_changeset = socket.assigns.changeset
+
     changeset =
       socket.assigns.bill
-      |> change_bill_maybe_with_defaults(bill_params)
+      |> change_bill_maybe_with_defaults(bill_params, previous_changeset)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
@@ -79,36 +81,45 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
     end
   end
 
-  defp change_bill_maybe_with_defaults(bill, params)
+  defp change_bill_maybe_with_defaults(bill, params, previous_changeset)
 
-  defp change_bill_maybe_with_defaults(%Bill{id: bill_id} = bill, params)
+  defp change_bill_maybe_with_defaults(%Bill{id: bill_id} = bill, params, _previous_changeset)
        when not is_nil(bill_id) do
     Bills.change_bill(bill, params)
   end
 
-  defp change_bill_maybe_with_defaults(bill, params) do
+  defp change_bill_maybe_with_defaults(bill, params, previous_changeset) do
     bill
     |> Bills.change_bill(params)
-    |> maybe_add_initial_before()
+    |> maybe_add_initial_before(previous_changeset)
   end
 
-  defp maybe_add_initial_before(changeset) do
-    billing_period_change =
-      Changeset.get_change(changeset, :billing_period_id)
+  defp maybe_add_initial_before(current_changeset, previous_changeset \\ nil) do
+    previous_billing_period_change =
+      if not is_nil(previous_changeset) do
+        Changeset.get_change(previous_changeset, :billing_period_id)
+      else
+        nil
+      end
+
+    current_billing_period_change =
+      Changeset.get_change(current_changeset, :billing_period_id)
 
     member_id =
-      Changeset.get_field(changeset, :member_id)
+      Changeset.get_field(current_changeset, :member_id)
 
-    with true <- not is_nil(billing_period_change),
+    with true <-
+           not is_nil(current_billing_period_change) &&
+             current_billing_period_change != previous_billing_period_change,
          %Bill{after: previous_reading} <-
-           Bills.get_previous_bill(member_id, billing_period_change) do
-      Changeset.put_change(changeset, :before, previous_reading)
+           Bills.get_previous_bill(member_id, current_billing_period_change) do
+      Changeset.put_change(current_changeset, :before, previous_reading)
     else
       nil ->
-        Changeset.force_change(changeset, :before, nil)
+        Changeset.force_change(current_changeset, :before, nil)
 
       _ ->
-        changeset
+        current_changeset
     end
   end
 end
