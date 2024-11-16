@@ -128,5 +128,6 @@ defmodule GuimbalWaterworks.Bills do
   defdelegate list_rates(params \\ %{}), to: RR
   defdelegate get_rate(params \\ %{}), to: RR
   defdelegate get_rate!(id), to: RR
+  defdelegate max_personal_rate(rate), to: RR
   defdelegate query_rate(params \\ %{}), to: RQ
 end
