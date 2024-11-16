@@ -2,6 +2,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   alias GuimbalWaterworks.Repo
   alias Decimal, as: D
 
+  alias GuimbalWaterworks.Bills
+
   alias GuimbalWaterworks.Bills.{
     Bill,
     Rate,
@@ -85,7 +87,16 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
         type == :personal ->
           rate.personal_prices
           |> Map.get("#{reading}")
-          |> D.new()
+          |> case do
+            nil ->
+              rate
+              |> Bills.max_personal_rate()
+              |> elem(1)
+              |> D.new()
+
+            reading ->
+              D.new(reading)
+          end
 
         type == :business ->
           D.mult(rate.business_rate, reading)
