@@ -36,6 +36,7 @@
         <th class="header">Total (Paid)</th>
         <th class="header">Date</th>
         <th class="header">Cashier</th>
+        <th class="header">Actions</th>
       </tr>
       <%= for payment <- @table_data do %>
         <tr class="data-row last:font-bold">
@@ -78,13 +79,43 @@
           </td>
           <td class="data"><%= payment.paid_at %></td>
           <td class="data"><%= payment.cashier %></td>
+          <td class="data">
+            <%= if is_binary(payment[:id]) do %>
+              <button
+                class="button -filter"
+                phx-click="edit_payment"
+                phx-value-payment-id={payment.id}
+                phx-target={@myself}
+              >
+                Edit
+              </button>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </table>
   </div>
-  <Page.pagination_buttons 
+  <Page.pagination_buttons
     target={@myself}
     pagination_params={@pagination_params}
     pagination={@pagination}
   />
+  <%= if @show_edit_modal? and is_map(@payment) do %>
+    <div id="modal" class="phx-modal fade-in">
+      <div
+        id="modal-content"
+        class="phx-modal-content fade-in-scale"
+      >
+        <.live_component
+          module={GuimbalWaterworksWeb.PaymentLive.FormComponent}
+          id={:new}
+          title={"Payment for #{Display.full_name(@payment.member)}"}
+          action={:new}
+          payment={@payment}
+          member={@payment.member}
+          return_to={Routes.member_index_path(@socket, :index, @filter_params)}
+        />
+      </div>
+    </div>
+  <% end %>
 </div>

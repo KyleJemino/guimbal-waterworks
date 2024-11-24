@@ -32,6 +32,17 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
   @initial_all_payments_breakdown Map.put(@initial_payment_breakdown, :total_paid, 0)
 
   @impl true
+  def mount(socket) do
+    socket =
+      assign(socket, %{
+        show_edit_modal?: false,
+        payment: nil
+      })
+
+    {:ok, socket}
+  end
+
+  @impl true
   def update(assigns, socket) do
     {:ok,
      socket
@@ -95,6 +106,17 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     {:noreply, push_event(socket, "generate", %{data: socket.assigns.table_data})}
   end
 
+  @impl true
+  def handle_event("edit_payment", %{"payment-id" => payment_id}, socket) do
+    payment = Enum.find(socket.assigns.payments, &(&1.id == payment_id))
+
+    {:noreply,
+     assign(socket, %{
+       payment: payment,
+       show_edit_modal?: true
+     })}
+  end
+
   defp assign_payments(socket) do
     %{
       base_params: base_params,
@@ -138,18 +160,19 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
               end
             )
 
-          payment_information = %{
-            member: Display.full_name(payment.member),
-            address: payment.member.street,
-            or: payment.or,
-            paid_at: Display.format_date(payment.paid_at),
-            cashier: Display.full_name(payment.user),
-            total_paid: payment.amount
-          }
+          payment_information =
+            %{
+              id: payment.id,
+              member: Display.full_name(payment.member),
+              address: payment.member.street,
+              or: payment.or,
+              paid_at: Display.format_date(payment.paid_at),
+              cashier: Display.full_name(payment.user),
+              total_paid: payment.amount
+            }
 
-          payment_row = Map.merge(payment_information, payment_breakdown)
-
-          %{}
+          payment_row =
+            Map.merge(payment_information, payment_breakdown)
 
           updated_all_payments_breakdown =
             running_all_payments_breakdown
