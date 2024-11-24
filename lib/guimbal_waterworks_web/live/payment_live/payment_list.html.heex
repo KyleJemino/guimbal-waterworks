@@ -105,7 +105,17 @@
       <div
         id="modal-content"
         class="phx-modal-content fade-in-scale"
+        phx-click-away="close_edit_modal"
+        phx-target={@myself}
       >
+
+        <a
+        id="close"
+        href="#"
+        class="phx-modal-close"
+        phx-click="close_edit_modal"
+        phx-target={@myself}
+        >✖</a>
         <.live_component
           module={GuimbalWaterworksWeb.PaymentLive.FormComponent}
           id={:new}

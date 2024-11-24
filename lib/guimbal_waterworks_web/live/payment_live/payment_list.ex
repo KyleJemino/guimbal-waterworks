@@ -117,6 +117,15 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
      })}
   end
 
+  @impl true
+  def handle_event("close_edit_modal", _params, socket) do
+    {:noreply,
+     assign(socket, %{
+       payment: nil,
+       show_edit_modal?: false
+     })}
+  end
+
   defp assign_payments(socket) do
     %{
       base_params: base_params,
