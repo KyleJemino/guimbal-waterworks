@@ -14,7 +14,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
         } = assigns,
         socket
       ) do
-    changeset = Bills.change_payment(payment)
+    changeset = payment_changeset_fn(payment, assigns.action)
 
     bills =
       Bills.list_bills(%{
@@ -73,18 +73,24 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
   def handle_event("validate", %{"payment" => payment_params}, socket) do
     changeset =
       socket.assigns.payment
-      |> Bills.change_payment(payment_params)
+      |> payment_changeset_fn(payment_params, socket.assigns.action)
       |> Map.put(:action, :validate)
 
     {:noreply, assign_changeset(socket, changeset)}
   end
 
   def handle_event("save", %{"payment" => payment_params}, socket) do
-    case Bills.create_payment(payment_params) do
+    case save_payment(payment_params, socket) do
       {:ok, %{payment: payment}} ->
         {:noreply,
          socket
          |> put_flash(:info, "Payment successful")
+         |> push_redirect(to: Routes.member_show_path(socket, :show, payment.member_id))}
+
+      {:ok, %Payment{} = payment} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Payment edit successful")
          |> push_redirect(to: Routes.member_show_path(socket, :show, payment.member_id))}
 
       {:error, _operation, %Changeset{} = changeset, _changes} ->
@@ -95,7 +101,21 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
     end
   end
 
+  defp save_payment(params, socket) do
+    if socket.assigns.action == :new do
+      Bills.create_payment(params)
+    else
+      Bills.edit_payment(socket.assigns.payment, params)
+    end
+  end
+
   defp assign_changeset(socket, changeset) do
     assign(socket, :changeset, changeset)
   end
+
+  defp payment_changeset_fn(payment, attrs \\ %{}, action)
+
+  defp payment_changeset_fn(payment, attrs, :edit), do: Payment.edit_changeset(payment, attrs)
+
+  defp payment_changeset_fn(payment, attrs, :new), do: Payment.changeset(payment, attrs)
 end

@@ -42,6 +42,10 @@ defmodule GuimbalWaterworks.Bills.Payment do
     |> validate_required([:amount])
   end
 
+  def edit_changeset(payment, attrs) do
+    cast(payment, attrs, [:or])
+  end
+
   defp validate_bill_ids_length(changeset) do
     bill_ids =
       changeset
