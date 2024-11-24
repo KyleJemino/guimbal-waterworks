@@ -118,9 +118,9 @@
         >✖</a>
         <.live_component
           module={GuimbalWaterworksWeb.PaymentLive.FormComponent}
-          id={:new}
+          id={@payment.id}
           title={"Payment for #{Display.full_name(@payment.member)}"}
-          action={:new}
+          action={:edit}
           payment={@payment}
           member={@payment.member}
           return_to={Routes.member_index_path(@socket, :index, @filter_params)}
