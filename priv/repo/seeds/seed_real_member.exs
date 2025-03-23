@@ -9,7 +9,6 @@ sheet_path
 |> then(fn {:ok, tid} ->
   Xlsxir.get_list(tid)
 end)
-|> IO.inspect(label: "### wat")
 
 [ _title_row, _header_row | member_params_list ] =
   sheet_path
