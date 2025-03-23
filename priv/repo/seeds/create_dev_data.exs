@@ -28,10 +28,18 @@ admin_attrs = %{
   approved_at: Helpers.db_now()
 }
 
-admin = 
-  %Users{}
-  |> Users.super_changeset(admin_attrs)
-  |> Repo.insert!()
+admin =
+  %{"role" => :admin, "limit" => 1}
+  |> UserQuery.query_user()
+  |> Repo.one()
+  |> case do
+    %Users{} = user ->
+      user
+    _ ->
+      %Users{}
+      |> Users.super_changeset(admin_attrs)
+      |> Repo.insert!()
+  end
 
 cashier_attrs = %{
   username: "cashieruser",
@@ -45,9 +53,17 @@ cashier_attrs = %{
 }
 
 cashier =
-  %Users{}
-  |> Users.super_changeset(cashier_attrs)
-  |> Repo.insert!()
+  %{"role" => :cashier, "limit" => 1}
+  |> UserQuery.query_user()
+  |> Repo.one()
+  |> case do
+    %Users{} = user ->
+      user
+    _ ->
+      %Users{}
+      |> Users.super_changeset(cashier_attrs)
+      |> Repo.insert!()
+  end
 
 # Create members
 members =
@@ -66,12 +82,17 @@ rate = Bills.get_rate(%{"limit" => 1})
 
 billing_periods =
   Enum.map(months, fn x ->
-    month = 
+    month =
       x
       |> Timex.month_name()
       |> String.upcase()
 
-    prev_month = x - 1
+    prev_month =
+      case x do
+        1 -> 12
+        x -> x - 1
+      end
+
 
     due_date =
       Date.new!(2023, x, 1)
@@ -84,9 +105,9 @@ billing_periods =
 
     recipient_count = Enum.random(0..3)
 
-    recipients = 
+    recipients =
       if recipient_count > 0 do
-        Enum.map(0..recipient_count, fn _x -> 
+        Enum.map(0..recipient_count, fn _x ->
           %{name: Faker.Name.name()}
         end)
       else
@@ -131,14 +152,14 @@ Enum.each(members, fn member ->
     end)
 
   no_of_bills_to_pay = Enum.random(3..6)
-  chunked_bills_to_pay = 
+  chunked_bills_to_pay =
     bills
     |> Enum.take(no_of_bills_to_pay)
     |> Helpers.chunk_random()
 
   payments =
     Enum.map(chunked_bills_to_pay, fn bills ->
-      bill_ids = 
+      bill_ids =
         bills
         |> Enum.map(fn bill -> bill.id end)
         |> Enum.join(",")
