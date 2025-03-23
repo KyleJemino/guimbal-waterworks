@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER_ID: ${USER_ID:-0}
+        GROUP_ID: ${GROUP_ID:-0}
+    volumes:
+      - ${PWD}:/home/user/app:z
+    ports:
+      - 4000:4000
+      - 35729:35729
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+    command: iex -S mix phx.server
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db/gww_develop
+  db:
+    image: postgres:14.2-alpine
+    command: postgres -c 'max_connections=200'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+volumes:
+  pgdata:

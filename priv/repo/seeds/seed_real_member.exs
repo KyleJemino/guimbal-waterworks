@@ -4,11 +4,20 @@ alias GuimbalWaterworks.Members.Member
 
 sheet_path = Path.join(:code.priv_dir(:guimbal_waterworks), "/static/gww-member-sheet.xlsx")
 
+sheet_path
+|> Xlsxir.peek(0, 5)
+|> then(fn {:ok, tid} ->
+  Xlsxir.get_list(tid)
+end)
+|> IO.inspect(label: "### wat")
+
 [ _title_row, _header_row | member_params_list ] =
   sheet_path
-  |> Xlsxir.stream_list(0)
-  |> Stream.map(
-    fn [ 
+  |> Xlsxir.extract(0)
+  |> then(&(elem(&1, 1)))
+  |> Xlsxir.get_list()
+  |> Enum.map(
+    fn [
       _,
       first_name,
       middle_name,
@@ -28,7 +37,7 @@ sheet_path = Path.join(:code.priv_dir(:guimbal_waterworks), "/static/gww-member-
           nil
         end,
         street: street,
-        type: 
+        type:
           type
           |> String.downcase()
           |> String.to_atom(),
@@ -41,7 +50,6 @@ sheet_path = Path.join(:code.priv_dir(:guimbal_waterworks), "/static/gww-member-
       _ -> nil
     end
   )
-  |> Enum.to_list()
 
 Multi.new()
 |> Multi.insert_all(:members, Member, member_params_list)
