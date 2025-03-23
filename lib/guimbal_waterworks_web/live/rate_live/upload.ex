@@ -35,8 +35,9 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
       consume_uploaded_entries(socket, :excel, fn %{path: path}, _entry ->
         [_headers | raw_data] =
           path
-          |> Xlsxir.stream_list(0)
-          |> Enum.to_list()
+          |> Xlsxir.extract(0)
+          |> then(&(elem(&1, 1)))
+          |> Xlsxir.get_list()
 
         [
           title,
