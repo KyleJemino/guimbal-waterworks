@@ -10,7 +10,7 @@ defmodule GuimbalWaterworks.Settings.Setting do
   end
 
   @doc false
-  def changeset(setting, attrs) do
+  def changeset(setting, attrs \\ %{}) do
     setting
     |> cast(attrs, [:contact_number, :address])
     |> validate_required([:contact_number, :address])

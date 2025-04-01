@@ -106,6 +106,7 @@ defmodule GuimbalWaterworksWeb.Router do
   live_session :authenticated, on_mount: GuimbalWaterworksWeb.AssignUsers do
     scope "/", GuimbalWaterworksWeb do
       pipe_through [:browser, :require_authenticated_users, :require_manager]
+      live "/settings", Settings.IndexLive, :index
       live "/employees", EmployeeLive.Index, :index
       live "/employees/:employee_id/change-role", EmployeeLive.Index, :role_change
 
