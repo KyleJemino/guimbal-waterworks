@@ -92,7 +92,10 @@ defmodule GuimbalWaterworksWeb.Router do
   end
 
   live_session :printing,
-    on_mount: GuimbalWaterworksWeb.AssignUsers,
+    on_mount: [
+      GuimbalWaterworksWeb.AssignUsers,
+      GuimbalWaterworksWeb.OnMounts.AssignSettings
+    ],
     root_layout: {GuimbalWaterworksWeb.LayoutView, "print_root.html"} do
     scope "/", GuimbalWaterworksWeb do
       pipe_through [:browser, :require_authenticated_users, :require_admin]
