@@ -16,5 +16,5 @@ defmodule GuimbalWaterworks.Settings do
     end
   end
 
-  def get_setting(), do: Repo.one(Setting)
+  def get_settings(), do: Repo.one(Setting)
 end
