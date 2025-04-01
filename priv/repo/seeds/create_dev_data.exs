@@ -1,13 +1,11 @@
 alias GuimbalWaterworks.Repo
 alias GuimbalWaterworks.Helpers
-alias GuimbalWaterworks.Constants
 alias GuimbalWaterworks.Accounts.Users
 alias GuimbalWaterworks.Members.Member
 alias GuimbalWaterworks.Bills
 alias GuimbalWaterworks.Bills.{
   Bill,
-  BillingPeriod,
-  Rate
+  BillingPeriod
 }
 alias GuimbalWaterworks.Accounts.Queries.UserQuery
 

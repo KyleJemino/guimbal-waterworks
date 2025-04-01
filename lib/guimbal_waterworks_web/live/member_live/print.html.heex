@@ -6,22 +6,24 @@
       bill_logo_src={Routes.static_path(@socket, "/images/gww-logo-sm.png")}
       latest_bill={latest_bill}
       latest_bill_calc={Bills.calculate_bill!(latest_bill)}
-      previous_bills={Enum.slice(member.bills, 1..-1)}
+      previous_bills={Enum.slice(member.bills, 1..-1//1)}
       total={@member_bill_map[member.id].total}
       death_aid_recipients={
         Enum.map(latest_bill.billing_period.death_aid_recipients, &(&1.name))
       }
+      settings={@settings}
     />
     <MemberComponents.bill_card
       member={member}
       bill_logo_src={Routes.static_path(@socket, "/images/gww-logo-sm.png")}
       latest_bill={latest_bill}
       latest_bill_calc={Bills.calculate_bill!(latest_bill)}
-      previous_bills={Enum.slice(member.bills, 1..-1)}
+      previous_bills={Enum.slice(member.bills, 1..-1//1)}
       total={@member_bill_map[member.id].total}
       death_aid_recipients={
         Enum.map(latest_bill.billing_period.death_aid_recipients, &(&1.name))
       }
+      settings={@settings}
     />
   <% end %>
 </div>

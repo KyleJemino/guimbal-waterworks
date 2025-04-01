@@ -2,6 +2,7 @@ defmodule GuimbalWaterworksWeb.Router do
   use GuimbalWaterworksWeb, :router
 
   import GuimbalWaterworksWeb.UsersAuth
+  import GuimbalWaterworksWeb.Plugs.Settings
   alias GuimbalWaterworksWeb.Plugs.AuthorizeUser
 
   pipeline :browser do
@@ -12,6 +13,7 @@ defmodule GuimbalWaterworksWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_users
+    plug :fetch_settings
   end
 
   pipeline :api do
@@ -90,7 +92,10 @@ defmodule GuimbalWaterworksWeb.Router do
   end
 
   live_session :printing,
-    on_mount: GuimbalWaterworksWeb.AssignUsers,
+    on_mount: [
+      GuimbalWaterworksWeb.AssignUsers,
+      GuimbalWaterworksWeb.OnMounts.AssignSettings
+    ],
     root_layout: {GuimbalWaterworksWeb.LayoutView, "print_root.html"} do
     scope "/", GuimbalWaterworksWeb do
       pipe_through [:browser, :require_authenticated_users, :require_admin]
@@ -106,6 +111,7 @@ defmodule GuimbalWaterworksWeb.Router do
   live_session :authenticated, on_mount: GuimbalWaterworksWeb.AssignUsers do
     scope "/", GuimbalWaterworksWeb do
       pipe_through [:browser, :require_authenticated_users, :require_manager]
+      live "/settings", SettingsLive.IndexLive, :index
       live "/employees", EmployeeLive.Index, :index
       live "/employees/:employee_id/change-role", EmployeeLive.Index, :role_change
 

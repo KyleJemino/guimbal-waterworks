@@ -9,9 +9,9 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
         <div class="bill-header">
           <img src={@bill_logo_src} class="logo"/>
           <div class="header-text">
-            <p>Guimbal BWP-Rural Waterworks and Sanitation Association</p> 
-            <p>Poblacion, Guimbal</p>
-            <p class="contact">Contact #: 09778039982 / (033) 517-4642</p>
+            <p>Guimbal BWP-Rural Waterworks and Sanitation Association</p>
+            <p><%= Map.get(@settings, :address, "N/A") %></p>
+            <p class="contact">Contact #: <%= Map.get(@settings, :contact_number, "N/A") %></p>
           </div>
         </div>
         <div class="bill-content h-auto">
@@ -58,7 +58,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             <div class="grid grid-cols-2">
               <p>
               Franchise Tax (
-              <%= 
+              <%=
                 @latest_bill.billing_period.rate.tax_rate
                 |> Decimal.mult(100)
                 |> Number.Percentage.number_to_percentage(precision: 2)
