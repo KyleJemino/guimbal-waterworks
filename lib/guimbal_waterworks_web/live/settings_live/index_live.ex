@@ -22,34 +22,38 @@ defmodule GuimbalWaterworksWeb.SettingsLive.IndexLive do
   def render(assigns) do
     ~H"""
     <div class="page-container">
-      <h1>Application Settings</h1>
+      <div class="flex justify-center items-center">
+        <h1>Application Settings</h1>
+      </div>
 
-      <.form
-        let={f}
-        for={@changeset}
-        id="settings-form"
-        phx-change="validate"
-        phx-submit="save"
-        class="form-component"
-      >
-        <%= hidden_input f, :id %>
+      <div class="flex justify-center items-center mt-16">
+        <.form
+          let={f}
+          for={@changeset}
+          id="settings-form"
+          phx-change="validate"
+          phx-submit="save"
+          class="form-component w-full max-w-[640px]"
+        >
+          <%= hidden_input f, :id %>
 
-        <div class="field-group">
-          <%= label f, :contact_number %>
-          <%= text_input f, :contact_number, required: true %>
-          <%= error_tag f, :contact_number %>
-        </div>
+          <div class="field-group">
+            <%= label f, :contact_number %>
+            <%= text_input f, :contact_number, required: true %>
+            <%= error_tag f, :contact_number %>
+          </div>
 
-        <div class="field-group">
-          <%= label f, :address %>
-          <%= text_input f, :address, required: true %>
-          <%= error_tag f, :address %>
-        </div>
+          <div class="field-group">
+            <%= label f, :address %>
+            <%= text_input f, :address, required: true %>
+            <%= error_tag f, :address %>
+          </div>
 
-        <div class="form-button-group">
-          <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
-        </div>
-      </.form>
+          <div class="form-button-group">
+            <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
+          </div>
+        </.form>
+      </div>
     </div>
     """
   end
