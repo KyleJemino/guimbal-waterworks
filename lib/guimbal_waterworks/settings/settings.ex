@@ -8,6 +8,7 @@ defmodule GuimbalWaterworks.Settings do
         setting
         |> Setting.changeset(attrs)
         |> Repo.update()
+
       _ ->
         %Setting{}
         |> Setting.changeset(attrs)
