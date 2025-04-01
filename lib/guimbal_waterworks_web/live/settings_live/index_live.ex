@@ -1,4 +1,4 @@
-defmodule GuimbalWaterworksWeb.Settings.IndexLive do
+defmodule GuimbalWaterworksWeb.SettingsLive.IndexLive do
   use GuimbalWaterworksWeb, :live_view
 
   alias GuimbalWaterworks.Settings
@@ -66,20 +66,20 @@ defmodule GuimbalWaterworksWeb.Settings.IndexLive do
   end
 
   def handle_event("save", %{"setting" => setting_params}, socket) do
-    case Settings.create_or_update_setting(setting_params) do
-      {:ok, setting} ->
-        socket
-        |> assign(%{
-          setting: setting,
-          changeset: Setting.changeset(setting)
-        })
-        |> put_flash(:info, "Settings saved")
+    socket =
+      case Settings.create_or_update_setting(setting_params) do
+        {:ok, setting} ->
+          socket
+          |> put_flash(:info, "Settings saved")
+          |> push_redirect(to: Routes.settings_index_path(socket, :index))
 
-      {:error, changeset} ->
-        socket
-        |> assign(:changeset, changeset)
-        |> put_flash(:error, "Something went wrong")
-    end
+        {:error, changeset} ->
+          socket
+          |> assign(:changeset, changeset)
+          |> put_flash(:error, "Something went wrong")
+      end
+
+    {:noreply, socket}
   end
 
   defp get_current_setting() do
