@@ -2,6 +2,7 @@ defmodule GuimbalWaterworksWeb.Router do
   use GuimbalWaterworksWeb, :router
 
   import GuimbalWaterworksWeb.UsersAuth
+  import GuimbalWaterworksWeb.Plugs.Settings
   alias GuimbalWaterworksWeb.Plugs.AuthorizeUser
 
   pipeline :browser do
@@ -12,6 +13,7 @@ defmodule GuimbalWaterworksWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_users
+    plug :fetch_settings
   end
 
   pipeline :api do
