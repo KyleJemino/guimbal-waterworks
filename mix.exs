@@ -76,7 +76,7 @@ defmodule GuimbalWaterworks.MixProject do
       deploy: [
         "deps.get --only prod",
         "compile",
-        # "assets.deploy",
+        "assets.deploy",
         "ecto.migrate",
         "phx.server"
       ],
