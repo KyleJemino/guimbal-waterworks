@@ -99,7 +99,11 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
           end
 
         type == :business ->
-          D.mult(rate.business_rate, reading)
+          if reading < 10 do
+            D.mult(rate.business_rate, 10)
+          else
+            D.mult(rate.business_rate, reading)
+          end
       end
 
     tax_rate = D.new(rate.tax_rate)
