@@ -1507,12 +1507,12 @@ select{
   margin-top:2.25rem
 }
 
-.mb-2{
-  margin-bottom:0.5rem
-}
-
 .mt-16{
   margin-top:4rem
+}
+
+.mb-2{
+  margin-bottom:0.5rem
 }
 
 .flex{
@@ -1569,18 +1569,6 @@ select{
 
 .max-w-\[640px\]{
   max-width:640px
-}
-
-.max-w-\[1080px\]{
-  max-width:1080px
-}
-
-.max-w-\[1440px\]{
-  max-width:1440px
-}
-
-.max-w-\[960px\]{
-  max-width:960px
 }
 
 .grid-cols-3{

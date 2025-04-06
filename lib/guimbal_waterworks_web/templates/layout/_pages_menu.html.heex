@@ -11,5 +11,6 @@
   <%= if not is_nil(@current_users) and @current_users.role === :manager do %>
     <%= link "Rates", to: Routes.rate_index_path(@conn, :index), class: "nav-item" %>
     <%= link "Requests", to: Routes.request_index_path(@conn, :index), class: "nav-item" %>
+    <%= link "Settings", to: Routes.settings_index_path(@conn, :index), class: "nav-item" %>
   <% end %>
 </div>
