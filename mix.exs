@@ -76,6 +76,7 @@ defmodule GuimbalWaterworks.MixProject do
       deploy: [
         "deps.get --only prod",
         "compile",
+        "assets.setup",
         "assets.deploy",
         "ecto.migrate",
         "phx.server"
@@ -87,7 +88,7 @@ defmodule GuimbalWaterworks.MixProject do
         "phx.digest"
       ],
       "assets.setup": [
-        "sass.install",
+        "sass.install --if-missing",
         "tailwind.install --if-missing"
       ],
       "assets.build": [
