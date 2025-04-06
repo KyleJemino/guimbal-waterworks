@@ -87,7 +87,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             <% end %>
             <%= if Decimal.gt?(@latest_bill_calc.surcharge, 0) do %>
               <div class="grid grid-cols-2">
-                <p>Late Fee</p>
+                <p>Surcharge</p>
                 <p class="text-right"><%= Display.money(@latest_bill_calc.surcharge) %></p>
               </div>
             <% end %>
