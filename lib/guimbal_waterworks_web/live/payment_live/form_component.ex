@@ -70,6 +70,62 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
      |> assign_changeset(changeset)}
   end
 
+  def render(assigns) do
+    ~H"""
+    <div class="form-modal-container">
+      <h1 class="text-center"><%= @title %></h1>
+
+      <.form
+        let={f}
+        for={@changeset}
+        id="bill-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+        class="form-component"
+        >
+
+        <%= hidden_input f, :member_id, required: true %>
+        <%= hidden_input f, :user_id, required: true %>
+
+        <div class="field-group">
+          <%= label f, :or, class: "uppercase" %>
+          <%= text_input f, :or, required: true %>
+          <%= error_tag f, :or %>
+        </div>
+
+        <%= if @action == :new do %>
+          <div class="flex flex-col gap-2 mt-3">
+            <h4>Unpaid Bills:</h4>
+            <div class="flex flex-col gap-1">
+              <%= for bill <- @bills_display do %>
+                <p class="font-medium"><%= bill %></p>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 mt-3">
+            <h4>Select Bills to Pay:</h4>
+            <div class="flex flex-col gap-1">
+              <%= for payment_option <- @payment_options do %>
+                <div class="flex items-center gap-2">
+                  <%= radio_button f, :bill_ids, payment_option.bill_ids %>
+                  <span><%= "#{payment_option.billing_periods} - PHP#{Display.money(payment_option.total_amount)}" %></span>
+                </div>
+              <% end %>
+              <%= error_tag f, :bill_ids %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-button-group">
+          <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
+        </div>
+      </.form>
+    </div>
+    """
+  end
+
   def handle_event("validate", %{"payment" => payment_params}, socket) do
     changeset =
       socket.assigns.payment
