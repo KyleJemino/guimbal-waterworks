@@ -69,7 +69,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
           _personal_prices,
           business_rate,
           tax_rate,
-          reconnection_fee,
+          _reconnection_fees,
           membership_fee,
           surcharge_fee
         ] = Enum.at(raw_data, 0)
@@ -80,9 +80,22 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
             Map.put(personal_price_map, "#{reading}", Decimal.new("#{personal_rate}"))
           end)
 
+        reconnection_fees =
+          raw_data
+          |> Enum.reduce([], fn row, acc ->
+            raw_fee = Enum.at(row, 5)
+
+            case Decimal.parse("#{raw_fee}") do
+              {%Decimal{}= reconnection_fee, _} -> [reconnection_fee | acc]
+              :error -> acc
+            end
+          end)
+          |> Enum.uniq()
+          |> Enum.sort(&(Decimal.gt?(&1, &2)))
+
         %{
           title: title,
-          reconnection_fee: reconnection_fee,
+          reconnection_fees: reconnection_fees,
           membership_fee: membership_fee,
           surcharge_fee: surcharge_fee,
           tax_rate: tax_rate,
