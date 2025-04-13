@@ -40,6 +40,75 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
      |> assign(:billing_period_options, billing_period_options)}
   end
 
+  def render(assigns) do
+    ~H"""
+    <div class="form-modal-container">
+      <h1 class="text-center"><%= @title %></h1>
+
+      <.form
+        let={f}
+        for={@changeset}
+        id="bill-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+        class="form-component"
+        >
+
+        <%= hidden_input f, :member_id, required: true %>
+        <%= hidden_input f, :user_id, required: true %>
+
+        <%= if is_nil(@bill.billing_period_id) do %>
+          <div class="field-group">
+            <%= label f, :billing_period_id, "Billing Period" %>
+            <%= select(
+              f,
+              :billing_period_id,
+              @billing_period_options,
+              required: true
+            )%>
+            <%= error_tag f, :billing_period_id %>
+            <%= if Enum.count(@billing_period_options) == 0 do %>
+              <span class="invalid-feedback">
+                Member has no missing bills. Must create a new billing period before making a bill for this member.
+              </span>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="field-group">
+          <%= label f, :before %>
+          <%= number_input f, :before, required: true %>
+          <%= error_tag f, :before %>
+        </div>
+
+        <div class="field-group">
+          <%= label f, :after %>
+          <%= number_input f, :after, required: true %>
+          <%= error_tag f, :after %>
+        </div>
+
+        <div class="field-group">
+          <%= label f, :discount %>
+          <%= number_input f, :discount, required: true %>
+          <%= error_tag f, :discount %>
+        </div>
+
+        <div class="field-group">
+          <div class="flex flex-row gap-2 items-center">
+            <%= checkbox f, :membership_fee? %>
+            <%= label f, :membership_fee?, "Should pay membership fee?", class: "font-medium" %>
+          </div>
+        </div>
+
+        <div class="form-button-group">
+          <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
+        </div>
+      </.form>
+    </div>
+    """
+  end
+
   def handle_event("validate", %{"bill" => bill_params}, socket) do
     previous_changeset = socket.assigns.changeset
 

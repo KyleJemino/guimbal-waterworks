@@ -34,7 +34,6 @@ defmodule GuimbalWaterworks.Bills.Bill do
     bill
     |> cast(attrs, [
       :membership_fee?,
-      :reconnection_fee?,
       :member_id,
       :billing_period_id,
       :user_id,
@@ -46,7 +45,6 @@ defmodule GuimbalWaterworks.Bills.Bill do
       :before,
       :after,
       :membership_fee?,
-      :reconnection_fee?,
       :member_id,
       :billing_period_id,
       :user_id,
