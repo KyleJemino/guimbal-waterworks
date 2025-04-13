@@ -65,7 +65,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   def calculate_bill(bill, billing_period, member, payment, rate) do
     %{
       membership_fee?: membership_fee?,
-      reconnection_fee?: reconnection_fee?
+      reconnection_fee: reconnection_fee
     } = bill
 
     %{
@@ -112,7 +112,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
     membership_amount = D.new(if membership_fee?, do: rate.membership_fee, else: 0)
 
-    reconnection_amount = D.new(if reconnection_fee?, do: rate.reconnection_fee, else: 0)
+    reconnection_amount = D.new(reconnection_fee)
 
     date_to_compare = if not is_nil(payment), do: payment.paid_at, else: Date.utc_today()
 
