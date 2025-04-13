@@ -30,6 +30,30 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
     end
   end
 
+  def render(assigns) do
+    ~H"""
+    <div class="page-container flex flex-col justify-center items-center">
+      <h1 class="text-center">Upload Rate Excel Sheet</h1>
+      <form
+        id="upload-form"
+        phx-change="validate"
+        phx-submit="save"
+        class="form-component max-w-[560px] mt-9"
+      >
+        <%= live_file_input @uploads.excel %>
+        <%= if @error_message do %>
+          <div class="alert alert-danger mt-3">
+            <p><%= @error_message %></p>
+          </div>
+        <% end %>
+        <div class="form-button-group">
+          <button type="submit" class="submit">Upload</button>
+        </div>
+      </form>
+    </div>
+    """
+  end
+
   defp save_rate_data(socket) do
     [rate_attrs] =
       consume_uploaded_entries(socket, :excel, fn %{path: path}, _entry ->
