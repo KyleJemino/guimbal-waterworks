@@ -18,7 +18,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
     field :before, :integer
     field :after, :integer
     field :membership_fee?, :boolean
-    field :reconnection_fee?, :boolean
+    field :reconnection_fee, :decimal, default: 0
     field :discount, :integer, default: 0
 
     belongs_to :member, Member
