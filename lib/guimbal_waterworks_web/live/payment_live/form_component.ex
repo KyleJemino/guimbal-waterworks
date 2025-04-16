@@ -24,13 +24,23 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
         "order_by" => "oldest_first"
       })
 
-    {bills_display, payment_options} =
-      Enum.reduce(bills, {[], []}, fn
+    latest_bill = List.last(bills)
+    reconnection_fees = [Decimal.new("0.00")] ++ latest_bill.billing_period.rate.reconnection_fees
+    reconnection_fee_options =
+      reconnection_fees
+      |> Enum.sort(&Decimal.lt?(&1, &2))
+      |> Enum.map(&([
+        key: Display.money(&1),
+        value: Decimal.to_string(&1),
+      ]))
+
+    {bills_display, payment_options, bill_breakdown_map} =
+      Enum.reduce(bills, {[], [], %{}}, fn
         bill, acc ->
           %{billing_period: period} = bill
-          {bills_display_acc, payment_options_acc} = acc
+          {bills_display_acc, payment_options_acc, bill_breakdown_map_acc} = acc
 
-          {:ok, %{total: bill_amount}} =
+          {:ok, %{total: bill_amount} = breakdown} =
             Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
           bill_name = "#{period.month} #{period.year}"
@@ -58,15 +68,22 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
 
           {
             [curr_bills_display | bills_display_acc],
-            [curr_payment_option | payment_options_acc]
+            [curr_payment_option | payment_options_acc],
+            Map.put(bill_breakdown_map_acc, bill.id, breakdown)
           }
       end)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:bills_display, Enum.reverse(bills_display))
-     |> assign(:payment_options, Enum.reverse(payment_options))
+     |> assign(%{
+       bills: bills,
+       bill_breakdown_map: bill_breakdown_map,
+       bills_display: Enum.reverse(bills_display),
+       payment_options: Enum.reverse(payment_options),
+       reconnection_fee_options: reconnection_fee_options,
+       total: Decimal.new("0.00")
+     })
      |> assign_changeset(changeset)}
   end
 
@@ -116,7 +133,16 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
               <%= error_tag f, :bill_ids %>
             </div>
           </div>
+
+          <div class="flex flex-col gap-2 mt-3">
+            <h4>Reconnection Fee</h4>
+            <%= select f, :reconnection_fee, @reconnection_fee_options, selected: Decimal.new("0.00") %>
+          </div>
         <% end %>
+
+        <div class="flex mt-3">
+          <h4>TOTAL: <%= Display.money(@total) %></h4>
+        </div>
 
         <div class="form-button-group">
           <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
@@ -127,10 +153,18 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
   end
 
   def handle_event("validate", %{"payment" => payment_params}, socket) do
+    %{
+      payment: payment,
+      action: action,
+      bills: bills,
+    } = socket.assigns
+
     changeset =
-      socket.assigns.payment
-      |> payment_changeset_fn(payment_params, socket.assigns.action)
+      payment
+      |> payment_changeset_fn(payment_params, action)
       |> Map.put(:action, :validate)
+
+    calculate_total(payment_params, bills)
 
     {:noreply, assign_changeset(socket, changeset)}
   end
@@ -174,4 +208,16 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
   defp payment_changeset_fn(payment, attrs, :edit), do: Payment.edit_changeset(payment, attrs)
 
   defp payment_changeset_fn(payment, attrs, :new), do: Payment.changeset(payment, attrs)
+
+  defp calculate_total(%{"bill_ids" => bill_ids}, bills)
+    when is_binary(bill_ids) and bill_ids != "" do
+    bill_ids = String.split(bill_ids, ",")
+
+    selected_bills =
+      Enum.filter(bills, &(&1.id in bill_ids))
+  end
+
+  defp calculate_total(params, bills) do
+    0
+  end
 end
