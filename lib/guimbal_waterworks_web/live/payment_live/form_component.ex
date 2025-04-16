@@ -164,9 +164,14 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
       |> payment_changeset_fn(payment_params, action)
       |> Map.put(:action, :validate)
 
-    calculate_total(payment_params, bills)
+    total = calculate_total(payment_params, bills)
 
-    {:noreply, assign_changeset(socket, changeset)}
+    socket =
+      socket
+      |> assign_changeset(changeset)
+      |> assign(%{total: total})
+
+    {:noreply, socket}
   end
 
   def handle_event("save", %{"payment" => payment_params}, socket) do
@@ -209,12 +214,27 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
 
   defp payment_changeset_fn(payment, attrs, :new), do: Payment.changeset(payment, attrs)
 
-  defp calculate_total(%{"bill_ids" => bill_ids}, bills)
+  defp calculate_total(%{"bill_ids" => bill_ids} = params, bills)
     when is_binary(bill_ids) and bill_ids != "" do
     bill_ids = String.split(bill_ids, ",")
 
     selected_bills =
       Enum.filter(bills, &(&1.id in bill_ids))
+
+    bill_total =
+      Enum.reduce(selected_bills, Decimal.new("0.00"), fn bill, acc ->
+        bill
+        |> Bills.calculate_bill!(bill)
+        |> Map.get(:total)
+        |> Decimal.add(acc)
+      end)
+
+    reconnection_fee =
+      params
+      |> Map.get("reconnection_fee", "0.00")
+      |> Decimal.new()
+
+    Decimal.sub(bill_total, reconnection_fee)
   end
 
   defp calculate_total(params, bills) do
