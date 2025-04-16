@@ -3,6 +3,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
   alias Ecto.Multi
   alias Ecto.Changeset
 
+  alias GuimbalWaterworks.Bills
   alias GuimbalWaterworks.Bills.{
     Payment,
     Bill
@@ -18,66 +19,98 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
   end
 
   def create_payment(%{"bill_ids" => bill_ids_string, "member_id" => member_id} = params) do
+    reconnection_fee =
+      params
+      |> Map.get("reconnection_fee", "0.00")
+      |> Decimal.new()
+
+    IO.inspect(params, label: "### params")
+
     Multi.new()
-    |> Multi.run(:bills_and_total, fn _repo, _ops ->
+    |> Multi.run(:bills, fn _repo, _opts ->
       bill_ids_string
       |> String.split(",")
-      |> Enum.reduce(
-        {:ok, %{bill_ids: [], total: 0}},
-        fn
-          bill_id, {:ok, acc} ->
-            %{
-              bill_ids: bill_ids,
-              total: total
-            } = acc
+      |> Enum.reduce({:ok, []}, fn
+        bill_id, {:ok, acc} ->
+          bill_params = %{
+            "id" => bill_id,
+            "member_id" => member_id,
+            "preload" => [:member, :payment, billing_period: [:rate]]
+          }
 
-            bill_params = %{
-              "id" => bill_id,
-              "member_id" => member_id,
-              "preload" => [:member, :payment, billing_period: [:rate]]
-            }
+        case BillResolver.get_bill(bill_params) do
+          %Bill{} = bill ->
+            {:ok, acc ++ [bill]}
 
-            case BillResolver.get_bill(bill_params) do
-              %Bill{} = bill ->
-                bill_amount = BillResolver.get_bill_total(bill)
+          _ ->
+            payment_changeset =
+              %Payment{}
+              |> change_payment(params)
+              |> Changeset.add_error(:bill_ids, "Invalid bills")
 
-                {:ok,
-                 %{
-                   bill_ids: [bill_id | bill_ids],
-                   total: Decimal.add(total, bill_amount)
-                 }}
-
-              _ ->
-                payment_changeset =
-                  %Payment{}
-                  |> change_payment(params)
-                  |> Changeset.add_error(:bill_ids, "Invalid bills")
-
-                {:error, payment_changeset}
-            end
-
-          _bill_id, error ->
-            error
+            {:error, payment_changeset}
         end
-      )
+      end)
     end)
-    |> Multi.insert(:payment, fn %{bills_and_total: bills_and_total} ->
-      params_with_total = Map.put(params, "amount", bills_and_total.total)
+    |> Multi.run(:last_bill_with_reconnection_fee, fn _repo, %{bills: bills} ->
+      last_bill = List.last(bills)
 
-      Payment.save_changeset(%Payment{}, params_with_total)
+      updated_bill =
+        if Decimal.gt?(reconnection_fee, Decimal.new("0.00")) do
+          last_bill
+          |> Bill.reconnection_changeset(reconnection_fee)
+          |> Repo.update()
+        else
+          {:ok, last_bill}
+        end
+    end)
+    |> Multi.run(:updated_bills, fn _repo, %{bills: bills, last_bill_with_reconnection_fee: last_bill} ->
+      bills =
+        Enum.map(bills, fn bill ->
+          if bill.id == last_bill.id do
+            last_bill
+          else
+            bill
+          end
+        end)
+
+      {:ok, bills}
+    end)
+    |> Multi.run(:bill_ids, fn _repo, %{updated_bills: bills} ->
+      {:ok, Enum.map(bills, &(&1.id))}
+    end)
+    |> Multi.insert(:payment, fn ops ->
+      %{updated_bills: bills, bill_ids: bill_ids} = ops
+
+      total =
+        Enum.reduce(bills, Decimal.new("0.00"),
+          fn bill, acc ->
+            bill
+            |> Bills.get_bill_total()
+            |> Decimal.add(acc)
+          end
+        )
+
+      payment_params = Map.merge(params, %{
+        "bill_ids" => Enum.join(bill_ids, ","),
+        "amount" => total
+      })
+
+      Payment.save_changeset(%Payment{}, payment_params)
     end)
     |> Multi.update_all(
       :pay_bills,
-      fn %{payment: payment, bills_and_total: bills_and_total} ->
+      fn %{payment: payment, bill_ids: bill_ids} ->
         import Ecto.Query
 
         Bill
-        |> where([b], b.id in ^bills_and_total.bill_ids)
+        |> where([b], b.id in ^bill_ids)
         |> update(set: [payment_id: ^payment.id])
       end,
       []
     )
     |> Repo.transaction()
+    |> IO.inspect(label: "### transaction")
   end
 
   def edit_payment(%Payment{} = payment, attrs \\ %{}) do
