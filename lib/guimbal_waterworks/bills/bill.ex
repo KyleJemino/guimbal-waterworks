@@ -67,6 +67,10 @@ defmodule GuimbalWaterworks.Bills.Bill do
     |> foreign_key_constraint(:payment_id)
   end
 
+  def reconnection_changeset(bill, reconnection_fee) do
+    change(bill, reconnection_fee: reconnection_fee)
+  end
+
   defp validate_from_before(changeset) do
     before_reading = fetch_field!(changeset, :before) || 0
     after_reading = fetch_field!(changeset, :after) || nil
