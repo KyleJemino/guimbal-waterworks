@@ -234,7 +234,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
       |> Map.get("reconnection_fee", "0.00")
       |> Decimal.new()
 
-    Decimal.sub(bill_total, reconnection_fee)
+    Decimal.add(bill_total, reconnection_fee)
   end
 
   defp calculate_total(params, bills) do
