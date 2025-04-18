@@ -62,7 +62,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     struct(Bill, params_with_defaults)
   end
 
-  def calculate_bill(bill, billing_period, member, payment, rate, discounted? \\ false) do
+  def calculate_bill(bill, billing_period, member, payment, rate) do
     %{
       membership_fee?: membership_fee?,
       reconnection_fee: reconnection_fee
@@ -160,18 +160,24 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def calculate_bill(_bill, _period, _member, _payment), do: {:error, nil}
 
-  def calculate_bill(bill, discounted \\ false) do
-    calculate_bill(bill, bill.billing_period, bill.member, bill.payment, discounted)
+  def calculate_bill(bill) do
+    %{
+      billing_period: period,
+      member: member,
+      payment: payment
+    } = bill
+
+    calculate_bill(bill, period, member, payment, period.rate)
   end
+
   def calculate_bill!(
         %{
           billing_period: period,
           member: member,
           payment: payment
-        } = bill,
-        discounted \\ false
+        } = bill
       ) do
-    {:ok, result} = calculate_bill(bill, period, member, payment, period.rate, discounted)
+    {:ok, result} = calculate_bill(bill, period, member, payment, period.rate)
 
     result
   end

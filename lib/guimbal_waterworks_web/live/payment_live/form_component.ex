@@ -224,7 +224,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
     bill_total =
       Enum.reduce(selected_bills, Decimal.new("0.00"), fn bill, acc ->
         bill
-        |> Bills.calculate_bill!(bill)
+        |> Bills.calculate_bill!()
         |> Map.get(:total)
         |> Decimal.add(acc)
       end)
