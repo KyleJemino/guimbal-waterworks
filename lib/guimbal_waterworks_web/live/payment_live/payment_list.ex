@@ -26,6 +26,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     franchise_tax: 0,
     membership_and_advance_fee: 0,
     reconnection_fee: 0,
+    member_discount: 0,
     total: 0
   }
 
@@ -91,6 +92,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
             <th class="header">Franchise Tax</th>
             <th class="header">Membership and Advance Fee</th>
             <th class="header">Reconnection Fee</th>
+            <th class="header">Discount</th>
             <th class="header">Total (Calculated)</th>
             <th class="header">Total (Paid)</th>
             <th class="header">Date</th>
@@ -129,6 +131,9 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
               </td>
               <td class="data text-right">
                 <%= Display.money(payment.reconnection_fee) %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.member_discount) %>
               </td>
               <td class="data text-right">
                 <%= Display.money(payment.total) %>
@@ -332,6 +337,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
             |> Map.update!(:franchise_tax, &D.add(&1, payment_breakdown.franchise_tax))
             |> Map.update!(:death_aid, &D.add(&1, payment_breakdown.death_aid))
             |> Map.update!(:reconnection_fee, &D.add(&1, payment_breakdown.reconnection_fee))
+            |> Map.update!(:member_discount, &D.add(&1, payment_breakdown.member_discount))
             |> Map.update!(
               :membership_and_advance_fee,
               &D.add(&1, payment_breakdown.membership_and_advance_fee)
@@ -380,6 +386,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       franchise_tax_amount: tax,
       membership_amount: membership,
       reconnection_amount: reconnection,
+      member_discount: member_discount,
       surcharge: surcharge,
       death_aid_amount: death_aid,
       total: total
@@ -404,6 +411,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     |> Map.update!(:franchise_tax, &D.add(&1, tax))
     |> Map.update!(:death_aid, &D.add(&1, death_aid))
     |> Map.update!(:reconnection_fee, &D.add(&1, reconnection))
+    |> Map.update!(:member_discount, &D.add(&1, member_discount))
     |> Map.update!(:membership_and_advance_fee, &D.add(&1, membership))
     |> Map.update!(:billing_periods, fn val ->
       abbreviated = Helpers.abbreviate_month(billing_period.month)
