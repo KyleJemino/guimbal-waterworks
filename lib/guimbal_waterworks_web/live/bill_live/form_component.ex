@@ -89,7 +89,7 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
         </div>
 
         <div class="field-group">
-          <%= label f, :discount %>
+          <%= label f, :discount, do: "Employee Discount (Cu.M.)" %>
           <%= number_input f, :discount, required: true %>
           <%= error_tag f, :discount %>
         </div>
