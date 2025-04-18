@@ -91,4 +91,13 @@ defmodule GuimbalWaterworksWeb.DisplayHelpers do
       end
     end)
   end
+
+  def percent(rate) do
+    percent =
+      rate
+      |> Decimal.mult("100")
+      |> Decimal.to_string()
+
+    "#{percent}%"
+  end
 end

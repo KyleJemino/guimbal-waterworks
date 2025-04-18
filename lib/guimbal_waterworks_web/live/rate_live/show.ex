@@ -39,8 +39,9 @@ defmodule GuimbalWaterworksWeb.RateLive.Show do
         <li>Membership Fee: <%= Display.money(@rate.membership_fee) %></li>
         <li>Reconnection Fee: <%= render_reconnection_fees(@rate.reconnection_fees) %></li>
         <li>Surcharge Fee: <%= Display.money(@rate.surcharge_fee) %></li>
-        <li>Tax Rate: <%= "#{@rate.tax_rate}" %></li>
+        <li>Tax Rate: <%= Display.percent(@rate.tax_rate) %></li>
         <li>Business Rate: <%= "#{@rate.business_rate}" %></li>
+        <li>Discount Rates: <%= render_rates(@rate.discount_rates) %></li>
       </ul>
       <h3 class="mt-6">Personal Prices</h3>
       <table class="data-table mt-3">
@@ -62,6 +63,12 @@ defmodule GuimbalWaterworksWeb.RateLive.Show do
   def render_reconnection_fees(reconnection_fees) do
     reconnection_fees
     |> Enum.map(&Display.money/1)
+    |> Enum.join(", ")
+  end
+
+  def render_rates(rates) do
+    rates
+    |> Enum.map(&Display.percent/1)
     |> Enum.join(", ")
   end
 end
