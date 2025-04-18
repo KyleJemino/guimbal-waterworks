@@ -79,32 +79,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       due_date: due_date
     } = billing_period
 
-    base_amount =
-      cond do
-        Decimal.lt?(reading, "0") ->
-          D.new("0")
-
-        type == :personal ->
-          rate.personal_prices
-          |> Map.get("#{reading}")
-          |> case do
-            nil ->
-              rate
-              |> Bills.max_personal_rate()
-              |> elem(1)
-              |> D.new()
-
-            reading ->
-              D.new(reading)
-          end
-
-        type == :business ->
-          if reading < 10 do
-            D.mult(rate.business_rate, 10)
-          else
-            D.mult(rate.business_rate, reading)
-          end
-      end
+    base_amount = calculate_base_amount(bill, rate, member)
 
     tax_rate = D.new(rate.tax_rate)
 
@@ -206,6 +181,52 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     after_reading
     |> Decimal.sub(before)
     |> Decimal.sub(discount || 0)
+  end
+
+  def calculate_bill_discount(%Bill{
+    member: member,
+    billing_period: %{rate: rate}
+  } = bill, discount_rate) do
+    reading = get_bill_reading(bill)
+
+    if Decimal.gt?(reading, "30") do
+      Decimal.new("0.00")
+    else
+      bill
+      |> calculate_base_amount(rate, member)
+      |> Decimal.mult(discount_rate)
+    end
+  end
+
+  def calculate_base_amount(bill, rate, member) do
+    reading = get_bill_reading(bill)
+    type = member.type
+
+    cond do
+      Decimal.lt?(reading, "0") ->
+        D.new("0")
+
+      type == :personal ->
+        rate.personal_prices
+        |> Map.get("#{reading}")
+        |> case do
+          nil ->
+            rate
+            |> Bills.max_personal_rate()
+            |> elem(1)
+            |> D.new()
+
+          reading ->
+            D.new(reading)
+        end
+
+      type == :business ->
+        if reading < 10 do
+          D.mult(rate.business_rate, 10)
+        else
+          D.mult(rate.business_rate, reading)
+        end
+    end
   end
 
   def get_previous_bill(member_id, billing_period_id) do

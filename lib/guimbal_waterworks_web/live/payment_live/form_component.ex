@@ -34,6 +34,15 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
         value: Decimal.to_string(&1),
       ]))
 
+    discounts = [Decimal.new("0.00")] ++ latest_bill.billing_period.rate.discount_rates
+    discount_options =
+      discounts
+      |> Enum.sort(&Decimal.lt?(&1, &2))
+      |> Enum.map(&([
+        key: Display.percent(&1),
+        value: Decimal.to_string(&1),
+      ]))
+
     {bills_display, payment_options, bill_breakdown_map} =
       Enum.reduce(bills, {[], [], %{}}, fn
         bill, acc ->
@@ -82,6 +91,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
        bills_display: Enum.reverse(bills_display),
        payment_options: Enum.reverse(payment_options),
        reconnection_fee_options: reconnection_fee_options,
+       discount_options: discount_options,
        total: Decimal.new("0.00")
      })
      |> assign_changeset(changeset)}
@@ -137,6 +147,11 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
           <div class="flex flex-col gap-2 mt-3">
             <h4>Reconnection Fee</h4>
             <%= select f, :reconnection_fee, @reconnection_fee_options, selected: Decimal.new("0.00") %>
+          </div>
+
+          <div class="flex flex-col gap-2 mt-3">
+            <h4>Discount</h4>
+            <%= select f, :discount_rate, @discount_options, selected: Decimal.new("0.00") %>
           </div>
         <% end %>
 
@@ -234,7 +249,21 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
       |> Map.get("reconnection_fee", "0.00")
       |> Decimal.new()
 
-    Decimal.add(bill_total, reconnection_fee)
+    discount_rate =
+      params
+      |> Map.get("discount_rate", "0.00")
+      |> Decimal.new()
+
+    total_discount =
+      Enum.reduce(selected_bills, Decimal.new("0.00"), fn bill, acc ->
+        bill
+        |> Bills.calculate_bill_discount(discount_rate)
+        |> Decimal.add(acc)
+      end)
+
+    bill_total
+    |> Decimal.add(reconnection_fee)
+    |> Decimal.sub(total_discount)
   end
 
   defp calculate_total(params, bills) do
