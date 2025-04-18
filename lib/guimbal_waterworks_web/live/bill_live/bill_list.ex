@@ -13,6 +13,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
     reconnection_amount: 0,
     surcharge: 0,
     death_aid_amount: 0,
+    member_discount: 0,
     total: 0
   }
 
@@ -42,6 +43,127 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
      |> assign_search_params()
      |> assign_pagination_params()
      |> update_results()}
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <div class="flex flex-col py-3 gap-3">
+      <div class="px-2">
+        <BillComponents.filter_form
+          target={@myself}
+          search_params={@search_params}
+          for={@for}
+        />
+      </div>
+      <div class="px-2">
+        <Page.pagination_count_select
+          target={@myself}
+          pagination_params={@pagination_params}
+          pagination={@pagination}
+        />
+      </div>
+      <div class="overflow-auto">
+      <table class="data-table">
+        <tr class="header-row">
+          <th class="header">
+            <%= if @for == :member do %>
+              Billing Period
+            <% end %>
+            <%= if @for == :billing_period do %>
+              Member
+            <% end %>
+          </th>
+          <th class="header">Before (Cu. M.)</th>
+          <th class="header">After (Cu. M.)</th>
+          <th class="header">Employee Discount (Cu. M.)</th>
+          <th class="header">Reading (Cu.M.)</th>
+          <th class="header">Base Amount</th>
+          <th class="header">Discount</th>
+          <th class="header">Franchise Tax</th>
+          <th class="header">Membership Fee</th>
+          <th class="header">Reconnection Fee</th>
+          <th class="header">Surcharge Fee</th>
+          <th class="header">Death Aid</th>
+          <th class="header">Total</th>
+          <th class="header">Payment Status</th>
+          <th class="header">Actions</th>
+        </tr>
+        <%= for bill <- @bills do %>
+          <tr class="data-row">
+            <td class="data">
+              <%= if @for == :member do %>
+                <%= Display.display_period(bill.billing_period) %>
+              <% end %>
+              <%= if @for == :billing_period do %>
+                <%= Display.full_name(bill.member) %>
+              <% end %>
+            </td>
+            <td class="data text-right"><%= Decimal.round(bill.before, 2) %></td>
+            <td class="data text-right"><%= Decimal.round(bill.after, 2) %></td>
+            <td class="data text-right"><%= Decimal.round(bill.discount, 2) %></td>
+            <td class="data text-right"><%= Decimal.round(Bills.get_bill_reading(bill)) %></td>
+            <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
+            <td class="data text-right"><%= Display.money(bill.calculation.member_discount) %></td>
+            <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
+            <td class="data text-right"><%= Display.money(bill.calculation.membership_amount) %></td>
+            <td class="data text-right"><%= Display.money(bill.calculation.reconnection_amount) %></td>
+            <td class="data text-right"><%= Display.money(bill.calculation.surcharge) %></td>
+            <td class="data text-right"><%= Display.money(bill.calculation.death_aid_amount) %></td>
+            <td class="data text-right"><%= Display.money(bill.calculation.total) %></td>
+            <td class="data">
+              <%= if not is_nil(bill.payment), do: "PAID", else: "UNPAID" %>
+            </td>
+            <td class="data text-center">
+              <SC.pop_up_menu target_id={bill.id}>
+                <%= if @for == :member do %>
+                  <%= live_redirect "Go to #{Display.display_period(bill.billing_period)}", to: Routes.billing_period_show_path(@socket, :show, bill.billing_period.id) %>
+                <% end %>
+                <%= if @for == :billing_period do %>
+                  <%= live_redirect "Go to #{Display.full_name(bill.member)}", to: Routes.member_show_path(@socket, :show, bill.member.id) %>
+                <% end %>
+                <SC.render_for_roles roles={[:cashier]} user={@current_users}>
+                  <%= live_redirect "Pay Bills", to: Routes.member_index_path(@socket, :payment, bill.member), class: "" %>
+                </SC.render_for_roles>
+                <SC.render_for_roles roles={[:admin]} user={@current_users}>
+                  <button
+                    phx-click="edit_bill"
+                    phx-value-bill-id={bill.id}
+                    phx-target={@myself}
+                    >
+                    Edit Bill
+                  </button>
+                </SC.render_for_roles>
+              </SC.pop_up_menu>
+            </td>
+          </tr>
+      <% end %>
+        <tr class="total-row">
+            <td class="data">Total</td>
+            <td class="data text-right"></td>
+            <td class="data text-right"></td>
+            <td class="data text-right"></td>
+            <td class="data text-right"></td>
+            <td class="data text-right"><%= Display.money(@total_prices.base_amount) %></td>
+            <td class="data text-right"><%= Display.money(@total_prices.member_discount) %></td>
+            <td class="data text-right"><%= Display.money(@total_prices.franchise_tax_amount) %></td>
+            <td class="data text-right"><%= Display.money(@total_prices.membership_amount) %></td>
+            <td class="data text-right"><%= Display.money(@total_prices.reconnection_amount) %></td>
+            <td class="data text-right"><%= Display.money(@total_prices.surcharge) %></td>
+            <td class="data text-right"><%= Display.money(@total_prices.death_aid_amount) %></td>
+            <td class="data text-right"><%= Display.money(@total_prices.total) %></td>
+            <td class="data"></td>
+            <td class="data"></td>
+        </tr>
+      </table>
+      </div>
+      <Page.pagination_buttons
+        target={@myself}
+        pagination_params={@pagination_params}
+        pagination={@pagination}
+      />
+    </div>
+    """
   end
 
   @impl true
