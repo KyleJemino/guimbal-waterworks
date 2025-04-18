@@ -65,7 +65,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   def calculate_bill(bill, billing_period, member, payment, rate) do
     %{
       membership_fee?: membership_fee?,
-      reconnection_fee: reconnection_fee
+      reconnection_fee: reconnection_fee,
+      member_discount: member_discount
     } = bill
 
     %{
@@ -89,6 +90,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
     reconnection_amount = D.new(reconnection_fee)
 
+    member_discount = D.new(member_discount)
+
     date_to_compare = if not is_nil(payment), do: payment.paid_at, else: Date.utc_today()
 
     is_overdue = Date.diff(date_to_compare, due_date) > 0
@@ -110,6 +113,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       |> D.add(reconnection_amount)
       |> D.add(surcharge_amount)
       |> D.add(death_aid_amount)
+      |> D.sub(member_discount)
 
     {:ok,
      %{
@@ -119,6 +123,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
        reconnection_amount: reconnection_amount,
        surcharge: surcharge_amount,
        death_aid_amount: death_aid_amount,
+       member_discount: member_discount,
        total: total
      }}
   end

@@ -74,6 +74,10 @@ defmodule GuimbalWaterworks.Bills.Bill do
     change(bill, reconnection_fee: reconnection_fee)
   end
 
+  def member_discount_changeset(bill, discount) do
+    change(bill, member_discount: discount)
+  end
+
   defp validate_from_before(changeset) do
     before_reading = fetch_field!(changeset, :before) || 0
     after_reading = fetch_field!(changeset, :after) || nil

@@ -24,7 +24,10 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
       |> Map.get("reconnection_fee", "0.00")
       |> Decimal.new()
 
-    IO.inspect(params, label: "### params")
+    discount_rate =
+      params
+      |> Map.get("discount_rate", "0.00")
+      |> Decimal.new()
 
     Multi.new()
     |> Multi.run(:bills, fn _repo, _opts ->
@@ -55,26 +58,43 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
     |> Multi.run(:last_bill_with_reconnection_fee, fn _repo, %{bills: bills} ->
       last_bill = List.last(bills)
 
-      updated_bill =
-        if Decimal.gt?(reconnection_fee, Decimal.new("0.00")) do
-          last_bill
-          |> Bill.reconnection_changeset(reconnection_fee)
-          |> Repo.update()
-        else
-          {:ok, last_bill}
-        end
+      if Decimal.gt?(reconnection_fee, Decimal.new("0.00")) do
+        last_bill
+        |> Bill.reconnection_changeset(reconnection_fee)
+        |> Repo.update()
+      else
+        {:ok, last_bill}
+      end
     end)
     |> Multi.run(:updated_bills, fn _repo, %{bills: bills, last_bill_with_reconnection_fee: last_bill} ->
-      bills =
-        Enum.map(bills, fn bill ->
-          if bill.id == last_bill.id do
-            last_bill
-          else
+      bills
+      |> Enum.map(fn bill ->
+        if bill.id == last_bill.id do
+          last_bill
+        else
+          bill
+        end
+      end)
+      |> Enum.reduce({:ok, []}, fn
+        bill, {:ok, bill_acc} ->
+          bill_discount_changeset =
             bill
-          end
-        end)
+            |> Bills.calculate_bill_discount(discount_rate)
+            |> then(fn discount ->
+              Bill.member_discount_changeset(bill, discount)
+            end)
 
-      {:ok, bills}
+          case Repo.update(bill_discount_changeset) do
+            {:ok, bill} ->
+              {:ok, bill_acc ++ [bill]}
+
+            {:error, changeset} ->
+              {:error, changeset}
+          end
+
+        _bill, acc ->
+          acc
+      end)
     end)
     |> Multi.run(:bill_ids, fn _repo, %{updated_bills: bills} ->
       {:ok, Enum.map(bills, &(&1.id))}
@@ -110,7 +130,6 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
       []
     )
     |> Repo.transaction()
-    |> IO.inspect(label: "### transaction")
   end
 
   def edit_payment(%Payment{} = payment, attrs \\ %{}) do
