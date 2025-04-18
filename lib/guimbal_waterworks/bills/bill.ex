@@ -21,6 +21,8 @@ defmodule GuimbalWaterworks.Bills.Bill do
     field :reconnection_fee, :decimal, default: 0
     ### discount to employees in cu.m.
     field :discount, :integer, default: 0
+    ### discount to members in Php
+    field :member_discount, :decimal, default: 0
 
     belongs_to :member, Member
     belongs_to :billing_period, BillingPeriod
