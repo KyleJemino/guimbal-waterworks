@@ -26,6 +26,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     franchise_tax: 0,
     membership_and_advance_fee: 0,
     reconnection_fee: 0,
+    member_discount: 0,
     total: 0
   }
 
@@ -52,6 +53,147 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
      |> assign_search_params()
      |> assign_pagination_params()
      |> update_results()}
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <div class="flex flex-col py-3 gap-3">
+      <div class="px-2">
+        <PaymentComponents.filter_form
+          target={@myself}
+          search_params={@search_params}
+          current_users={@current_users}
+          for={@for}
+        />
+      </div>
+      <div class="px-2">
+        <Page.pagination_count_select
+          target={@myself}
+          pagination_params={@pagination_params}
+          pagination={@pagination}
+        />
+      </div>
+      <div class="overflow-auto">
+        <table class="data-table">
+          <tr class="header-row">
+            <th class="header">
+              Name
+            </th>
+            <th class="header">
+              Address
+            </th>
+            <th class="header">OR</th>
+            <th class="header">Current Consumption</th>
+            <th class="header">Overdue Consumption</th>
+            <th class="header">Period of Billing</th>
+            <th class="header">Surcharges</th>
+            <th class="header">Death Aid</th>
+            <th class="header">Franchise Tax</th>
+            <th class="header">Membership and Advance Fee</th>
+            <th class="header">Reconnection Fee</th>
+            <th class="header">Discount</th>
+            <th class="header">Total (Calculated)</th>
+            <th class="header">Total (Paid)</th>
+            <th class="header">Date</th>
+            <th class="header">Cashier</th>
+            <th class="header">Actions</th>
+          </tr>
+          <%= for payment <- @table_data do %>
+            <tr class="data-row last:font-bold">
+              <td class="data name">
+                <%= payment.member %>
+              </td>
+              <td class="data">
+                <%= payment.address %>
+              </td>
+              <td class="data"><%= payment.or %></td>
+              <td class="data text-right">
+                <%= Display.money(payment.current) %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.overdue) %>
+              </td>
+              <td class="data text-right">
+                <%= payment.billing_periods %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.surcharges) %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.death_aid) %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.franchise_tax) %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.membership_and_advance_fee) %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.reconnection_fee) %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.member_discount) %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.total) %>
+              </td>
+              <td class="data text-right">
+                <%= Display.money(payment.total_paid) %>
+              </td>
+              <td class="data"><%= payment.paid_at %></td>
+              <td class="data"><%= payment.cashier %></td>
+              <td class="data">
+                <%= if is_binary(payment[:id]) do %>
+                  <button
+                    class="button -filter"
+                    phx-click="edit_payment"
+                    phx-value-payment-id={payment.id}
+                    phx-target={@myself}
+                  >
+                    Edit
+                  </button>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+      <Page.pagination_buttons
+        target={@myself}
+        pagination_params={@pagination_params}
+        pagination={@pagination}
+      />
+      <%= if @show_edit_modal? and is_map(@payment) do %>
+        <div id="modal" class="phx-modal fade-in">
+          <div
+            id="modal-content"
+            class="phx-modal-content fade-in-scale"
+            phx-click-away="close_edit_modal"
+            phx-target={@myself}
+          >
+
+            <a
+            id="close"
+            href="#"
+            class="phx-modal-close"
+            phx-click="close_edit_modal"
+            phx-target={@myself}
+            >✖</a>
+            <.live_component
+              module={GuimbalWaterworksWeb.PaymentLive.FormComponent}
+              id={@payment.id}
+              title={"Payment for #{Display.full_name(@payment.member)}"}
+              action={:edit}
+              payment={@payment}
+              member={@payment.member}
+              return_to={Routes.member_index_path(@socket, :index, @filter_params)}
+            />
+          </div>
+        </div>
+      <% end %>
+    </div>
+    """
   end
 
   @impl true
@@ -195,6 +337,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
             |> Map.update!(:franchise_tax, &D.add(&1, payment_breakdown.franchise_tax))
             |> Map.update!(:death_aid, &D.add(&1, payment_breakdown.death_aid))
             |> Map.update!(:reconnection_fee, &D.add(&1, payment_breakdown.reconnection_fee))
+            |> Map.update!(:member_discount, &D.add(&1, payment_breakdown.member_discount))
             |> Map.update!(
               :membership_and_advance_fee,
               &D.add(&1, payment_breakdown.membership_and_advance_fee)
@@ -243,6 +386,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       franchise_tax_amount: tax,
       membership_amount: membership,
       reconnection_amount: reconnection,
+      member_discount: member_discount,
       surcharge: surcharge,
       death_aid_amount: death_aid,
       total: total
@@ -267,6 +411,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
     |> Map.update!(:franchise_tax, &D.add(&1, tax))
     |> Map.update!(:death_aid, &D.add(&1, death_aid))
     |> Map.update!(:reconnection_fee, &D.add(&1, reconnection))
+    |> Map.update!(:member_discount, &D.add(&1, member_discount))
     |> Map.update!(:membership_and_advance_fee, &D.add(&1, membership))
     |> Map.update!(:billing_periods, fn val ->
       abbreviated = Helpers.abbreviate_month(billing_period.month)

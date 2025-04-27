@@ -6,7 +6,8 @@ defmodule GuimbalWaterworks.Bills.Rate do
   @foreign_key_type :binary_id
   schema "rates" do
     field :title, :string
-    field :reconnection_fee, :decimal
+    field :reconnection_fees, {:array, :decimal}, default: []
+    field :discount_rates, {:array, :decimal}, default: []
     field :membership_fee, :decimal
     field :surcharge_fee, :decimal
     field :tax_rate, :decimal
@@ -19,22 +20,24 @@ defmodule GuimbalWaterworks.Bills.Rate do
   def changeset(rate, attrs) do
     rate
     |> cast(attrs, [
-      :reconnection_fee,
+      :reconnection_fees,
       :surcharge_fee,
       :membership_fee,
       :tax_rate,
       :title,
       :personal_prices,
-      :business_rate
+      :business_rate,
+      :discount_rates
     ])
     |> validate_required([
-      :reconnection_fee,
+      :reconnection_fees,
       :surcharge_fee,
       :membership_fee,
       :tax_rate,
       :title,
       :personal_prices,
-      :business_rate
+      :business_rate,
+      :discount_rates
     ])
     |> unique_constraint(
       :title,

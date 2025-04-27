@@ -65,7 +65,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
   def calculate_bill(bill, billing_period, member, payment, rate) do
     %{
       membership_fee?: membership_fee?,
-      reconnection_fee?: reconnection_fee?
+      reconnection_fee: reconnection_fee,
+      member_discount: member_discount
     } = bill
 
     %{
@@ -79,28 +80,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       due_date: due_date
     } = billing_period
 
-    base_amount =
-      cond do
-        Decimal.lt?(reading, "0") ->
-          D.new("0")
-
-        type == :personal ->
-          rate.personal_prices
-          |> Map.get("#{reading}")
-          |> case do
-            nil ->
-              rate
-              |> Bills.max_personal_rate()
-              |> elem(1)
-              |> D.new()
-
-            reading ->
-              D.new(reading)
-          end
-
-        type == :business ->
-          D.mult(rate.business_rate, reading)
-      end
+    base_amount = calculate_base_amount(bill, rate, member)
 
     tax_rate = D.new(rate.tax_rate)
 
@@ -108,7 +88,9 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
     membership_amount = D.new(if membership_fee?, do: rate.membership_fee, else: 0)
 
-    reconnection_amount = D.new(if reconnection_fee?, do: rate.reconnection_fee, else: 0)
+    reconnection_amount = D.new(reconnection_fee)
+
+    member_discount = D.new(member_discount)
 
     date_to_compare = if not is_nil(payment), do: payment.paid_at, else: Date.utc_today()
 
@@ -131,6 +113,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
       |> D.add(reconnection_amount)
       |> D.add(surcharge_amount)
       |> D.add(death_aid_amount)
+      |> D.sub(member_discount)
 
     {:ok,
      %{
@@ -140,6 +123,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
        reconnection_amount: reconnection_amount,
        surcharge: surcharge_amount,
        death_aid_amount: death_aid_amount,
+       member_discount: member_discount,
        total: total
      }}
   end
@@ -156,6 +140,16 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
 
   def calculate_bill(_bill, _period, _member, _payment), do: {:error, nil}
 
+  def calculate_bill(bill) do
+    %{
+      billing_period: period,
+      member: member,
+      payment: payment
+    } = bill
+
+    calculate_bill(bill, period, member, payment, period.rate)
+  end
+
   def calculate_bill!(
         %{
           billing_period: period,
@@ -163,7 +157,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
           payment: payment
         } = bill
       ) do
-    {:ok, result} = calculate_bill(bill, period, member, payment)
+    {:ok, result} = calculate_bill(bill, period, member, payment, period.rate)
 
     result
   end
@@ -192,6 +186,52 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     after_reading
     |> Decimal.sub(before)
     |> Decimal.sub(discount || 0)
+  end
+
+  def calculate_bill_discount(%Bill{
+    member: member,
+    billing_period: %{rate: rate}
+  } = bill, discount_rate) do
+    reading = get_bill_reading(bill)
+
+    if Decimal.gt?(reading, "30") do
+      Decimal.new("0.00")
+    else
+      bill
+      |> calculate_base_amount(rate, member)
+      |> Decimal.mult(discount_rate)
+    end
+  end
+
+  def calculate_base_amount(bill, rate, member) do
+    reading = get_bill_reading(bill)
+    type = member.type
+
+    cond do
+      Decimal.lt?(reading, "0") ->
+        D.new("0")
+
+      type == :personal ->
+        rate.personal_prices
+        |> Map.get("#{reading}")
+        |> case do
+          nil ->
+            rate
+            |> Bills.max_personal_rate()
+            |> elem(1)
+            |> D.new()
+
+          reading ->
+            D.new(reading)
+        end
+
+      type == :business ->
+        if reading < 10 do
+          D.mult(rate.business_rate, 10)
+        else
+          D.mult(rate.business_rate, reading)
+        end
+    end
   end
 
   def get_previous_bill(member_id, billing_period_id) do

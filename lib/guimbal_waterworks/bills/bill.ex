@@ -18,8 +18,11 @@ defmodule GuimbalWaterworks.Bills.Bill do
     field :before, :integer
     field :after, :integer
     field :membership_fee?, :boolean
-    field :reconnection_fee?, :boolean
+    field :reconnection_fee, :decimal, default: 0
+    ### discount to employees in cu.m.
     field :discount, :integer, default: 0
+    ### discount to members in Php
+    field :member_discount, :decimal, default: 0
 
     belongs_to :member, Member
     belongs_to :billing_period, BillingPeriod
@@ -34,7 +37,6 @@ defmodule GuimbalWaterworks.Bills.Bill do
     bill
     |> cast(attrs, [
       :membership_fee?,
-      :reconnection_fee?,
       :member_id,
       :billing_period_id,
       :user_id,
@@ -46,7 +48,6 @@ defmodule GuimbalWaterworks.Bills.Bill do
       :before,
       :after,
       :membership_fee?,
-      :reconnection_fee?,
       :member_id,
       :billing_period_id,
       :user_id,
@@ -67,6 +68,14 @@ defmodule GuimbalWaterworks.Bills.Bill do
     bill
     |> change(payment_id: payment_id)
     |> foreign_key_constraint(:payment_id)
+  end
+
+  def reconnection_changeset(bill, reconnection_fee) do
+    change(bill, reconnection_fee: reconnection_fee)
+  end
+
+  def member_discount_changeset(bill, discount) do
+    change(bill, member_discount: discount)
   end
 
   defp validate_from_before(changeset) do

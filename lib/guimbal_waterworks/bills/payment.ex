@@ -14,6 +14,8 @@ defmodule GuimbalWaterworks.Bills.Payment do
     field :or, :string
     field :paid_at, :utc_datetime
     field :bill_ids, :string, virtual: true
+    field :reconnection_fee, :decimal, virtual: true
+    field :discount_rate, :decimal, virtual: true
     field :amount, :decimal
     belongs_to :member, Member
     belongs_to :user, Users

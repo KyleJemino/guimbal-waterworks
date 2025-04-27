@@ -24,13 +24,32 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
         "order_by" => "oldest_first"
       })
 
-    {bills_display, payment_options} =
-      Enum.reduce(bills, {[], []}, fn
+    latest_bill = List.last(bills)
+    reconnection_fees = [Decimal.new("0.00")] ++ latest_bill.billing_period.rate.reconnection_fees
+    reconnection_fee_options =
+      reconnection_fees
+      |> Enum.sort(&Decimal.lt?(&1, &2))
+      |> Enum.map(&([
+        key: Display.money(&1),
+        value: Decimal.to_string(&1),
+      ]))
+
+    discounts = [Decimal.new("0.00")] ++ latest_bill.billing_period.rate.discount_rates
+    discount_options =
+      discounts
+      |> Enum.sort(&Decimal.lt?(&1, &2))
+      |> Enum.map(&([
+        key: Display.percent(&1),
+        value: Decimal.to_string(&1),
+      ]))
+
+    {bills_display, payment_options, bill_breakdown_map} =
+      Enum.reduce(bills, {[], [], %{}}, fn
         bill, acc ->
           %{billing_period: period} = bill
-          {bills_display_acc, payment_options_acc} = acc
+          {bills_display_acc, payment_options_acc, bill_breakdown_map_acc} = acc
 
-          {:ok, %{total: bill_amount}} =
+          {:ok, %{total: bill_amount} = breakdown} =
             Bills.calculate_bill(bill, bill.billing_period, bill.member, bill.payment)
 
           bill_name = "#{period.month} #{period.year}"
@@ -58,25 +77,116 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
 
           {
             [curr_bills_display | bills_display_acc],
-            [curr_payment_option | payment_options_acc]
+            [curr_payment_option | payment_options_acc],
+            Map.put(bill_breakdown_map_acc, bill.id, breakdown)
           }
       end)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:bills_display, Enum.reverse(bills_display))
-     |> assign(:payment_options, Enum.reverse(payment_options))
+     |> assign(%{
+       bills: bills,
+       bill_breakdown_map: bill_breakdown_map,
+       bills_display: Enum.reverse(bills_display),
+       payment_options: Enum.reverse(payment_options),
+       reconnection_fee_options: reconnection_fee_options,
+       discount_options: discount_options,
+       total: Decimal.new("0.00")
+     })
      |> assign_changeset(changeset)}
   end
 
+  def render(assigns) do
+    ~H"""
+    <div class="form-modal-container">
+      <h1 class="text-center"><%= @title %></h1>
+
+      <.form
+        let={f}
+        for={@changeset}
+        id="bill-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+        class="form-component"
+        >
+
+        <%= hidden_input f, :member_id, required: true %>
+        <%= hidden_input f, :user_id, required: true %>
+
+        <div class="field-group">
+          <%= label f, :or, class: "uppercase" %>
+          <%= text_input f, :or, required: true %>
+          <%= error_tag f, :or %>
+        </div>
+
+        <%= if @action == :new do %>
+          <div class="flex flex-col gap-2 mt-3">
+            <h4>Unpaid Bills:</h4>
+            <div class="flex flex-col gap-1">
+              <%= for bill <- @bills_display do %>
+                <p class="font-medium"><%= bill %></p>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 mt-3">
+            <h4>Select Bills to Pay:</h4>
+            <div class="flex flex-col gap-1">
+              <%= for payment_option <- @payment_options do %>
+                <div class="flex items-center gap-2">
+                  <%= radio_button f, :bill_ids, payment_option.bill_ids %>
+                  <span><%= "#{payment_option.billing_periods} - PHP#{Display.money(payment_option.total_amount)}" %></span>
+                </div>
+              <% end %>
+              <%= error_tag f, :bill_ids %>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 mt-3">
+            <h4>Reconnection Fee</h4>
+            <%= select f, :reconnection_fee, @reconnection_fee_options, selected: Decimal.new("0.00") %>
+          </div>
+
+          <div class="flex flex-col gap-2 mt-3">
+            <h4>Discount</h4>
+            <%= select f, :discount_rate, @discount_options, selected: Decimal.new("0.00") %>
+          </div>
+        <% end %>
+
+        <div class="flex mt-3">
+          <h4>TOTAL: <%= Display.money(@total) %></h4>
+        </div>
+
+        <div class="form-button-group">
+          <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
+        </div>
+      </.form>
+    </div>
+    """
+  end
+
   def handle_event("validate", %{"payment" => payment_params}, socket) do
+    %{
+      payment: payment,
+      action: action,
+      bills: bills,
+    } = socket.assigns
+
     changeset =
-      socket.assigns.payment
-      |> payment_changeset_fn(payment_params, socket.assigns.action)
+      payment
+      |> payment_changeset_fn(payment_params, action)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign_changeset(socket, changeset)}
+    total = calculate_total(payment_params, bills)
+
+    socket =
+      socket
+      |> assign_changeset(changeset)
+      |> assign(%{total: total})
+
+    {:noreply, socket}
   end
 
   def handle_event("save", %{"payment" => payment_params}, socket) do
@@ -118,4 +228,45 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
   defp payment_changeset_fn(payment, attrs, :edit), do: Payment.edit_changeset(payment, attrs)
 
   defp payment_changeset_fn(payment, attrs, :new), do: Payment.changeset(payment, attrs)
+
+  defp calculate_total(%{"bill_ids" => bill_ids} = params, bills)
+    when is_binary(bill_ids) and bill_ids != "" do
+    bill_ids = String.split(bill_ids, ",")
+
+    selected_bills =
+      Enum.filter(bills, &(&1.id in bill_ids))
+
+    bill_total =
+      Enum.reduce(selected_bills, Decimal.new("0.00"), fn bill, acc ->
+        bill
+        |> Bills.calculate_bill!()
+        |> Map.get(:total)
+        |> Decimal.add(acc)
+      end)
+
+    reconnection_fee =
+      params
+      |> Map.get("reconnection_fee", "0.00")
+      |> Decimal.new()
+
+    discount_rate =
+      params
+      |> Map.get("discount_rate", "0.00")
+      |> Decimal.new()
+
+    total_discount =
+      Enum.reduce(selected_bills, Decimal.new("0.00"), fn bill, acc ->
+        bill
+        |> Bills.calculate_bill_discount(discount_rate)
+        |> Decimal.add(acc)
+      end)
+
+    bill_total
+    |> Decimal.add(reconnection_fee)
+    |> Decimal.sub(total_discount)
+  end
+
+  defp calculate_total(params, bills) do
+    0
+  end
 end

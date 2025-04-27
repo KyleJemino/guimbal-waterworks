@@ -5,11 +5,11 @@ export default {
     this.handleEvent("generate", ({ data }) => {
       today = new Date()
 
-      const csvConfig = mkConfig({ 
+      const csvConfig = mkConfig({
         filename: `payments_${today.toISOString()}`,
         columnHeaders: [
           'member',
-          'address', 
+          'address',
           'or',
           'current',
           'overdue',
@@ -19,6 +19,7 @@ export default {
           'franchise_tax',
           'membership_and_advance_fee',
           'reconnection_fee',
+          'member_discount',
           'total',
           'total_paid',
           'paid_at',
