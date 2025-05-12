@@ -16,6 +16,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
     field :bill_ids, :string, virtual: true
     field :reconnection_fee, :decimal, virtual: true
     field :discount_rate, :decimal, virtual: true
+    field :senior_id, :string, virtual: true
     field :amount, :decimal
     belongs_to :member, Member
     belongs_to :user, Users
@@ -27,13 +28,14 @@ defmodule GuimbalWaterworks.Bills.Payment do
 
   def changeset(payment, attrs) do
     payment
-    |> cast(attrs, [:or, :member_id, :user_id, :bill_ids])
+    |> cast(attrs, [:or, :member_id, :user_id, :bill_ids, :discount_rate, :senior_id])
     |> validate_required([:or, :member_id, :user_id, :bill_ids])
     |> unique_constraint(:or, name: :payments_ors_uniq_idx)
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:user_id)
     |> validate_format(:or, ~r/\d+/)
     |> validate_bill_ids_length()
+    |> maybe_validate_senior_id()
     |> put_change(:paid_at, Helpers.db_now())
   end
 
@@ -57,6 +59,19 @@ defmodule GuimbalWaterworks.Bills.Payment do
 
     if is_nil(bill_ids) or bill_ids == "" do
       add_error(changeset, :bill_ids, "No bills selected.")
+    else
+      changeset
+    end
+  end
+
+  defp maybe_validate_senior_id(changeset) do
+    discount_rate =
+      changeset
+      |> get_change(:discount_rate, "0.00")
+      |> Decimal.new()
+
+    if Decimal.gt?(discount_rate, 0) do
+      validate_required(changeset, [:senior_id], message: "Can't be blank if discounted")
     else
       changeset
     end

@@ -18,7 +18,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
     |> Repo.all()
   end
 
-  def create_payment(%{"bill_ids" => bill_ids_string, "member_id" => member_id} = params) do
+  def create_payment(%{"bill_ids" => bill_ids_string, "member_id" => member_id} = params) when is_binary(bill_ids_string) and bill_ids_string != ""  do
     reconnection_fee =
       params
       |> Map.get("reconnection_fee", "0.00")
@@ -28,6 +28,9 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
       params
       |> Map.get("discount_rate", "0.00")
       |> Decimal.new()
+
+    senior_id =
+      Map.get(params, "senior_id")
 
     Multi.new()
     |> Multi.run(:bills, fn _repo, _opts ->
@@ -50,6 +53,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
               %Payment{}
               |> change_payment(params)
               |> Changeset.add_error(:bill_ids, "Invalid bills")
+              |> Map.put(:action, :validate)
 
             {:error, payment_changeset}
         end
@@ -81,7 +85,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
             bill
             |> Bills.calculate_bill_discount(discount_rate)
             |> then(fn discount ->
-              Bill.member_discount_changeset(bill, discount)
+              Bill.member_discount_changeset(bill, discount, senior_id)
             end)
 
           case Repo.update(bill_discount_changeset) do
@@ -95,6 +99,15 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
         _bill, acc ->
           acc
       end)
+      |> case do
+        {:ok, bills} -> {:ok, bills}
+        {:error, changeset} ->
+           payment_changeset =
+             %Payment{}
+             |> change_payment(params)
+             |> Changeset.add_error(:senior_id, "Can't be blank if discounted")
+             |> Map.put(:action, :validate)
+      end
     end)
     |> Multi.run(:bill_ids, fn _repo, %{updated_bills: bills} ->
       {:ok, Enum.map(bills, &(&1.id))}
@@ -130,6 +143,16 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
       []
     )
     |> Repo.transaction()
+  end
+
+  def create_payment(params) do
+    payment_changeset =
+      %Payment{}
+      |> change_payment(params)
+      |> Changeset.add_error(:bill_ids, "Invalid bills")
+      |> Map.put(:action, :validate)
+
+    {:error, payment_changeset}
   end
 
   def edit_payment(%Payment{} = payment, attrs \\ %{}) do

@@ -21,6 +21,8 @@ defmodule GuimbalWaterworks.Bills.Bill do
     field :reconnection_fee, :decimal, default: 0
     ### discount to employees in cu.m.
     field :discount, :integer, default: 0
+    ### discount
+    field :senior_id, :string
     ### discount to members in Php
     field :member_discount, :decimal, default: 0
 
@@ -74,8 +76,16 @@ defmodule GuimbalWaterworks.Bills.Bill do
     change(bill, reconnection_fee: reconnection_fee)
   end
 
-  def member_discount_changeset(bill, discount) do
-    change(bill, member_discount: discount)
+  def member_discount_changeset(bill, discount, senior_id) do
+    changeset = change(bill, member_discount: discount)
+
+    if Decimal.gt?(discount, 0) do
+      changeset
+      |> change(senior_id: senior_id)
+      |> validate_required([:senior_id], message: "Can't be blank if discounted")
+    else
+      changeset
+    end
   end
 
   defp validate_from_before(changeset) do
