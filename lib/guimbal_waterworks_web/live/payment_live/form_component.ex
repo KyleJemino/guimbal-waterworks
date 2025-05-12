@@ -153,6 +153,12 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
             <h4>Discount</h4>
             <%= select f, :discount_rate, @discount_options, selected: Decimal.new("0.00") %>
           </div>
+
+          <div class="flex flex-col gap-2 mt-3">
+            <h4>Senior ID</h4>
+            <%= text_input f, :senior_id %>
+            <%= error_tag f, :senior_id %>
+          </div>
         <% end %>
 
         <div class="flex mt-3">
@@ -160,7 +166,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
         </div>
 
         <div class="form-button-group">
-          <%= submit "Save", phx_disable_with: "Saving...", class: "submit" %>
+          <%= submit "Save", phx_disable_with: "Saving...", class: "submit", disabled: not(@changeset.valid?) %>
         </div>
       </.form>
     </div>
@@ -204,6 +210,9 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
          |> push_redirect(to: Routes.member_show_path(socket, :show, payment.member_id))}
 
       {:error, _operation, %Changeset{} = changeset, _changes} ->
+        {:noreply, assign_changeset(socket, changeset)}
+
+      {:error, %Changeset{} = changeset} ->
         {:noreply, assign_changeset(socket, changeset)}
 
       _ ->
