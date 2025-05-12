@@ -106,7 +106,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
             <td class="data text-right"><%= Decimal.round(Bills.get_bill_reading(bill)) %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.member_discount) %></td>
-            <td class="data text-right"><%= bill.senior_id %></td>
+            <td class="data text-left"><%= bill.senior_id %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.membership_amount) %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.reconnection_amount) %></td>
