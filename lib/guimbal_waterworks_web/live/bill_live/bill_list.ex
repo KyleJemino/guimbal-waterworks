@@ -80,6 +80,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
           <th class="header">Reading (Cu.M.)</th>
           <th class="header">Base Amount</th>
           <th class="header">Discount</th>
+          <th class="header">Senior ID</th>
           <th class="header">Franchise Tax</th>
           <th class="header">Membership Fee</th>
           <th class="header">Reconnection Fee</th>
@@ -105,6 +106,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
             <td class="data text-right"><%= Decimal.round(Bills.get_bill_reading(bill)) %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.base_amount) %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.member_discount) %></td>
+            <td class="data text-right"><%= bill.senior_id %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.franchise_tax_amount) %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.membership_amount) %></td>
             <td class="data text-right"><%= Display.money(bill.calculation.reconnection_amount) %></td>
@@ -146,6 +148,7 @@ defmodule GuimbalWaterworksWeb.BillLive.BillList do
             <td class="data text-right"></td>
             <td class="data text-right"><%= Display.money(@total_prices.base_amount) %></td>
             <td class="data text-right"><%= Display.money(@total_prices.member_discount) %></td>
+            <td class="data text-right"></td>
             <td class="data text-right"><%= Display.money(@total_prices.franchise_tax_amount) %></td>
             <td class="data text-right"><%= Display.money(@total_prices.membership_amount) %></td>
             <td class="data text-right"><%= Display.money(@total_prices.reconnection_amount) %></td>
