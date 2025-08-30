@@ -22,7 +22,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     "type",
     "due_from",
     "due_to",
-    "status"
+    "status",
+    "archived?"
   ]
 
   @impl true
@@ -80,6 +81,38 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
      socket
      |> assign_pagination_params(updated_pagination_params)
      |> patch_params_path()}
+  end
+
+  @impl true
+  def handle_event("archive", %{"id" => id}, socket) do
+    member = Members.get_member!(id)
+
+    case Members.archive_member(member) do
+      {:ok, _member} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "User deleted")
+         |> patch_params_path(redirect?: true)}
+
+      _ ->
+        {:noreply, put_flash(socket, :error, "Something went wrong")}
+    end
+  end
+
+  @impl true
+  def handle_event("unarchive", %{"id" => id}, socket) do
+    member = Members.get_member!(id)
+
+    case Members.unarchive_member(member) do
+      {:ok, _member} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "User restored")
+         |> patch_params_path(redirect?: true)}
+
+      _ ->
+        {:noreply, put_flash(socket, :error, "Something went wrong")}
+    end
   end
 
   defp assign_filter_params(socket, filter_params) do
@@ -187,7 +220,9 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     |> assign_pagination_information()
   end
 
-  defp patch_params_path(socket) do
+  defp patch_params_path(socket, opts \\ []) do
+    redirect? = Keyword.get(opts, :redirect?, false)
+
     %{
       assigns: %{
         search_params: search_params,
@@ -202,6 +237,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
 
     route = Routes.member_index_path(socket, :index, updated_filter_params)
 
-    push_patch(socket, to: route)
+    if redirect? do
+      push_redirect(socket, to: route)
+    else
+      push_patch(socket, to: route)
+    end
   end
 end

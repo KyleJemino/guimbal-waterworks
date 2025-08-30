@@ -85,19 +85,4 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
   end
 
   defp assign_payment(socket, _action, _params), do: assign(socket, :payment, nil)
-
-  @impl true
-  def handle_event("archive", %{"id" => id}, socket) do
-    member = Members.get_member!(id)
-
-    case Members.archive_member(member) do
-      {:ok, _member} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "User deleted")}
-
-      _ ->
-        {:noreply, put_flash(socket, :error, "Something went wrong")}
-    end
-  end
 end

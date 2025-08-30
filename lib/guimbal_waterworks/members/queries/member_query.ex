@@ -125,5 +125,17 @@ defmodule GuimbalWaterworks.Members.Queries.MemberQuery do
     query_by(status_query, Map.delete(params, "status"))
   end
 
+  defp query_by(query, %{"archived?" => falsy} = params) when falsy in ["false", false] do
+    query
+    |> where([m], is_nil(m.archived_at))
+    |> query_by(Map.delete(params, "archived?"))
+  end
+
+  defp query_by(query, %{"archived?" => truthy} = params) when truthy in ["true", true] do
+    query
+    |> where([m], not is_nil(m.archived_at))
+    |> query_by(Map.delete(params, "archived?"))
+  end
+
   use GuimbalWaterworks, :basic_queries
 end

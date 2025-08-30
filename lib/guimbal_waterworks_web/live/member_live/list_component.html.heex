@@ -23,31 +23,40 @@
       </div>
       <div class="search-input-group">
         <%= label f, :street %>
-        <%= select( 
-          f, 
-          :street, 
-          ["All" | GuimbalWaterworks.Constants.streets()], 
+        <%= select(
+          f,
+          :street,
+          ["All" | GuimbalWaterworks.Constants.streets()],
           value: @search_params["street"]
         )%>
       </div>
       <div class="search-input-group">
         <%= label f, :type %>
-        <%= select( 
-          f, 
-          :type, 
-          ["All": :all, "Personal": :personal, "Business": :business], 
+        <%= select(
+          f,
+          :type,
+          ["All": :all, "Personal": :personal, "Business": :business],
           required: true,
           value: @search_params["type"]
         )%>
       </div>
       <div class="search-input-group">
         <%= label f, :status %>
-        <%= select( 
-          f, 
-          :status, 
-          @status_options, 
+        <%= select(
+          f,
+          :status,
+          @status_options,
           required: true,
           value: @search_params["status"]
+        )%>
+      </div>
+      <div class="search-input-group">
+        <%= label f, :archived? %>
+        <%= checkbox(
+          f,
+          :archived?,
+          value: Map.get(@search_params, "archived?", false),
+          class: "!w-6 !h-6 !flex-none"
         )%>
       </div>
     </div>
@@ -59,7 +68,7 @@
       </div>
       <div class="flex w-1/3 justify-center">
         <a
-          href={Routes.member_print_path(@socket, :print, @filter_params)} 
+          href={Routes.member_print_path(@socket, :print, @filter_params)}
           class="button -filter"
           target="_blank"
           rel="noopener noreferrer"
@@ -70,7 +79,7 @@
     </div>
   </.form>
 
-  <Page.pagination_count_select 
+  <Page.pagination_count_select
     target={@myself}
     pagination_params={@pagination_params}
     pagination={@pagination}
@@ -83,7 +92,7 @@
         <th class="header">Unpaid Bill</th>
         <th class="header">Billing Periods</th>
         <th class="header">Status</th>
-        <th 
+        <th
           class="header"
           >
           Actions
@@ -111,7 +120,7 @@
               MLHelpers.get_member_status(member)
             }
           />
-          <td 
+          <td
             class="actions text-center"
           >
             <SC.pop_up_menu target_id={member.id}>
@@ -124,14 +133,27 @@
                 <%= live_patch "Pay Bills", to: Routes.member_index_path(@socket, :payment, member, @filter_params), class: "" %>
                 </SC.render_for_roles>
                 <SC.render_for_roles roles={[:manager]} user={@current_users}>
-                <button
-                  class=""
-                  phx-click="archive"
-                  phx-value-id={member.id}
-                  data-confirm="Are you sure you want to delete member?"
-                  >
-                  Delete
-                </button>
+                  <%= if is_nil(member.archived_at) do %>
+                    <button
+                      class=""
+                      phx-click="archive"
+                      phx-target={@myself}
+                      phx-value-id={member.id}
+                      data-confirm="Are you sure you want to delete member?"
+                      >
+                      Delete
+                    </button>
+                  <% else %>
+                    <button
+                      class=""
+                      phx-click="unarchive"
+                      phx-target={@myself}
+                      phx-value-id={member.id}
+                      data-confirm="Are you sure you want to restore member?"
+                      >
+                      Restore
+                    </button>
+                  <% end %>
                 </SC.render_for_roles>
             </SC.pop_up_menu>
           </td>
@@ -149,7 +171,7 @@
       </tr>
     </table>
   </div>
-  <Page.pagination_buttons 
+  <Page.pagination_buttons
     target={@myself}
     pagination_params={@pagination_params}
     pagination={@pagination}

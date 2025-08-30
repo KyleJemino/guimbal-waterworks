@@ -7,7 +7,7 @@ defmodule GuimbalWaterworks.Members.Resolvers.MemberResolver do
 
   def list_members(params \\ %{}) do
     params
-    |> Map.put_new("with_archived?", false)
+    |> Map.put_new("archived?", false)
     |> MQ.query_member()
     |> Repo.all()
   end
@@ -15,6 +15,12 @@ defmodule GuimbalWaterworks.Members.Resolvers.MemberResolver do
   def archive_member(member) do
     member
     |> Member.archive_changeset()
+    |> Repo.update()
+  end
+
+  def unarchive_member(member) do
+    member
+    |> Member.unarchive_changeset()
     |> Repo.update()
   end
 
