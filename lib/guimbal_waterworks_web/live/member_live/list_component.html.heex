@@ -136,6 +136,7 @@
                     <button
                       class=""
                       phx-click="archive"
+                      phx-target={@myself}
                       phx-value-id={member.id}
                       data-confirm="Are you sure you want to delete member?"
                       >
@@ -145,6 +146,7 @@
                     <button
                       class=""
                       phx-click="unarchive"
+                      phx-target={@myself}
                       phx-value-id={member.id}
                       data-confirm="Are you sure you want to restore member?"
                       >
