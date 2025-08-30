@@ -22,7 +22,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     "type",
     "due_from",
     "due_to",
-    "status"
+    "status",
+    "archived?"
   ]
 
   @impl true
