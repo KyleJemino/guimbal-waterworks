@@ -55,7 +55,8 @@
         <%= checkbox(
           f,
           :archived?,
-          value: Map.get(@search_params, "archived?", false)
+          value: Map.get(@search_params, "archived?", false),
+          class: "!w-6 !h-6 !flex-none"
         )%>
       </div>
     </div>
