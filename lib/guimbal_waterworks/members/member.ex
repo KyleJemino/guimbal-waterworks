@@ -62,4 +62,8 @@ defmodule GuimbalWaterworks.Members.Member do
 
     change(member, archived_at: now)
   end
+
+  def unarchive_changeset(member) do
+    change(member, archived_at: nil)
+  end
 end

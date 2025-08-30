@@ -132,14 +132,25 @@
                 <%= live_patch "Pay Bills", to: Routes.member_index_path(@socket, :payment, member, @filter_params), class: "" %>
                 </SC.render_for_roles>
                 <SC.render_for_roles roles={[:manager]} user={@current_users}>
-                <button
-                  class=""
-                  phx-click="archive"
-                  phx-value-id={member.id}
-                  data-confirm="Are you sure you want to delete member?"
-                  >
-                  Delete
-                </button>
+                  <%= if is_nil(member.archived_at) do %>
+                    <button
+                      class=""
+                      phx-click="archive"
+                      phx-value-id={member.id}
+                      data-confirm="Are you sure you want to delete member?"
+                      >
+                      Delete
+                    </button>
+                  <% else %>
+                    <button
+                      class=""
+                      phx-click="unarchive"
+                      phx-value-id={member.id}
+                      data-confirm="Are you sure you want to restore member?"
+                      >
+                      Restore
+                    </button>
+                  <% end %>
                 </SC.render_for_roles>
             </SC.pop_up_menu>
           </td>

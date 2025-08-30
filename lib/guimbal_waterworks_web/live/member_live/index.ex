@@ -100,4 +100,19 @@ defmodule GuimbalWaterworksWeb.MemberLive.Index do
         {:noreply, put_flash(socket, :error, "Something went wrong")}
     end
   end
+
+  @impl true
+  def handle_event("unarchive", %{"id" => id}, socket) do
+    member = Members.get_member!(id)
+
+    case Members.unarchive_member(member) do
+      {:ok, _member} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "User restored")}
+
+      _ ->
+        {:noreply, put_flash(socket, :error, "Something went wrong")}
+    end
+  end
 end

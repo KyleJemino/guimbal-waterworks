@@ -18,6 +18,12 @@ defmodule GuimbalWaterworks.Members.Resolvers.MemberResolver do
     |> Repo.update()
   end
 
+  def unarchive_member(member) do
+    member
+    |> Member.unarchive_changeset()
+    |> Repo.update()
+  end
+
   def calculate_member_bills(%Member{bills: bills} = member) when is_list(bills) do
     Enum.reduce(bills, 0, fn bill, acc ->
       {:ok, %{total: total}} =
