@@ -12,9 +12,9 @@ defmodule GuimbalWaterworks.Members.Resolvers.MemberResolver do
     |> Repo.all()
   end
 
-  def archive_member(member) do
+  def archive_member(member, params) do
     member
-    |> Member.archive_changeset()
+    |> Member.archive_changeset(params)
     |> Repo.update()
   end
 

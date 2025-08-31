@@ -20,6 +20,7 @@ defmodule GuimbalWaterworks.Members.Member do
     field :archived_at, :utc_datetime
 
     has_many :bills, Bill
+    belongs_to :archiver, Users, foreign_key: :archived_by
 
     timestamps()
   end
@@ -55,15 +56,19 @@ defmodule GuimbalWaterworks.Members.Member do
     )
   end
 
-  def archive_changeset(member) do
+  def archive_changeset(member, params \\ %{}) do
     now =
       DateTime.utc_now()
       |> DateTime.truncate(:second)
 
-    change(member, archived_at: now)
+    member
+    |> cast(params, [:archived_by])
+    |> validate_required(:archived_by)
+    |> foreign_key_constraint(:archived_by)
+    |> put_change(:archived_at, now)
   end
 
   def unarchive_changeset(member) do
-    change(member, archived_at: nil)
+    change(member, %{archived_at: nil, archived_by: nil})
   end
 end

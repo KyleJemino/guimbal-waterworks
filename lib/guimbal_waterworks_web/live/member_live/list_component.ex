@@ -87,7 +87,11 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
   def handle_event("archive", %{"id" => id}, socket) do
     member = Members.get_member!(id)
 
-    case Members.archive_member(member) do
+    params = %{
+      "archived_by" => socket.assigns.current_users.id
+    }
+
+    case Members.archive_member(member, params) do
       {:ok, _member} ->
         {:noreply,
          socket
@@ -110,7 +114,8 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
          |> put_flash(:info, "User restored")
          |> patch_params_path(redirect?: true)}
 
-      _ ->
+      {:error, changeset} ->
+        IO.inspect(changeset, label: "### error", level: :infinity)
         {:noreply, put_flash(socket, :error, "Something went wrong")}
     end
   end
