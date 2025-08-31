@@ -167,7 +167,7 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
     list_params =
       filter_params
       |> Map.merge(%{
-        "preload" => [bills: MLHelpers.unpaid_bill_preload_query()],
+        "preload" => [:archiver, bills: MLHelpers.unpaid_bill_preload_query()],
         "order_by" => [
           asc: :last_name,
           asc: :first_name,
