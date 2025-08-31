@@ -92,6 +92,9 @@
         <th class="header">Unpaid Bill</th>
         <th class="header">Billing Periods</th>
         <th class="header">Status</th>
+        <%= if Map.get(@search_params, "archived?", false) do %>
+          <th class="data text-right">Deleted by</th>
+        <% end %>
         <th
           class="header"
           >
@@ -120,6 +123,13 @@
               MLHelpers.get_member_status(member)
             }
           />
+          <%= if Map.get(@search_params, "archived?", false) do %>
+            <td class="data text-right">
+              <%= if is_struct(member.archiver) do %>
+                <%= Display.full_name(member.archiver) %>
+              <% end %>
+            </td>
+          <% end %>
           <td
             class="actions text-center"
           >
@@ -167,6 +177,9 @@
         </td>
         <td class="data"></td>
         <td class="data"></td>
+        <%= if Map.get(@search_params, "archived?", false) do %>
+          <td class="data"></td>
+        <% end %>
         <td class="actions"></td>
       </tr>
     </table>
