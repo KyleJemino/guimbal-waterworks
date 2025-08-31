@@ -4,6 +4,7 @@ defmodule GuimbalWaterworks.Members.Member do
 
   alias GuimbalWaterworks.Bills.Bill
   alias GuimbalWaterworks.Constants
+  alias GuimbalWaterworks.Accounts.Users
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
