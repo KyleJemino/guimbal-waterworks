@@ -56,9 +56,7 @@ defmodule GuimbalWaterworks.Bills.BillingPeriod do
   end
 
   def death_aid_recipient_changeset(death_aid_recipient, params) do
-    death_aid_recipient
-    |> cast(params, [:name])
-    |> validate_required([:name])
+    cast(death_aid_recipient, params, [:name])
   end
 
   defp validate_from_and_to(changeset) do
