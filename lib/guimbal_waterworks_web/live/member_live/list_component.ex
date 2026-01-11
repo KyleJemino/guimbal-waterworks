@@ -115,7 +115,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.ListComponent do
          |> patch_params_path(redirect?: true)}
 
       {:error, changeset} ->
-        IO.inspect(changeset, label: "### error", level: :infinity)
         {:noreply, put_flash(socket, :error, "Something went wrong")}
     end
   end
