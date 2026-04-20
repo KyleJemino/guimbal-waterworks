@@ -4,6 +4,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
 
   alias GuimbalWaterworks.Bills
   alias GuimbalWaterworks.Bills.Payment
+  alias GuimbalWaterworks.Bills.Rate
 
   def update(
         %{
@@ -24,24 +25,36 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
         "order_by" => "oldest_first"
       })
 
-    latest_bill = List.last(bills)
-    reconnection_fees = [Decimal.new("0.00")] ++ latest_bill.billing_period.rate.reconnection_fees
+    %Rate{} =
+      latest_rate =
+      Bills.get_rate(%{
+        "order_by" => [desc: :inserted_at],
+        "limit" => 1
+      })
+
+    reconnection_fees = [Decimal.new("0.00")] ++ latest_rate.reconnection_fees
+
     reconnection_fee_options =
       reconnection_fees
       |> Enum.sort(&Decimal.lt?(&1, &2))
-      |> Enum.map(&([
-        key: Display.money(&1),
-        value: Decimal.to_string(&1),
-      ]))
+      |> Enum.map(
+        &[
+          key: Display.money(&1),
+          value: Decimal.to_string(&1)
+        ]
+      )
 
-    discounts = [Decimal.new("0.00")] ++ latest_bill.billing_period.rate.discount_rates
+    discounts = [Decimal.new("0.00")] ++ latest_rate.discount_rates
+
     discount_options =
       discounts
       |> Enum.sort(&Decimal.lt?(&1, &2))
-      |> Enum.map(&([
-        key: Display.percent(&1),
-        value: Decimal.to_string(&1),
-      ]))
+      |> Enum.map(
+        &[
+          key: Display.percent(&1),
+          value: Decimal.to_string(&1)
+        ]
+      )
 
     {bills_display, payment_options, bill_breakdown_map} =
       Enum.reduce(bills, {[], [], %{}}, fn
@@ -171,7 +184,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
     %{
       payment: payment,
       action: action,
-      bills: bills,
+      bills: bills
     } = socket.assigns
 
     changeset =
@@ -230,7 +243,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
   defp payment_changeset_fn(payment, attrs, :new), do: Payment.changeset(payment, attrs)
 
   defp calculate_total(%{"bill_ids" => bill_ids} = params, bills)
-    when is_binary(bill_ids) and bill_ids != "" do
+       when is_binary(bill_ids) and bill_ids != "" do
     bill_ids = String.split(bill_ids, ",")
 
     selected_bills =
