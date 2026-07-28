@@ -89,6 +89,13 @@ defmodule GuimbalWaterworksWeb.BillLive.FormComponent do
         </div>
 
         <div class="field-group">
+          <%= label f, :manual_calculation_amount, do: "Manual Bill Calculation (in Pesos)" %>
+          <span>Leave blank if manual calculation is not needed. Only include price of consumption. Don't include discount, membership fee, and reconnection fee to the calculation they will be applied later.</span>
+          <%= number_input f, :manual_calculation_amount %>
+          <%= error_tag f, :manual_calculation_amount %>
+        </div>
+
+        <div class="field-group">
           <%= label f, :discount, do: "Employee Discount (Cu.M.)" %>
           <%= number_input f, :discount, required: true %>
           <%= error_tag f, :discount %>

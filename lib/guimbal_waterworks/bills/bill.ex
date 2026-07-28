@@ -23,6 +23,7 @@ defmodule GuimbalWaterworks.Bills.Bill do
     field :discount, :integer, default: 0
     ### discount to members in Php
     field :member_discount, :decimal, default: 0
+    field :manual_calculation_amount, :decimal
 
     belongs_to :member, Member
     belongs_to :billing_period, BillingPeriod
@@ -42,7 +43,8 @@ defmodule GuimbalWaterworks.Bills.Bill do
       :user_id,
       :before,
       :after,
-      :discount
+      :discount,
+      :manual_calculation_amount
     ])
     |> validate_required([
       :before,
