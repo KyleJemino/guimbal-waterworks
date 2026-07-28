@@ -1,4 +1,5 @@
 defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
+  require Decimal
   alias GuimbalWaterworks.Repo
   alias Decimal, as: D
 
@@ -188,10 +189,13 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     |> Decimal.sub(discount || 0)
   end
 
-  def calculate_bill_discount(%Bill{
-    member: member,
-    billing_period: %{rate: rate}
-  } = bill, discount_rate) do
+  def calculate_bill_discount(
+        %Bill{
+          member: member,
+          billing_period: %{rate: rate}
+        } = bill,
+        discount_rate
+      ) do
     reading = get_bill_reading(bill)
 
     if Decimal.gt?(reading, "30") do
@@ -208,6 +212,9 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     type = member.type
 
     cond do
+      D.is_decimal(bill.manual_calculation_amount) ->
+        bill.manual_calculation_amount
+
       Decimal.lt?(reading, "0") ->
         D.new("0")
 
