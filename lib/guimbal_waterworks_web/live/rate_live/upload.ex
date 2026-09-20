@@ -30,6 +30,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
     end
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="page-container flex flex-col justify-center items-center">
@@ -67,7 +68,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
           title,
           _reading,
           _personal_prices,
-          business_rate,
+          _business_prices,
           tax_rate,
           _reconnection_fees,
           membership_fee,
@@ -76,7 +77,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
         ] = Enum.at(raw_data, 0)
 
         {personal_price_map, business_price_map} =
-          Enum.reduce(raw_data, [%{}, %{}], fn [
+          Enum.reduce(raw_data, {%{}, %{}}, fn [
                                                  _title,
                                                  reading,
                                                  personal_rate,
@@ -118,16 +119,17 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
           |> Enum.uniq()
           |> Enum.sort(&Decimal.gt?(&1, &2))
 
-        %{
-          title: title,
-          reconnection_fees: reconnection_fees,
-          membership_fee: membership_fee,
-          surcharge_fee: surcharge_fee,
-          tax_rate: tax_rate,
-          personal_prices: personal_price_map,
-          business_prices: business_price_map,
-          discount_rates: discount_rates
-        }
+        {:ok,
+         %{
+           title: title,
+           reconnection_fees: reconnection_fees,
+           membership_fee: membership_fee,
+           surcharge_fee: surcharge_fee,
+           tax_rate: tax_rate,
+           personal_prices: personal_price_map,
+           business_prices: business_price_map,
+           discount_rates: discount_rates
+         }}
       end)
 
     Bills.create_rate(rate_attrs)

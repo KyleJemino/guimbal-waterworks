@@ -27,7 +27,7 @@ defmodule GuimbalWaterworks.Bills.Rate do
       :tax_rate,
       :title,
       :personal_prices,
-      :business_rate,
+      :business_prices,
       :discount_rates
     ])
     |> validate_required([
@@ -37,7 +37,7 @@ defmodule GuimbalWaterworks.Bills.Rate do
       :tax_rate,
       :title,
       :personal_prices,
-      :business_rate,
+      :business_prices,
       :discount_rates
     ])
     |> unique_constraint(
