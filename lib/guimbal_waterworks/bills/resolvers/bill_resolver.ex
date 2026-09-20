@@ -233,11 +233,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
         end
 
       type == :business ->
-        if reading < 10 do
-          D.mult(rate.business_rate, 10)
-        else
-          D.mult(rate.business_rate, reading)
-        end
+        calculate_business_base_amount(rate, reading)
     end
   end
 
@@ -252,6 +248,30 @@ defmodule GuimbalWaterworks.Bills.Resolvers.BillResolver do
     else
       _result ->
         nil
+    end
+  end
+
+  defp calculate_business_base_amount(%{business_prices: %{}} = rate, reading) do
+    rate.business_prices
+    |> Map.get("#{reading}")
+    |> case do
+      nil ->
+        rate
+        |> Bills.max_business_rate()
+        |> elem(1)
+        |> D.new()
+
+      reading ->
+        D.new(reading)
+    end
+  end
+
+  defp calculate_business_base_amount(%{business_rate: business_rate}, reading)
+       when D.is_decimal(business_rate) do
+    if reading < 10 do
+      D.mult(business_rate, 10)
+    else
+      D.mult(business_rate, reading)
     end
   end
 end

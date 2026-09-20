@@ -31,5 +31,9 @@ defmodule GuimbalWaterworks.Bills.Resolvers.RateResolver do
     Enum.max_by(rate.personal_prices, &elem(&1, 1))
   end
 
+  def max_business_rate(rate) do
+    Enum.max_by(rate.business_prices, &elem(&1, 1))
+  end
+
   def rate_changeset(%Rate{} = rate, attrs \\ %{}), do: Rate.changeset(rate, attrs)
 end
