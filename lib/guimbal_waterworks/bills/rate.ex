@@ -12,6 +12,7 @@ defmodule GuimbalWaterworks.Bills.Rate do
     field :surcharge_fee, :decimal
     field :tax_rate, :decimal
     field :personal_prices, :map
+    field :business_prices, :map
     field :business_rate, :decimal
 
     timestamps()
