@@ -32,13 +32,17 @@ let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToke
 // Show progress bar on live navigation and form submits
 window.addEventListener("phx:page-loading-start", () => {
   const spinner = document.getElementById("loading-container")
-  
-  spinner.classList.add("-loading")
+
+  if (spinner) {
+    spinner.classList.add("-loading")
+  }
 })
 window.addEventListener("phx:page-loading-stop", () => {
   const spinner = document.getElementById("loading-container")
-  
-  spinner.classList.remove("-loading")
+
+  if (spinner) {
+    spinner.classList.remove("-loading")
+  }
 })
 
 // connect if there are any LiveViews on the page
