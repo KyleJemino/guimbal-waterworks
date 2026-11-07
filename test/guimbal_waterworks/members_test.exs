@@ -93,4 +93,45 @@ defmodule GuimbalWaterworks.MembersTest do
       assert %Ecto.Changeset{} = Members.change_member(member)
     end
   end
+
+  describe "account_no" do
+    defp member_attrs(attrs) do
+      Enum.into(attrs, %{
+        first_name: "Juan",
+        last_name: "Dela Cruz",
+        street: "BALANTAD ST. (1)",
+        type: :personal,
+        connected?: true,
+        mda?: false
+      })
+    end
+
+    test "allows multiple members without an account_no" do
+      assert {:ok, %{account_no: nil}} =
+               Members.create_member(member_attrs(%{unique_identifier: "1"}))
+
+      assert {:ok, %{account_no: nil}} =
+               Members.create_member(member_attrs(%{unique_identifier: "2", account_no: ""}))
+    end
+
+    test "does not allow multiple members with the same account_no on create" do
+      assert {:ok, _member} =
+               Members.create_member(member_attrs(%{unique_identifier: "1", account_no: "123"}))
+
+      assert {:error, changeset} =
+               Members.create_member(member_attrs(%{unique_identifier: "2", account_no: "123"}))
+
+      assert %{account_no: ["Account number already exists."]} = errors_on(changeset)
+    end
+
+    test "does not allow updating a member to an existing account_no" do
+      assert {:ok, _member} =
+               Members.create_member(member_attrs(%{unique_identifier: "1", account_no: "123"}))
+
+      assert {:ok, member} = Members.create_member(member_attrs(%{unique_identifier: "2"}))
+
+      assert {:error, changeset} = Members.update_member(member, %{account_no: "123"})
+      assert %{account_no: ["Account number already exists."]} = errors_on(changeset)
+    end
+  end
 end
