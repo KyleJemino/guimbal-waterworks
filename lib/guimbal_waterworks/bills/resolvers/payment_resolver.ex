@@ -4,6 +4,7 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
   alias Ecto.Changeset
 
   alias GuimbalWaterworks.Bills
+
   alias GuimbalWaterworks.Bills.{
     Payment,
     Bill
@@ -41,18 +42,18 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
             "preload" => [:member, :payment, billing_period: [:rate]]
           }
 
-        case BillResolver.get_bill(bill_params) do
-          %Bill{} = bill ->
-            {:ok, acc ++ [bill]}
+          case BillResolver.get_bill(bill_params) do
+            %Bill{} = bill ->
+              {:ok, acc ++ [bill]}
 
-          _ ->
-            payment_changeset =
-              %Payment{}
-              |> change_payment(params)
-              |> Changeset.add_error(:bill_ids, "Invalid bills")
+            _ ->
+              payment_changeset =
+                %Payment{}
+                |> change_payment(params)
+                |> Changeset.add_error(:bill_ids, "Invalid bills")
 
-            {:error, payment_changeset}
-        end
+              {:error, payment_changeset}
+          end
       end)
     end)
     |> Multi.run(:last_bill_with_reconnection_fee, fn _repo, %{bills: bills} ->
@@ -66,7 +67,8 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
         {:ok, last_bill}
       end
     end)
-    |> Multi.run(:updated_bills, fn _repo, %{bills: bills, last_bill_with_reconnection_fee: last_bill} ->
+    |> Multi.run(:updated_bills, fn _repo,
+                                    %{bills: bills, last_bill_with_reconnection_fee: last_bill} ->
       bills
       |> Enum.map(fn bill ->
         if bill.id == last_bill.id do
@@ -97,24 +99,23 @@ defmodule GuimbalWaterworks.Bills.Resolvers.PaymentResolver do
       end)
     end)
     |> Multi.run(:bill_ids, fn _repo, %{updated_bills: bills} ->
-      {:ok, Enum.map(bills, &(&1.id))}
+      {:ok, Enum.map(bills, & &1.id)}
     end)
     |> Multi.insert(:payment, fn ops ->
       %{updated_bills: bills, bill_ids: bill_ids} = ops
 
       total =
-        Enum.reduce(bills, Decimal.new("0.00"),
-          fn bill, acc ->
-            bill
-            |> Bills.get_bill_total()
-            |> Decimal.add(acc)
-          end
-        )
+        Enum.reduce(bills, Decimal.new("0.00"), fn bill, acc ->
+          bill
+          |> Bills.get_bill_total()
+          |> Decimal.add(acc)
+        end)
 
-      payment_params = Map.merge(params, %{
-        "bill_ids" => Enum.join(bill_ids, ","),
-        "amount" => total
-      })
+      payment_params =
+        Map.merge(params, %{
+          "bill_ids" => Enum.join(bill_ids, ","),
+          "amount" => total
+        })
 
       Payment.save_changeset(%Payment{}, payment_params)
     end)
