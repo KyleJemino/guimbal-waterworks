@@ -12,6 +12,7 @@
         Enum.map(latest_bill.billing_period.death_aid_recipients, &(&1.name))
       }
       settings={@settings}
+      any_overdue?={MLHelpers.any_overdue_bills?(member.bills)}
     />
     <MemberComponents.bill_card
       member={member}
@@ -24,6 +25,7 @@
         Enum.map(latest_bill.billing_period.death_aid_recipients, &(&1.name))
       }
       settings={@settings}
+      any_overdue?={MLHelpers.any_overdue_bills?(member.bills)}
     />
   <% end %>
 </div>
