@@ -24,17 +24,18 @@ defmodule GuimbalWaterworks.BillsTest do
       valid_attrs = %{
         due_date: ~D[2023-08-06],
         from: ~D[2023-08-06],
-        month: "some month",
+        month: "AUGUST",
         to: ~D[2023-08-06],
-        year: "some year"
+        year: "2023",
+        rate_id: rate_fixture().id
       }
 
       assert {:ok, %BillingPeriod{} = billing_period} = Bills.create_billing_period(valid_attrs)
       assert billing_period.due_date == ~D[2023-08-06]
       assert billing_period.from == ~D[2023-08-06]
-      assert billing_period.month == "some month"
+      assert billing_period.month == "AUGUST"
       assert billing_period.to == ~D[2023-08-06]
-      assert billing_period.year == "some year"
+      assert billing_period.year == "2023"
     end
 
     test "create_billing_period/1 with invalid data returns error changeset" do
@@ -47,9 +48,9 @@ defmodule GuimbalWaterworks.BillsTest do
       update_attrs = %{
         due_date: ~D[2023-08-07],
         from: ~D[2023-08-07],
-        month: "some updated month",
+        month: "SEPTEMBER",
         to: ~D[2023-08-07],
-        year: "some updated year"
+        year: "2024"
       }
 
       assert {:ok, %BillingPeriod{} = billing_period} =
@@ -57,9 +58,9 @@ defmodule GuimbalWaterworks.BillsTest do
 
       assert billing_period.due_date == ~D[2023-08-07]
       assert billing_period.from == ~D[2023-08-07]
-      assert billing_period.month == "some updated month"
+      assert billing_period.month == "SEPTEMBER"
       assert billing_period.to == ~D[2023-08-07]
-      assert billing_period.year == "some updated year"
+      assert billing_period.year == "2024"
     end
 
     test "update_billing_period/2 with invalid data returns error changeset" do
