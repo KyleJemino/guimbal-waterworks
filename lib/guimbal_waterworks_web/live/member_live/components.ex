@@ -31,6 +31,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             <span class="mr-2">Address:</span>
             <span class="font-bold"><%= @member.street %></span>
           </p>
+          <p class="uppercase">
+            <span class="mr-2">Account No:</span>
+            <span class="font-bold"><%= @member.account_no %></span>
+          </p>
           <div class="grid grid-cols-3 grid-row-2">
             <div>From</div>
             <div>To</div>
