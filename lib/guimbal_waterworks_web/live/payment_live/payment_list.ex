@@ -84,6 +84,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
               Address
             </th>
             <th class="header">OR</th>
+            <th class="header">Gcash Ref No.</th>
             <th class="header">Current Consumption</th>
             <th class="header">Overdue Consumption</th>
             <th class="header">Period of Billing</th>
@@ -108,6 +109,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
                 <%= payment.address %>
               </td>
               <td class="data"><%= payment.or %></td>
+              <td class="data"><%= payment.gcash_ref_no %></td>
               <td class="data text-right">
                 <%= Display.money(payment.current) %>
               </td>
@@ -317,6 +319,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
               member: Display.full_name(payment.member),
               address: payment.member.street,
               or: payment.or,
+              gcash_ref_no: payment.gcash_ref_no || "",
               paid_at: Display.format_date(payment.paid_at),
               cashier: Display.full_name(payment.user),
               total_paid: payment.amount
@@ -353,6 +356,7 @@ defmodule GuimbalWaterworksWeb.PaymentLive.PaymentList do
       member: "ALL",
       address: "",
       or: "",
+      gcash_ref_no: "",
       paid_at: "",
       cashier: ""
     }
