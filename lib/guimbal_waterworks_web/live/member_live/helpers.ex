@@ -100,21 +100,6 @@ defmodule GuimbalWaterworksWeb.MemberLive.Helpers do
     end)
   end
 
-  def any_overdue_bills?(bills) do
-    today = Date.utc_today()
-
-    Enum.any?(bills, fn bill ->
-      %{
-        payment_id: payment_id,
-        billing_period: %BillingPeriod{
-          due_date: due_date
-        }
-      } = bill
-
-      is_nil(payment_id) and Date.diff(today, due_date) > 0
-    end)
-  end
-
   def unpaid_bill_preload_query do
     Bills.query_bill(%{
       "order_by" => "default",

@@ -111,13 +111,11 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
           </div>
         </div>
         <div class="h-full"></div>
-        <%= unless @any_overdue? do %>
-          <div class="flex flex-col self-end">
-            <p class="bill-highlight font-bold">ANNOUNCEMENT:</p>
-            <p>To pay via <span class="bill-highlight">Gcash</span>, please message your account number to our Facebook page at facebook.com/guimbalwaterworks and wait for instructions.</p>
-            <p>*We only accept updated payments. No arrears.*</p>
-          </div>
-        <% end %>
+        <div class="flex flex-col self-end">
+          <p class="bill-highlight font-bold">ANNOUNCEMENT:</p>
+          <p>To pay via <span class="bill-highlight">Gcash</span>, please message your account number to our Facebook page at facebook.com/guimbalwaterworks and wait for instructions.</p>
+          <p>*We only accept updated payments. No arrears.*</p>
+        </div>
         <%= unless Enum.empty?(@death_aid_recipients) do %>
           <div class="flex flex-col">
             <p class="bill-highlight font-bold">Mutual Death Aid</p>
