@@ -31,6 +31,10 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             <span class="mr-2">Address:</span>
             <span class="font-bold"><%= @member.street %></span>
           </p>
+          <p class="uppercase">
+            <span class="mr-2">Account No:</span>
+            <span class="font-bold"><%= @member.account_no %></span>
+          </p>
           <div class="grid grid-cols-3 grid-row-2">
             <div>From</div>
             <div>To</div>
@@ -110,12 +114,20 @@ defmodule GuimbalWaterworksWeb.MemberLive.Components do
             </div>
           </div>
         </div>
-        <div class="death-aid-section">
-          <p>Mutual Death Aid</p>
-          <%= for recipient <- @death_aid_recipients do %>
-            <p class="bill-highlight"><%= recipient %></p>
-          <% end %>
+        <div class="h-full"></div>
+        <div class="flex flex-col self-end">
+          <p class="bill-highlight font-bold">ANNOUNCEMENT:</p>
+          <p>To pay via <span class="bill-highlight">Gcash</span>, please message your account number to our Facebook page at facebook.com/guimbalwaterworks and wait for instructions.</p>
+          <p>*We only accept updated payments. No arrears.*</p>
         </div>
+        <%= unless Enum.empty?(@death_aid_recipients) do %>
+          <div class="flex flex-col">
+            <p class="bill-highlight font-bold">Mutual Death Aid</p>
+            <%= for recipient <- @death_aid_recipients do %>
+              <p class="bill-highlight"><%= recipient %></p>
+            <% end %>
+          </div>
+        <% end %>
         <p>
           (Kindly disregard the previous bills if payment has been made.)
         </p>

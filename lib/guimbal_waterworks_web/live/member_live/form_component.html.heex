@@ -64,6 +64,12 @@
   </div>
 
   <div class="field-group">
+    <%= label f, :account_no %>
+    <%= text_input f, :account_no %>
+    <%= error_tag f, :account_no %>
+  </div>
+
+  <div class="field-group">
     <div class="flex flex-row gap-2 items-center">
       <%= checkbox f, :connected? %>
       <%= label f, :connected?, class: "font-medium" %>

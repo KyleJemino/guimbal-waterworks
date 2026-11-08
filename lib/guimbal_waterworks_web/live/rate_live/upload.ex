@@ -60,7 +60,7 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
         [_headers | raw_data] =
           path
           |> Xlsxir.extract(0)
-          |> then(&(elem(&1, 1)))
+          |> then(&elem(&1, 1))
           |> Xlsxir.get_list()
 
         [
@@ -87,12 +87,12 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
             raw_fee = Enum.at(row, 5)
 
             case Decimal.parse("#{raw_fee}") do
-              {%Decimal{}= reconnection_fee, _} -> [reconnection_fee | acc]
+              {%Decimal{} = reconnection_fee, _} -> [reconnection_fee | acc]
               :error -> acc
             end
           end)
           |> Enum.uniq()
-          |> Enum.sort(&(Decimal.gt?(&1, &2)))
+          |> Enum.sort(&Decimal.gt?(&1, &2))
 
         discount_rates =
           raw_data
@@ -100,12 +100,12 @@ defmodule GuimbalWaterworksWeb.RateLive.Upload do
             raw_rate = Enum.at(row, 8)
 
             case Decimal.parse("#{raw_rate}") do
-              {%Decimal{}= raw_rate, _} -> [raw_rate | acc]
+              {%Decimal{} = raw_rate, _} -> [raw_rate | acc]
               :error -> acc
             end
           end)
           |> Enum.uniq()
-          |> Enum.sort(&(Decimal.gt?(&1, &2)))
+          |> Enum.sort(&Decimal.gt?(&1, &2))
 
         %{
           title: title,

@@ -16,6 +16,7 @@ defmodule GuimbalWaterworks.Members.Member do
     field :street, :string
     field :type, Ecto.Enum, values: [:personal, :business]
     field :meter_no, :string
+    field :account_no, :string
     field :connected?, :boolean
     field :mda?, :boolean
     field :archived_at, :utc_datetime
@@ -37,6 +38,7 @@ defmodule GuimbalWaterworks.Members.Member do
       :street,
       :type,
       :meter_no,
+      :account_no,
       :connected?,
       :mda?
     ])
@@ -54,6 +56,11 @@ defmodule GuimbalWaterworks.Members.Member do
       :meter_no,
       name: :members_meter_no_unique_idx,
       message: "Meter number already exists."
+    )
+    |> unique_constraint(
+      :account_no,
+      name: :members_account_no_unique_idx,
+      message: "Account number already exists."
     )
   end
 

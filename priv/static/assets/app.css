@@ -1635,6 +1635,10 @@ select{
   gap:0.25rem
 }
 
+.self-end{
+  align-self:flex-end
+}
+
 .overflow-auto{
   overflow:auto
 }

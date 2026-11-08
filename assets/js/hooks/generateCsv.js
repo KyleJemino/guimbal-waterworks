@@ -11,6 +11,7 @@ export default {
           'member',
           'address',
           'or',
+          'gcash_ref_no',
           'current',
           'overdue',
           'billing_periods',

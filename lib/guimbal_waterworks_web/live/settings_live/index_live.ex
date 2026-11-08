@@ -90,6 +90,7 @@ defmodule GuimbalWaterworksWeb.SettingsLive.IndexLive do
     case Settings.get_settings() do
       %Setting{} = setting ->
         setting
+
       nil ->
         %Setting{}
     end

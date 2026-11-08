@@ -12,6 +12,7 @@ defmodule GuimbalWaterworks.Bills.Payment do
 
   schema "payments" do
     field :or, :string
+    field :gcash_ref_no, :string
     field :paid_at, :utc_datetime
     field :bill_ids, :string, virtual: true
     field :reconnection_fee, :decimal, virtual: true
@@ -27,9 +28,10 @@ defmodule GuimbalWaterworks.Bills.Payment do
 
   def changeset(payment, attrs) do
     payment
-    |> cast(attrs, [:or, :member_id, :user_id, :bill_ids])
+    |> cast(attrs, [:or, :gcash_ref_no, :member_id, :user_id, :bill_ids])
     |> validate_required([:or, :member_id, :user_id, :bill_ids])
     |> unique_constraint(:or, name: :payments_ors_uniq_idx)
+    |> gcash_ref_no_unique_constraint()
     |> foreign_key_constraint(:member_id)
     |> foreign_key_constraint(:user_id)
     |> validate_format(:or, ~r/\d+/)
@@ -45,7 +47,18 @@ defmodule GuimbalWaterworks.Bills.Payment do
   end
 
   def edit_changeset(payment, attrs) do
-    cast(payment, attrs, [:or])
+    payment
+    |> cast(attrs, [:or, :gcash_ref_no])
+    |> gcash_ref_no_unique_constraint()
+  end
+
+  defp gcash_ref_no_unique_constraint(changeset) do
+    unique_constraint(
+      changeset,
+      :gcash_ref_no,
+      name: :payments_gcash_ref_no_unique_idx,
+      message: "Gcash reference no. already exists."
+    )
   end
 
   defp validate_bill_ids_length(changeset) do
