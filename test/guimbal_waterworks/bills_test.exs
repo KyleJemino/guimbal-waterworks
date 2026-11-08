@@ -82,4 +82,59 @@ defmodule GuimbalWaterworks.BillsTest do
       assert %Ecto.Changeset{} = Bills.change_billing_period(billing_period)
     end
   end
+
+  describe "gcash_ref_no" do
+    alias GuimbalWaterworks.Bills.Payment
+    alias GuimbalWaterworks.Members
+    alias GuimbalWaterworks.Repo
+
+    import GuimbalWaterworks.AccountsFixtures
+
+    setup do
+      {:ok, member} =
+        Members.create_member(%{
+          first_name: "Juan",
+          last_name: "Dela Cruz",
+          unique_identifier: "1",
+          street: "BALANTAD ST. (1)",
+          type: :personal,
+          connected?: true,
+          mda?: false
+        })
+
+      %{member: member, user: users_fixture()}
+    end
+
+    defp insert_payment(%{member: member, user: user}, attrs) do
+      %Payment{}
+      |> Payment.save_changeset(
+        Enum.into(attrs, %{
+          member_id: member.id,
+          user_id: user.id,
+          bill_ids: Ecto.UUID.generate(),
+          amount: Decimal.new("100.00")
+        })
+      )
+      |> Repo.insert()
+    end
+
+    test "allows multiple payments without a gcash_ref_no", ctx do
+      assert {:ok, %{gcash_ref_no: nil}} = insert_payment(ctx, %{or: "1"})
+      assert {:ok, %{gcash_ref_no: nil}} = insert_payment(ctx, %{or: "2", gcash_ref_no: ""})
+    end
+
+    test "does not allow multiple payments with the same gcash_ref_no on create", ctx do
+      assert {:ok, _payment} = insert_payment(ctx, %{or: "1", gcash_ref_no: "123"})
+      assert {:error, changeset} = insert_payment(ctx, %{or: "2", gcash_ref_no: "123"})
+      assert %{gcash_ref_no: ["Gcash reference no. already exists."]} = errors_on(changeset)
+    end
+
+    test "does not allow editing a payment to an existing gcash_ref_no", ctx do
+      assert {:ok, _payment} = insert_payment(ctx, %{or: "1", gcash_ref_no: "123"})
+      assert {:ok, payment} = insert_payment(ctx, %{or: "2"})
+
+      assert {:error, changeset} = Bills.edit_payment(payment, %{gcash_ref_no: "123"})
+      assert %{gcash_ref_no: ["Gcash reference no. already exists."]} = errors_on(changeset)
+    end
+  end
 end

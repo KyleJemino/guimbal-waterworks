@@ -134,6 +134,12 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
           <%= error_tag f, :or %>
         </div>
 
+        <div class="field-group">
+          <%= label f, :gcash_ref_no, "Gcash reference no." %>
+          <%= text_input f, :gcash_ref_no %>
+          <%= error_tag f, :gcash_ref_no %>
+        </div>
+
         <%= if @action == :new do %>
           <div class="flex flex-col gap-2 mt-3">
             <h4>Unpaid Bills:</h4>
@@ -217,6 +223,9 @@ defmodule GuimbalWaterworksWeb.PaymentLive.FormComponent do
          |> push_redirect(to: Routes.member_show_path(socket, :show, payment.member_id))}
 
       {:error, _operation, %Changeset{} = changeset, _changes} ->
+        {:noreply, assign_changeset(socket, changeset)}
+
+      {:error, %Changeset{} = changeset} ->
         {:noreply, assign_changeset(socket, changeset)}
 
       _ ->
